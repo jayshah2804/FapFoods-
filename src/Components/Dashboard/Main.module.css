@@ -1,0 +1,236 @@
+.container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+.container::-webkit-scrollbar-track {
+  /* background: #f1f1f1;  */
+  /* border-radius: 30px; */
+}
+
+/* Handle */
+.container::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+.container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.container {
+  width: 100%;
+  height: calc(100vh - 75px);
+  margin: 0 25px;
+  padding: 20px 0;
+}
+
+.adminName {
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.adminText {
+  font-size: 14px;
+  color: gray;
+}
+
+.cards {
+  display: flex;
+  gap: 25px;
+  color: white;
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+.cards div {
+  /* width: 310px; */
+  width: 23%;
+  height: 140px;
+  border-radius: 10px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-left: 15px;
+  padding-bottom: 25px;
+  font-size: 14px;
+}
+
+.text span {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.cards div:nth-child(1) {
+  background-color: rgba(34, 137, 203, 255);
+}
+
+.cards div:hover {
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(33, 33, 33, 0.4);
+}
+
+.cards div:nth-child(2) {
+  background-color: rgb(226, 44, 29);
+}
+
+.cards div:nth-child(3) {
+  background-color: rgba(42, 149, 69, 255);
+}
+
+.cards div:nth-child(4) {
+  background-color: rgba(245, 174, 48, 255);
+}
+
+.chart {
+  margin: 10px;
+  padding-top: 20px;
+  margin-bottom: 25px;
+}
+
+.tripChart {
+  background-color: white;
+  border-radius: 15px;
+  width: 97%;
+}
+
+.driverListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.driverDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.driverInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+.driverPhoto {
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  object-fit: cover;
+}
+
+.viewMoreDriverList {
+  font-size: 14px;
+  color: rgb(72, 72, 243);
+  cursor: pointer;
+}
+
+.viewMoreDriverList:hover {
+  border-bottom: 1px solid blue;
+  color: rgb(24, 24, 156);
+}
+
+.driverList {
+  background-color: white;
+  border-radius: 15px;
+  padding: 10px 20px;
+  /* width: 310px; */
+  width: 23%;
+  height: max-content;
+}
+
+.driverName {
+  font-size: 14px;
+}
+
+.carNumber {
+  margin-top: -3px;
+  font-size: 10.5px;
+  color: gray;
+}
+
+.activeDriver {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(42, 149, 69, 255);
+}
+
+.inActiveDriver {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgb(226, 44, 29);
+}
+
+.footer {
+  display: flex;
+  gap: 25px;
+}
+
+.mapContainer {
+  position: relative;
+  width: 25%;
+}
+
+.map {
+  position: relative;
+  height: 236px;
+  /* width: 980px; */
+  width: 290%;
+  margin-top: 40px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.mapText {
+  position: absolute;
+  top: 0px;
+  height: 40px;
+  background-color: white;
+  /* width: 980px; */
+  width: 290%;
+  border-radius: 10px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 768px) {
+  .cards {
+    display: flex;
+    flex-direction: column;
+    width: 350%;
+  }
+
+  .footer {
+    display: block;
+  }
+
+  .map {
+    width: 310px;
+  }
+
+  .mapText {
+    width: 310px;
+  }
+
+  .tripChart {
+    width: 310px;
+  }
+
+  .driverList {
+    width: 310px;
+  }
+}
