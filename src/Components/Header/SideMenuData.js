@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
@@ -16,14 +16,17 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
     setSubMenuIsActive((prev) => !prev);
     if (e.target.innerText === "Dashboard") {
       sideMenuClose(false);
-      history.push("/" + e.target.innerText);
+      history.push("/" + e.target.innerText.toLowerCase());
     }
   };
 
   const subMenuClickHandler = (e) => {
+    setTimeout(() => {
+      setSubMenuIsActive(false);
+    })
     if (e.target.innerText === "Trips") {
       sideMenuClose(false);
-      history.push("/" + e.target.innerText);
+      history.push("/" + e.target.innerText.toLowerCase());
     }
   };
 
@@ -50,7 +53,7 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
         <div>
           {sub &&
             sub.map((ele) => (
-              <p className={classes.subMenu} onClick={subMenuClickHandler}>
+              <p className={classes.subMenu} onClick={subMenuClickHandler} style={{ cursor: "pointer" }}>
                 {ele}
               </p>
             ))}

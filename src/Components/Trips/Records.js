@@ -2,6 +2,11 @@ import React from "react";
 import Accordian from "./Accordian";
 
 const Records = ({ data, headers }) => {
+  const func = (val) => {
+    if (val) {
+      document.getElementById(val).click();
+    }
+  }
   return (
     <React.Fragment>
       <table className="table" id="my-table">
@@ -15,6 +20,7 @@ const Records = ({ data, headers }) => {
         <tbody>
           {data.map((item, index) => (
             <Accordian
+              formyRender={func}
               id={index}
               car_info={item.car_info}
               total_trip_time={item.total_trip_time}

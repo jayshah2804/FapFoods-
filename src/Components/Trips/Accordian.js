@@ -74,8 +74,21 @@ const RIDER_DATA = [
   },
 ];
 
+
+let parent_prev_id;
+let prev_active_status;
 const Accordian = (props) => {
   const [isActive, setIsActive] = useState(false);
+
+  const myInterval = setInterval(() => {
+    if (document.getElementsByClassName("gm-svpc")[0])
+      document.getElementsByClassName("gm-svpc")[0].style.display = "none";
+    if (document.getElementsByClassName("gm-style-mtc")[0]) {
+      document.getElementsByClassName("gm-style-mtc")[0].style.display = "none";
+      document.getElementsByClassName("gm-style-mtc")[1].style.display = "none";
+      clearInterval(myInterval);
+    }
+  }, 100);
 
   const script = document.createElement("script");
   script.src =
@@ -144,9 +157,17 @@ const Accordian = (props) => {
 
   window.myInitMap = myInitMap;
 
+  const tableRowClickHandler = (e) => {
+    if (parent_prev_id !== e.target.parentElement.id && !prev_active_status)
+      props.formyRender(parent_prev_id);
+    setIsActive(prev => !prev);
+    parent_prev_id = e.target.parentElement.id;
+    prev_active_status = isActive;
+  }
+
   return (
     <React.Fragment>
-      <tr onClick={() => setIsActive((prev) => !prev)}>
+      <tr onClick={tableRowClickHandler} id={props.id + "tr"} >
         <td>
           <div className={classes.driverInfo} >
             <img
@@ -175,7 +196,7 @@ const Accordian = (props) => {
         </td>
       </tr>
       {isActive && (
-        <td colSpan="7" id={props.id}>
+        <td colSpan="7">
           <div id="map"></div>
           <div className={classes.rideTableContainer}>
             <table className={classes.riderTable}>
