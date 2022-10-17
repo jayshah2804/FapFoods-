@@ -3,6 +3,8 @@ import { MdArrowRight } from "react-icons/md";
 import { MdArrowDropDown } from "react-icons/md";
 import photo from "../../Assets/admin.jpg";
 
+import classes from "./Accordian.module.css";
+
 const RIDER_TITLE = [
   "Rider Name",
   "Pickup Location",
@@ -28,7 +30,7 @@ const RIDER_DATA = [
   },
   {
     id: 2,
-    rider_name: "Deep Parmar",
+    rider_name: "Jay Shah",
     pickup_location: "A/4 Kuldeep Apartment, Maninagar, East",
     shuttle_arrival_time: "5:21 PM",
     boarding_time: "5:24 PM",
@@ -39,7 +41,7 @@ const RIDER_DATA = [
   },
   {
     id: 3,
-    rider_name: "Deep Parmar",
+    rider_name: "Rahul Patel",
     pickup_location: "A/4 Kuldeep Apartment, Maninagar, East",
     shuttle_arrival_time: "5:21 PM",
     boarding_time: "5:24 PM",
@@ -50,7 +52,7 @@ const RIDER_DATA = [
   },
   {
     id: 4,
-    rider_name: "Deep Parmar",
+    rider_name: "Vishwas Parmar",
     pickup_location: "A/4 Kuldeep Apartment, Maninagar, East",
     shuttle_arrival_time: "5:21 PM",
     boarding_time: "5:24 PM",
@@ -82,34 +84,80 @@ const Accordian = (props) => {
   document.body.appendChild(script);
 
   function myInitMap() {
-    var map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: 23.23233, lng: 72.87878 },
-      zoom: 10,
-      mapTypeControl: false,
+    const image =
+      "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+    const map = new window.google.maps.Map(document.getElementById("map"), {
+      zoom: 16,
+      center: { lat: 23.23393, lng: 72.67918 },
+      // mapTypeId: "terrain",
+    });
+
+    const flightPlanCoordinates = [
+      { lat: 23.23233, lng: 72.67878 },
+      { lat: 23.23533, lng: 72.67878 },
+      { lat: 23.23553, lng: 72.67918 },
+      { lat: 23.23293, lng: 72.67918 },
+    ];
+    const flightPath = new window.google.maps.Polyline({
+      path: flightPlanCoordinates,
+      geodesic: true,
+      strokeColor: "blue",
+      strokeOpacity: 1.0,
+      strokeWeight: 5,
+    });
+
+    flightPath.setMap(map);
+
+    const tourStops = [
+      [{ lat: 23.23233, lng: 72.67878 }],
+      [{ lat: 23.23533, lng: 72.67878 }],
+      [{ lat: 23.23553, lng: 72.67918 }],
+      [{ lat: 23.23293, lng: 72.67918 }]
+    ];
+    const infoWindow = new window.google.maps.InfoWindow();
+    let icon;
+    let label;
+    tourStops.forEach(([position], i) => {
+      if (i === 0) {
+        icon = image;
+        label = null;
+      }
+      else {
+        icon = null;
+        label = `${i}`;
+      }
+      const marker = new window.google.maps.Marker({
+        position,
+        map,
+        title: `${i}. ${RIDER_DATA[i].rider_name}`,
+        label,
+        icon,
+        optimized: false,
+      });
+      marker.addListener("click", () => {
+        infoWindow.close();
+        infoWindow.setContent(marker.getTitle());
+        infoWindow.open(marker.getMap(), marker);
+      });
     });
   }
+
   window.myInitMap = myInitMap;
 
   return (
     <React.Fragment>
-      <tr
-        style={{ cursor: "pointer" }}
-        onClick={() => setIsActive((prev) => !prev)}
-      >
-        <td style={{ display: "flex", gap: "5px", marginLeft: "5px" }}>
-          <img
-            src={photo}
-            alt=""
-            style={{
-              width: "35px",
-              height: "35px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-          />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <p>{props.driver_name}</p>
-            <p className="car-info">{props.car_info}</p>
+      <tr onClick={() => setIsActive((prev) => !prev)}>
+        <td>
+          <div className={classes.driverInfo} >
+            <img
+              src={photo}
+              alt=""
+              className={classes.driverPhoto}
+            />
+            <div className={classes.div}>
+              <p>{props.driver_name}</p>
+              <p className={classes.carInfo}>{props.car_info}</p>
+            </div>
           </div>
         </td>
         <td>{props.journey_id} </td>
@@ -117,51 +165,46 @@ const Accordian = (props) => {
         <td>{props.pickup_time} </td>
         <td>{props.drop_time} </td>
         <td>{props.total_trip_time} </td>
-        <td>
+        <td className={classes.totalTrip}>
           {props.total_trip_km}{" "}
           {isActive ? (
-            <MdArrowDropDown className="toggle-icon" />
+            <MdArrowDropDown className={classes.toggleIcon} />
           ) : (
-            <MdArrowRight className="toggle-icon" />
+            <MdArrowRight className={classes.toggleIcon} />
           )}{" "}
         </td>
       </tr>
       {isActive && (
-        <td colspan="7" id={props.id}>
+        <td colSpan="7" id={props.id}>
           <div id="map"></div>
-          <table className="sub-table">
-            <tr>
-              {RIDER_TITLE.map((data) => (
-                <th>{data}</th>
-              ))}
-            </tr>
-            {RIDER_DATA.map((data) => {
-              return (
-                <tr>
-                  <td style={{ display: "flex" }}>
-                    <img
-                      src={photo}
-                      alt=""
-                      style={{
-                        width: "35px",
-                        height: "35px",
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                      }}
-                    />
-                    <p>{data.rider_name}</p>
-                  </td>
-                  <td>{data.pickup_location} </td>
-                  <td>{data.shuttle_arrival_time} </td>
-                  <td>{data.boarding_time} </td>
-                  <td>{data.boarding_lat_lng} </td>
-                  <td>{data.drop_location} </td>
-                  <td>{data.alighting_time} </td>
-                  <td>{data.alighting_lat_lng} </td>
-                </tr>
-              );
-            })}
-          </table>
+          <div className={classes.rideTableContainer}>
+            <table className={classes.riderTable}>
+              <tr>
+                {RIDER_TITLE.map((data) => (
+                  <th>{data}</th>
+                ))}
+              </tr>
+              <tbody>
+                {RIDER_DATA.map((data) => {
+                  return (
+                    <tr>
+                      <td className={classes.riderName} >
+                        <img src={photo} alt="" />
+                        <p>{data.rider_name}</p>
+                      </td>
+                      <td>{data.pickup_location} </td>
+                      <td>{data.shuttle_arrival_time} </td>
+                      <td>{data.boarding_time} </td>
+                      <td>{data.boarding_lat_lng} </td>
+                      <td>{data.drop_location} </td>
+                      <td>{data.alighting_time} </td>
+                      <td>{data.alighting_lat_lng} </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </td>
       )}
     </React.Fragment>

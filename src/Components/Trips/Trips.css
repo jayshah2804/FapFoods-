@@ -105,26 +105,16 @@
   width: calc(100vw - 55px);
   /* height: auto; */
   overflow: scroll;
-  /* background-color: white; */
-  /* border-radius: 10px; */
-  /* margin: 20px; */
 }
 
 .table tr:hover {
-  background-color: rgb(240, 234, 234);
-}
-
-.sub-table {
-  border-collapse: collapse;
-  overflow: scroll;
-  background-color: white;
-  margin: 10px;
+  background-color: rgb(247, 245, 245);
 }
 
 td {
   text-align: center;
   padding: 8px;
-  height: 50px;
+  /* height: 50px; */
   font-size: 15px;
   /* overflow: hidden; */
   /* white-space: nowrap; */
@@ -170,17 +160,6 @@ tr {
   height: 260px;
   width: 100%;
   border-radius: 10px;
-}
-
-.toggle-icon {
-  /* color: rgb(18, 116, 155);
-    margin-top: -6px;
-    font-size: 25px; */
-}
-
-.car-info {
-  color: gray;
-  font-size: 11px;
 }
 
 .trips-details .title {

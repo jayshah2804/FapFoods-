@@ -17,7 +17,7 @@ const Login = ({ login }) => {
 
   const loginHandler = (event) => {
     event.preventDefault();
-    if (
+    if (                      // eslint-disable-next-line 
       !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
         emailInputRef.current.value
       )
@@ -35,7 +35,7 @@ const Login = ({ login }) => {
   };
 
   const emailChangeHandler = () => {
-    if (
+    if (                            // eslint-disable-next-line
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
         emailInputRef?.current?.value
       )

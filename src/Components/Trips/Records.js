@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import Accordian from "./Accordian";
 
 const Records = ({ data, headers }) => {

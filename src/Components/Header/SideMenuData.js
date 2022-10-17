@@ -4,7 +4,7 @@ import {
   MdKeyboardArrowUp,
   MdOutlineDashboard,
 } from "react-icons/md";
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import classes from "./SideMenuData.module.css";
 
