@@ -357,13 +357,13 @@ function App() {
     (myClick
       ? currentPage * recordsPerPage - (filteredData.length % recordsPerPage)
       : currentPage * recordsPerPage +
-        recordsPerPage -
-        (filteredData.length % recordsPerPage)) > filteredData.length
+      recordsPerPage -
+      (filteredData.length % recordsPerPage)) > filteredData.length
   )
     toRecords = filteredData.length;
   else toRecords = currentPage * recordsPerPage;
   if (toRecords === 0) fromRecords = 0;
-  if(currentPage === nPages) toRecords = filteredData.length;
+  if (currentPage === nPages) toRecords = filteredData.length;
 
   const filterButtonClickHandler = (e) => {
     document.getElementById(e.target.id).classList.add("selected");
@@ -415,6 +415,18 @@ function App() {
     setFilteredData(TRIP_DATA);
   };
 
+  const inputFromDateBlurHandler = (e) => {
+    e.target.type = "text";
+    if (startDateRef.current.value)
+      startDateRef.current.value = formatToMMDDYYYYfromYYYYMMDD(startDateRef.current.value);
+  }
+
+  const inputToDateBlurHandler = (e) => {
+    e.target.type = "text";
+    if (endDateRef.current.value)
+      endDateRef.current.value = formatToMMDDYYYYfromYYYYMMDD(startDateRef.current.value);
+  }
+
   return (
     <div className="trips-details" id="trip-table">
       <div className="title">corporate shuttle trips</div>
@@ -438,15 +450,15 @@ function App() {
                 placeholder="From Date"
                 type="text"
                 ref={startDateRef}
+                onBlur={inputFromDateBlurHandler}
                 onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
               />
               <input
                 placeholder="To Date"
                 type="text"
                 ref={endDateRef}
                 onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
+                onBlur={inputToDateBlurHandler}
               />
             </div>
             <CSVLink data={TRIP_DATA} className="export_csv">

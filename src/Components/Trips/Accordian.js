@@ -3,6 +3,12 @@ import { MdArrowRight } from "react-icons/md";
 import { MdArrowDropDown } from "react-icons/md";
 import photo from "../../Assets/admin.jpg";
 
+import studentDropImage from "../../Assets/student_dummy_photo.png";
+// import studentDummyImage from "../../Assets/student_dummy_photo.png";
+import studentDummyImage from "../../Assets/new_student_marker.png";
+import startPoint from "../../Assets/Pin_icon_green50.png";
+import endPoint from "../../Assets/Pin_icon50.png";
+
 import classes from "./Accordian.module.css";
 
 const RIDER_TITLE = [
@@ -100,54 +106,68 @@ const Accordian = (props) => {
     const image =
       "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
     const map = new window.google.maps.Map(document.getElementById("map"), {
-      zoom: 16,
-      center: { lat: 23.23393, lng: 72.67918 },
+      zoom: 15,
+      center: { lat: 23.03489120423814, lng: 72.56658725087891 },
       // mapTypeId: "terrain",
     });
 
     const flightPlanCoordinates = [
-      { lat: 23.23233, lng: 72.67878 },
-      { lat: 23.23533, lng: 72.67878 },
-      { lat: 23.23553, lng: 72.67918 },
-      { lat: 23.23293, lng: 72.67918 },
+      { lat: 23.037569650831212, lng: 72.55877665822754},
+      { lat: 23.03489120423814, lng: 72.56658725087891 },
+      { lat: 23.03248207530169, lng: 72.56562165563355 },
+      { lat: 23.032583894197987, lng: 72.56023406982422 },
     ];
+
     const flightPath = new window.google.maps.Polyline({
       path: flightPlanCoordinates,
       geodesic: true,
       strokeColor: "blue",
-      strokeOpacity: 1.0,
-      strokeWeight: 5,
+      strokeOpacity: 0.9,
+      strokeWeight: 6,
     });
 
     flightPath.setMap(map);
 
     const tourStops = [
-      [{ lat: 23.23233, lng: 72.67878 }],
-      [{ lat: 23.23533, lng: 72.67878 }],
-      [{ lat: 23.23553, lng: 72.67918 }],
-      [{ lat: 23.23293, lng: 72.67918 }]
+      [{ lat: 23.037569650831212, lng: 72.55877665822754 }],
+      [{ lat: 23.03489120423814, lng: 72.56658725087891 }],
+      [{ lat: 23.03248207530169, lng: 72.56562165563355 }],
+      [{ lat: 23.032583894197987, lng: 72.56023406982422 }],
+      [{ lat: 23.032583894197987, lng: 72.56023406982423 }]
     ];
+
     const infoWindow = new window.google.maps.InfoWindow();
     let icon;
-    let label;
+    let title;
+    // const myImage = {
+    //   url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+    //   // url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5t9xxQSxtcsppMb9apHlsWTIZO6KAGL-7OA&usqp=CAU",
+    //   size: new window.google.maps.Size(20, 32),
+    //   origin: new window.google.maps.Point(0, 0),
+    //   anchor: new window.google.maps.Point(0, 32),
+    // }
     tourStops.forEach(([position], i) => {
       if (i === 0) {
-        icon = image;
-        label = null;
+        icon = startPoint;
+        title = `<div><h3>S.S Divine School</h3></div>`;
       }
       else {
-        icon = null;
-        label = `${i}`;
+        icon = studentDummyImage;
+        title = `<div><div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i-1].rider_name}</h3></div><p><span>Drop Location: </span>${RIDER_DATA[i-1].drop_location}</p></div>`;
+      }
+      if(i === RIDER_DATA.length - 1) {
+        icon = endPoint;
       }
       const marker = new window.google.maps.Marker({
         position,
         map,
-        title: `${i}. ${RIDER_DATA[i].rider_name}`,
-        label,
+        title,
         icon,
         optimized: false,
       });
-      marker.addListener("click", () => {
+      
+      marker.addListener("mouseover", () => {
+        console.log(marker);
         infoWindow.close();
         infoWindow.setContent(marker.getTitle());
         infoWindow.open(marker.getMap(), marker);
