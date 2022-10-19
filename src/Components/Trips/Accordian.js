@@ -138,7 +138,7 @@ const Accordian = (props) => {
 
     const infoWindow = new window.google.maps.InfoWindow();
     let icon;
-    let title;
+    let myTitle;
     // const myImage = {
     //   url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
     //   // url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5t9xxQSxtcsppMb9apHlsWTIZO6KAGL-7OA&usqp=CAU",
@@ -149,19 +149,20 @@ const Accordian = (props) => {
     tourStops.forEach(([position], i) => {
       if (i === 0) {
         icon = startPoint;
-        title = `<div><h3>S.S Divine School</h3></div>`;
+        myTitle = `<div><h3>S.S Divine School</h3></div>`;
       }
       else {
         icon = studentDummyImage;
-        title = `<div><div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i-1].rider_name}</h3></div><p><span>Drop Location: </span>${RIDER_DATA[i-1].drop_location}</p></div>`;
+        myTitle = `<div id="infowindow"><div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i-1].rider_name}</h3></div><p><span>Drop Location: </span>${RIDER_DATA[i-1].drop_location}</p></div>`;
       }
       if(i === RIDER_DATA.length - 1) {
         icon = endPoint;
       }
+
       const marker = new window.google.maps.Marker({
         position,
         map,
-        title,
+        myTitle,
         icon,
         optimized: false,
       });
@@ -169,7 +170,7 @@ const Accordian = (props) => {
       marker.addListener("mouseover", () => {
         console.log(marker);
         infoWindow.close();
-        infoWindow.setContent(marker.getTitle());
+        infoWindow.setContent(marker.myTitle);
         infoWindow.open(marker.getMap(), marker);
       });
     });

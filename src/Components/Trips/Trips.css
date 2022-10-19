@@ -169,6 +169,10 @@ tr {
   font-weight: bold;
 }
 
+#infowindow {
+  width: 250px;
+}
+
 #dummy-student-image {
   width: 30px;
   height: 30px;
