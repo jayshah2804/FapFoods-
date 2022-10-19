@@ -55,10 +55,7 @@
     overflow-y: hidden;
   }
   .subMenu {
-    height: 25vh;
+    /* height: 25vh; */
     overflow-y: scroll;
-  }
-  .closeIcon {
-    margin-right: 50px;
   }
 }

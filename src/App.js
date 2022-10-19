@@ -13,7 +13,7 @@ function App() {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const history = useHistory();
 
-  if (isSideMenuOpen) {
+  if (isSideMenuOpen && window.screen.width >= 768) {
     if (document.getElementById("myContainer")) {
       document.getElementById("myContainer").style.overflowX = "scroll";
       document.getElementById("myContainer").style.width = "75%";
@@ -25,7 +25,7 @@ function App() {
     }
   }
 
-  if (!isSideMenuOpen) {
+  if (!isSideMenuOpen && window.screen.width >= 768) {
     if (document.getElementById("myContainer")) {
       if (flag)
         document.getElementById("myContainer").style.overflowX = "visible";

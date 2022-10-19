@@ -76,9 +76,17 @@ body {
 @media only screen and (max-width: 768px) {
   .myContainer {
     display: block;
-    /* position: fixed; */
+    /* overflow-x: hidden;
+    overflow-y: scroll; */
+    /* height: 100vh; */
+  }
+  #myContainer {
     overflow-x: hidden;
     overflow-y: scroll;
+  }
+  #mySidemenu {
+    position: absolute;
+    z-index: 999;
     height: 100vh;
   }
 }

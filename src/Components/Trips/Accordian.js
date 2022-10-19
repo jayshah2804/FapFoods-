@@ -153,7 +153,7 @@ const Accordian = (props) => {
       }
       else {
         icon = studentDummyImage;
-        myTitle = `<div id="infowindow"><div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i-1].rider_name}</h3></div><p><span>Drop Location: </span>${RIDER_DATA[i-1].drop_location}</p></div>`;
+        myTitle = `<div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i-1].rider_name}</h3></div>`;
       }
       if(i === RIDER_DATA.length - 1) {
         icon = endPoint;
