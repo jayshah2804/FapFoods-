@@ -6,6 +6,7 @@ import React, { useCallback, useState } from "react";
 import SideMenu from "./Components/Header/SideMenu";
 import { Redirect, Route, useHistory } from "react-router-dom";
 import Trips from "./Components/Trips/Trips";
+import Support from "./Components/Support/Support";
 
 let flag = false;
 function App() {
@@ -23,6 +24,9 @@ function App() {
       document.getElementById("trip-table").style.width = "78%";
       document.getElementById("my-table").style.width = "100%";
     }
+    if(document.getElementById("support")){
+      document.getElementById("support").style.width = "calc(100vw - 320px )";
+    }
   }
 
   if (!isSideMenuOpen && window.screen.width >= 768) {
@@ -34,6 +38,9 @@ function App() {
     if (document.getElementById("trip-table")) {
       document.getElementById("trip-table").style.width = "100%";
       document.getElementById("my-table").style.width = "100%";
+    }
+    if(document.getElementById("support")){
+      document.getElementById("support").style.width = "calc(100vw - 20px )";
     }
   }
 
@@ -68,6 +75,9 @@ function App() {
         </Route>
         <Route path="/dashboard">
           <Dashboard />
+        </Route>
+        <Route path="/support">
+          <Support />
         </Route>
       </div>
       {/* <Route path="/dashboard">

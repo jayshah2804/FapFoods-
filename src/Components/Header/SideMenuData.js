@@ -18,6 +18,10 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
       sideMenuClose(false);
       history.push("/" + e.target.innerText.toLowerCase());
     }
+    else if (e.target.innerText === "Query & Support") {
+      sideMenuClose(false);
+      history.push("/support");
+    }
   };
 
   const subMenuClickHandler = (e) => {

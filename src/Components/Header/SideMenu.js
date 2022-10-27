@@ -18,6 +18,9 @@ const DUMMY_MENU_DATA = [
   {
     main: "Departments",
   },
+  {
+    main: "Query & Support"
+  }
 ];
 
 let flag = false;
