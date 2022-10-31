@@ -1,0 +1,12 @@
+table .actions {
+    background-color: rgba(34, 137, 203, 255);
+    border: rgba(34, 137, 203, 255);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: white;
+}
+
+table .actions:hover {
+    background-color: rgb(97, 97, 235);
+}

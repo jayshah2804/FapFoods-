@@ -8,6 +8,13 @@
     margin-right: 30px;
 }
 
+.mainMenu:hover {
+    text-decoration: underline;
+    text-decoration-color: black;
+    text-underline-offset: 3px;
+    /* color: rgba(34, 137, 203, 255); */
+}
+
 .dropIcons {
     display: inline-block;
 }
@@ -16,4 +23,9 @@
     color: gray;
     padding-left: 40px;
     margin-top: 10px;
+}
+
+.subMenu:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }

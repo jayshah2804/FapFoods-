@@ -28,6 +28,11 @@ const DUMMY_DATA = [
     driverName: "Ketan Patel",
     carNumber: "GJ 01 AA 2343",
     status: "Inactive"
+  },
+  {
+    driverName: "Gautam Solanki",
+    carNumber: "GJ 01 AA 2343",
+    status: "Inactive"
   }
 ];
 
@@ -97,11 +102,14 @@ const Main = () => {
   function myInitMap() {
     var map = new window.google.maps.Map(document.getElementById("map-modal"), {
       center: { lat: 23.0225, lng: 72.5714 },
-      zoom: 13,
+      zoom: 11,
       mapTypeControl: false,
     });
 
     let myInt = setInterval(() => {
+      if(document.getElementsByClassName("gm-control-active")[0]){
+        document.getElementsByClassName("gm-control-active")[0].style.marginTop = "40px";
+      }
       if (document.getElementsByClassName("gm-svpc")[0]) {
         document.getElementsByClassName("gm-svpc")[0].style.display = "none";
         clearInterval(myInt);
@@ -116,12 +124,12 @@ const Main = () => {
       <p className={classes.adminText}>You can check all data of your Organization in Dashboard!</p>
       <div className={classes.cards}>
         <div className={classes.text} title="Click to see Monthly Trip details">
-          <p>Monthly Trips</p>
+          <p>Trips</p>
           <span>328</span>
         </div>
         <div className={classes.text} title="Click to see Monthly Usage details">
-          <p>Monthly Usage</p>
-          <span>821.23</span>
+          <p>Riders</p>
+          <span>82</span>
         </div>
         <div className={classes.text} title="Click to see Routes details">
           <p>Routes</p>
@@ -132,9 +140,9 @@ const Main = () => {
           <span>2</span>
         </div>
       </div>
-      <div className={classes.tripChart}>
+      {/* <div className={classes.tripChart}>
         <Chart options={options.options} series={options.series} type="line" height={270} className={classes.chart} />
-      </div>
+      </div> */}
       <div className={classes.footer}>
         <div className={classes.driverList}>
           <div className={classes.driverListHeader}>

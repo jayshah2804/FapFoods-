@@ -22,6 +22,10 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
       sideMenuClose(false);
       history.push("/support");
     }
+    else if(e.target.innerText === "Routes"){
+      sideMenuClose(false);
+      history.push("/routes");
+    }
   };
 
   const subMenuClickHandler = (e) => {

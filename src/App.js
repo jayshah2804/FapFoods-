@@ -7,6 +7,7 @@ import SideMenu from "./Components/Header/SideMenu";
 import { Redirect, Route, useHistory } from "react-router-dom";
 import Trips from "./Components/Trips/Trips";
 import Support from "./Components/Support/Support";
+import Routes from "./Components/Routes/Route";
 
 let flag = false;
 function App() {
@@ -27,6 +28,8 @@ function App() {
     if(document.getElementById("support")){
       document.getElementById("support").style.width = "calc(100vw - 320px )";
     }
+  } else if(isSideMenuOpen && window.screen.width < 768){
+    document.body.style.overflow = "hidden";
   }
 
   if (!isSideMenuOpen && window.screen.width >= 768) {
@@ -78,6 +81,9 @@ function App() {
         </Route>
         <Route path="/support">
           <Support />
+        </Route>
+        <Route path="/routes">
+          <Routes />
         </Route>
       </div>
       {/* <Route path="/dashboard">

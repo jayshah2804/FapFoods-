@@ -86,8 +86,8 @@ body {
   }
   #mySidemenu {
     position: absolute;
-    z-index: 999;
-    height: 100vh;
+    /* z-index: 999; */
+    /* height: calc(100vh-80px); */
   }
 }
 
@@ -125,4 +125,12 @@ body {
 #form {
   display: flex;
   flex-direction: column;
+}
+
+#true {
+  color: green;
+}
+
+#false {
+  color: red;
 }
