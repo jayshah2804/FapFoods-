@@ -93,45 +93,45 @@ const initial = {
   },
 };
 
-const RIDER_NAMES = [
+const RIDER_DATA = [
   {
-    name: "Jay Shah",
+    name: ["S.S. Divine School"],
+    location: { lat: 23.020922774165125, lng: 72.46970495605471 }
+  },
+  {
+    name: ["Jay Shah", "Darshan Patel"],
+    location: { lat: 23.015234991655756, lng: 72.51416525268557 },
     status: false
   },
   {
-    name: "Dev Shah",
+    name: ["Dev Shah", "Vijay Kansara"],
+    location: { lat: 22.993429603752258, lng: 72.5378545227051 },
     status: false
   },
   {
-    name: "Het Desai",
+    name: ["Het Desai"],
+    location: { lat: 23.034509283424683, lng: 72.55879721069338 },
     status: false
   },
   {
-    name: "Roshan Patel",
+    name: ["Roshan Patel"],
+    location: { lat: 23.03489120423814, lng: 72.56658725087891 },
     status: false
   },
   {
-    name: "Nihar Gupte",
+    name: ["Nihar Gupte"],
+    location: { lat: 23.04272371760406, lng: 72.53682455444338 },
     status: false
   },
   {
-    name: "Vinay Joshi",
+    name: ["Vinay Joshi"],
+    location: { lat: 23.006702868171974, lng: 72.53030142211917 },
     status: false
   },
-];
-
-const tourStops = [
-  { lat: 23.037569650831212, lng: 72.55877665822754 },
-  { lat: 23.036569650831218, lng: 72.55877665822800 },
-  { lat: 23.037569650831211, lng: 72.55877665822752 },
-  { lat: 23.035569650831218, lng: 72.56077665822800 },
-  { lat: 23.03489120423814, lng: 72.56658725087891 },
-  { lat: 23.03248207530169, lng: 72.56562165563355 },
-  { lat: 23.032583894197987, lng: 72.56023406982422 },
 ];
 
 const flightPlanCoordinates = [
-  { lat: tourStops[0].lat, lng: tourStops[0].lng },
+  { lat: RIDER_DATA[0].location.lat, lng: RIDER_DATA[0].location.lng },
 ];
 
 const Main = () => {
@@ -150,8 +150,8 @@ const Main = () => {
     //   mapTypeControl: false,
     // });
     const map = new window.google.maps.Map(document.getElementById("map-modal"), {
-      zoom: 15,
-      center: { lat: 23.03489120423814, lng: 72.56658725087891 },
+      zoom: 12,
+      center: { lat: RIDER_DATA[Math.round(RIDER_DATA.length/2)].location.lat, lng: RIDER_DATA[Math.round(RIDER_DATA.length/2)].location.lng },
       disableDefaultUI: true,
       fullscreenControl: true,
       zoomControl: true
@@ -181,31 +181,33 @@ const Main = () => {
     flightPath.setMap(map);
 
     const assignButtonClickHandler = (e) => {
-      console.log(e.target.parentElement.id);
-      RIDER_NAMES[e.target.parentElement.id - 1].status = true;
-      console.log(RIDER_NAMES);
-      let obj = {};
-      obj.lat = tourStops[e.target.parentElement.id].lat;
-      obj.lng = tourStops[e.target.parentElement.id].lng;
-      flightPlanCoordinates.push(obj);
+      RIDER_DATA[e.target.parentElement.id].status = true;
+      flightPlanCoordinates.push(
+        {
+          lat: RIDER_DATA[e.target.parentElement.id].location.lat, 
+          lng: RIDER_DATA[e.target.parentElement.id].location.lng
+        });
+        // if(+e.target.parentElement.id === (RIDER_DATA.length - 1)){
+        //   flightPlanCoordinates.push(RIDER_DATA[0].location);
+        // }
       setIsRender(prev => !prev);
     }
 
-    tourStops.forEach((position, i) => {
+    RIDER_DATA.forEach((position, i) => {
       if (i === 0) {
         icon = startPoint;
-        myTitle = `<div><h3>Vishala Circle</h3></div>`;
+        myTitle = `<div><h3>${position.name.toString()}</h3></div>`;
       }
       else {
         icon = studentDummyImage;
-        if (RIDER_NAMES[i - 1].status)
-          myTitle = `<div id="infowindow-container" ><h3>${RIDER_NAMES[i - 1].name}</h3><p>Assigned</div>`;
+        if (position.status)
+          myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><p>Assigned</div>`;
         else
-          myTitle = `<div id="infowindow-container" ><h3>${RIDER_NAMES[i - 1].name}</h3><div id=${i}><button id='myButton'>Assign rider</button></div></div>`;
+          myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><div id=${i}><button id='myButton'>Assign rider</button></div></div>`;
       }
 
       const marker = new window.google.maps.Marker({
-        position,
+        position: position.location,
         map,
         myTitle,
         icon,
@@ -295,7 +297,7 @@ const Main = () => {
   )
 }
 
-export default Main;
+export default React.memo(Main);
 
 // function distance(lat1,
     //   lat2, lon1, lon2) {
