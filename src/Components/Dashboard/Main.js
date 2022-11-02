@@ -135,7 +135,7 @@ const flightPlanCoordinates = [
 ];
 
 const Main = () => {
-  // const [options, setOptions] = useState(initial);
+  // const [options, setOptions] = useState(initial);  
   const [isRender, setIsRender] = useState();
 
   const script = document.createElement('script');

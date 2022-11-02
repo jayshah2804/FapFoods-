@@ -65,6 +65,7 @@ body {
 
 .input:focus {
   outline: none;
+  /* border-bottom: 2px solid rgba(34, 137, 203, 255); */
 }
 
 .loginButton {

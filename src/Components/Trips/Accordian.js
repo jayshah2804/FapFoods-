@@ -173,7 +173,12 @@ const Accordian = (props) => {
         infoWindow.setContent(marker.myTitle);
         infoWindow.open(marker.getMap(), marker);
       });
-    });
+      // document.getElementById("myHandler").addEventListener("click", () => {
+      //   infoWindow.setPosition([{ lat: 23.037569650831212, lng: 72.55877665822754 }]);
+      //   infoWindow.setContent("Jay Shah");
+      //   infoWindow.open(marker.getMap(), marker);
+      // })
+    }); 
   }
 
   window.myInitMap = myInitMap;
@@ -229,7 +234,7 @@ const Accordian = (props) => {
               <tbody>
                 {RIDER_DATA.map((data) => {
                   return (
-                    <tr>
+                    <tr id="myHandler">
                       <td className={classes.riderName} >
                         <img src={photo} alt="" />
                         <p>{data.rider_name}</p>
