@@ -1,31 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import TimingsInfo from './TimingsInfo';
+import "./RouteInfo.css";
 
+let prev = "";
+let current = "RouteInfo";
+let next = "";
 function RouteInfo(props) {
     const [isNextClicked, setIsNextClicked] = useState();
     const nextClickHandler = () => {
+        document.getElementById(current).classList.remove("in-progress");
+        document.getElementById(current).classList.add("complete");
+        if(current === "RouteInfo") {
+            prev = current;
+            next = "TimingInfo";
+            current = next;
+        }
+        document.getElementById(next).classList.add("in-progress");
         setIsNextClicked(true);
     }
     return (
         <div className="add-route-container">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px" }}>
+            <div className='header'>
                 <div>Shuttle Route Creation</div>
-                <div onClick={() => props.setIsAddRouteClicked(false)}>X</div>
+                <div className='closeIcon' onClick={() => props.setIsAddRouteClicked(false)}>X</div>
             </div>
             <hr />
             <br />
+            <div className="wizard-progress">
+                <div className="step in-progress" id="RouteInfo">
+                    Route Info
+                    <div className="node"></div>
+                </div>
+                <div className="step" id="TimingInfo">
+                    Timing Info
+                    <div className="node"></div>
+                </div>
+                <div className="step" id="Departments">
+                    Departments
+                    <div className="node"></div>
+                </div>
+                <div className="step" id="StopInfo">
+                    Stop Info
+                    <div className="node"></div>
+                </div>
+            </div>
             {!isNextClicked &&
-                <React.Fragment>
-                    <label htmlFor='route-name'>Route Name:</label>
-                    <input type="text" id="route-name" />
-                    <label htmlFor='route-type'>Route Type:</label>
+                <div className='routeInfo-container'>
+                    <div>
+                    <input type="text" id="route-name" placeholder='Route Name' />
                     <select>
-                        <option selected>--select--</option>
+                        <option disabled selected>Route Type</option>
                         <option>Pick Students</option>
                         <option>Drop Students</option>
                     </select>
-                    <button onClick={nextClickHandler}>Next</button>
-                </React.Fragment>
+                    </div>
+                    <button className='nextButton' onClick={nextClickHandler}>Next</button>
+                </div>
             }
             {isNextClicked && <TimingsInfo setIsNextClicked={setIsNextClicked} />}
         </div>

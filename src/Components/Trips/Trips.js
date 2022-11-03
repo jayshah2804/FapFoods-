@@ -366,6 +366,8 @@ function App() {
   if (currentPage === nPages) toRecords = filteredData.length;
 
   const filterButtonClickHandler = (e) => {
+    startDateRef.current.value = "";
+    endDateRef.current.value = "";
     document.getElementById(e.target.id).classList.add("selected");
     document.getElementById(prev_id).classList.remove("selected");
     prev_id = e.target.id;
@@ -424,7 +426,7 @@ function App() {
   const inputToDateBlurHandler = (e) => {
     e.target.type = "text";
     if (endDateRef.current.value)
-      endDateRef.current.value = formatToMMDDYYYYfromYYYYMMDD(startDateRef.current.value);
+      endDateRef.current.value = formatToMMDDYYYYfromYYYYMMDD(endDateRef.current.value);
   }
 
   return (

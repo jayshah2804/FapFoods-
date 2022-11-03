@@ -168,18 +168,6 @@
     text-transform: uppercase;
     font-weight: bold;
   }
-
-  .add-route-container {
-    position: absolute;
-    box-shadow: 0 0 20px rgba(33, 33, 33, .3);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    background-color: white;
-    border-radius: 10px;
-    width: 70%;
-    height: 50%;
-  }
   
   @media only screen and (max-width: 768px){
     .table-container-routes .header {

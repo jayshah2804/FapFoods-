@@ -19,6 +19,7 @@ function App() {
     if (document.getElementById("myContainer")) {
       document.getElementById("myContainer").style.overflowX = "scroll";
       document.getElementById("myContainer").style.width = "75%";
+      // document.getElementById("myContainer").style.width = "calc(100vw-420px)";
       flag = true;
     }
     if (document.getElementById("trip-table")) {
@@ -26,7 +27,8 @@ function App() {
       document.getElementById("my-table").style.width = "100%";
     }
     if(document.getElementById("support")){
-      document.getElementById("support").style.width = "calc(100vw - 320px )";
+      // document.getElementById("support").style.width = "calc(100vw - 320px )";
+      document.getElementById("support").style.width = "77%";
     }
   } else if(isSideMenuOpen && window.screen.width < 768){
     document.body.style.overflow = "hidden";
@@ -43,7 +45,8 @@ function App() {
       document.getElementById("my-table").style.width = "100%";
     }
     if(document.getElementById("support")){
-      document.getElementById("support").style.width = "calc(100vw - 20px )";
+      // document.getElementById("support").style.width = "calc(100vw - 20px )";
+      document.getElementById("support").style.width = "100%";
     }
   }
 

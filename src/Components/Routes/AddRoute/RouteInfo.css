@@ -1,0 +1,161 @@
+.add-route-container {
+  position: absolute;
+  box-shadow: 0 0 20px rgba(33, 33, 33, .3);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 10px;
+  width: fit-content;
+  height: max-content;
+}
+
+.add-route-container .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px;
+  background-color: rgba(34, 137, 203, 255);
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.add-route-container .closeIcon {
+  cursor: pointer;
+}
+
+.add-route-container .routeInfo-container {
+  margin-top: 50px;
+}
+
+.add-route-container input {
+  border: none;
+  border-bottom: 1px solid gray;
+  background: transparent;
+  margin-top: 30px;
+  width: 270px;
+  height: 15px;
+  font-size: 17px;
+  padding: 8px;
+  margin-left: 6%;
+  font-size: 15px;
+}
+
+.add-route-container input:focus {
+  outline: none;
+}
+
+.add-route-container select {
+  border: none;
+  border-bottom: 1px solid gray;
+  background: transparent;
+  margin-top: 30px;
+  width: 270px;
+  height: 22px;
+  font-size: 15px;
+  margin-left: 30px;
+  cursor: pointer;
+}
+
+.add-route-container select:focus {
+  outline: none;
+}
+
+select {
+  color: gray;
+}
+
+option:not(:first-of-type) {
+  color: black;
+}
+
+.add-route-container .nextButton {
+  color: rgba(42, 149, 69, 255);
+  background-color: white;
+  border: 1px solid rgba(42, 149, 69, 255);
+  padding: 4px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 30px 0px;
+  margin-left: 80%;
+}
+
+.add-route-container .nextButton:hover {
+  color: white;
+  background-color: rgba(42, 149, 69, 255);
+}
+
+.wizard-progress {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  position: relative;
+  /* padding-left: 5%; */
+}
+
+.wizard-progress .step {
+  display: table-cell;
+  /* text-align: center; */
+  vertical-align: top;
+  overflow: visible;
+  position: relative;
+  font-size: 14px;
+  color: black;
+  font-weight: bold;
+  padding-left: 6%;
+}
+
+.wizard-progress .step:not(:last-child):before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 42%;
+  top: 37px;
+  background-color: rgb(206, 204, 204);
+  height: 3px;
+  width: 100%;
+}
+
+.wizard-progress .step .node {
+  display: inline-block;
+  border: 10px solid rgb(206, 204, 204);
+  background-color: #fff;
+  border-radius: 18px;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 29px;
+  left: 42%;
+  margin-left: -18px;
+}
+
+.wizard-progress .step.complete:before {
+  background-color: #07c;
+}
+
+.wizard-progress .step.complete .node {
+  border-color: #07c;
+  background-color: #07c;
+  border: 1px solid #07c;
+}
+
+.wizard-progress .step.complete .node:before {
+  content: "\2713";
+  color: white;
+
+}
+
+.wizard-progress .step.in-progress:before {
+  /* background: #07c;
+  background: -moz-linear-gradient(left, #07c 0%, #fff 100%);
+  background: -webkit-linear-gradient(left, #07c 0%, rgb(126, 123, 123) 100%);
+  background: linear-gradient(to right, #07c 0%, #fff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#07c", endColorstr="#fff",GradientType=1); */
+}
+
+.wizard-progress .step.in-progress .node {
+  border-color: #07c;
+  background-color: white;
+  border: 6px solid #07c;
+}

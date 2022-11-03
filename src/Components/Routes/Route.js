@@ -210,16 +210,16 @@ function Routes() {
     }
 
     const routeSearchHandler = (e) => {
-        if (e.target.value)
-            setFilteredData(filteredData.filter(data => data.route.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()) ||
-                data.route_id.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()) ||
-                data.city.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()) ||
-                data.country.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()) ||
-                data.zone_price.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()) ||
-                data.route_type.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()) ||
-                data.department.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase())
+        // if (e.target.value)
+            setFilteredData(TRIP_DATA.filter(data => data.route.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                data.route_id.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                data.city.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                data.country.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                data.zone_price.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                data.route_type.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                data.department.toLowerCase().includes(e.target.value.toLowerCase())
             ));
-        else setFilteredData(TRIP_DATA);
+        // else setFilteredData(TRIP_DATA);
     };
 
     return (
