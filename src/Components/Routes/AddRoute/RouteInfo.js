@@ -11,20 +11,20 @@ function RouteInfo(props) {
     const nextWizard = (value) => {
         document.getElementById(current).classList.remove("in-progress");
         document.getElementById(current).classList.add("complete");
-        if (current === "RouteInfo") {
+        if (value === "TimingInfo") {
             prev = "RouteInfo";
-            next = "TimingInfo";
-            current = next;
+            current = value;
+            next = "Departments";
         }
         if (value === "Departments") {
             prev = "TimingInfo";
-            next = "Departments";
-            current = next;
+            current = value;
+            next = "StopInfo";
         }
         if (value === "StopInfo") {
             prev = "Departments";
-            next = "StopInfo";
-            current = next;
+            current = value;
+            next = "";
         }
         if (value !== "Submit")
             document.getElementById(current).classList.add("in-progress");
@@ -32,28 +32,31 @@ function RouteInfo(props) {
 
     const backWizard = (value) => {
         document.getElementById(current).classList.remove("in-progress");
-        document.getElementById(prev)?.classList.remove("complete");
-        document.getElementById(prev)?.classList.add("in-progress");
-        if (current === "TimingInfo") {
+        document.getElementById(prev).classList.remove("complete");
+        document.getElementById(prev).classList.add("in-progress");
+        if (value === "TimingInfo") {
             current = "RouteInfo";
             next = "TimingInfo";
         }
         if (value === "Departments") {
             current = "TimingInfo";
             next = "Departments";
+            prev = "RouteInfo";
         }
         if (value === "StopInfo") {
             current = "Departments";
             next = "StopInfo";
+            prev = "TimingInfo";
         }
     }
 
     const nextClickHandler = () => {
-        nextWizard();
+        current = "RouteInfo";
+        nextWizard("TimingInfo");
         setIsNextClicked(true);
     }
     const backClickHandler = () => {
-        backWizard();
+        backWizard("TimingInfo");
     }
     return (
         <div className="add-route-container">

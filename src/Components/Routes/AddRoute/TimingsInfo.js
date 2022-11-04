@@ -47,7 +47,7 @@ const TimingsInfo = (props) => {
         setIsNextClicked(true);
     }
     const backClickHandler = () => {
-        props.backClickHandler();
+        props.backClickHandler("TimingInfo");
         props.setIsNextClicked(false);
     }
     const pickupTimeChangeHandler = () => {

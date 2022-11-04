@@ -4,7 +4,8 @@ import "./StopInfo.css";
 import startPoint from "../../../Assets/Pin_icon_green50.png";
 import studentDummyImage from "../../../Assets/new_student_marker.png";
 
-
+let studentCount = 0;
+let shuttleSeatingCapacity = 4;
 let myRecord = "";
 let previewRouteFlag = false;
 const RIDER_DATA = [
@@ -116,17 +117,26 @@ const StopInfo = (props) => {
     flightPath.setMap(map);
 
     const assignButtonClickHandler = (e) => {
-      RIDER_DATA[e.target.parentElement.id].status = true;
-      myRecord = e.target.parentElement.id;
-      flightPlanCoordinates.push(
-        {
-          lat: RIDER_DATA[e.target.parentElement.id].location.lat,
-          lng: RIDER_DATA[e.target.parentElement.id].location.lng
-        });
-      // if(+e.target.parentElement.id === (RIDER_DATA.length - 1)){
-      //   flightPlanCoordinates.push(RIDER_DATA[0].location);
-      // }
-      setIsRender(prev => !prev);
+      studentCount += RIDER_DATA[e.target.parentElement.id].name.length;
+      if (studentCount > shuttleSeatingCapacity)
+        alert("Shuttle seating capacity exceeded");
+      else {
+        if (previewRouteFlag) {
+          flightPlanCoordinates.pop();
+          previewRouteFlag = false;
+        }
+        RIDER_DATA[e.target.parentElement.id].status = true;
+        myRecord = e.target.parentElement.id;
+        flightPlanCoordinates.push(
+          {
+            lat: RIDER_DATA[e.target.parentElement.id].location.lat,
+            lng: RIDER_DATA[e.target.parentElement.id].location.lng
+          });
+        // if(+e.target.parentElement.id === (RIDER_DATA.length - 1)){
+        //   flightPlanCoordinates.push(RIDER_DATA[0].location);
+        // }
+        setIsRender(prev => !prev);
+      }
     }
 
     RIDER_DATA.forEach((position, i) => {
@@ -177,7 +187,7 @@ const StopInfo = (props) => {
     <div className='stopInfo-container'>
       <div className='sub-header'>
         <p>Select stops for the route</p>
-        <span>Shuttle capacity: {25}</span>
+        <span>Shuttle capacity: {shuttleSeatingCapacity}</span>
       </div>
       <div className='route-operation'>
         <span onClick={undoRouteClickHandler}>Undo route operation</span>
