@@ -1,0 +1,109 @@
+.stopInfo-container {
+    margin: 50px 6%;
+    margin-bottom: 20px;
+    /* width: 70%; */
+    width: 1000px;
+}
+
+.stopInfo-container .sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: rgb(75, 73, 73);
+    width: 90%;
+}
+
+.stopInfo-container .route-operation {
+    font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: -10px;
+    gap: 15px;
+    color: rgb(226, 44, 29);
+    font-weight: bold;
+    cursor: pointer;
+    width: 90%;
+}
+
+.stopInfo-container .route-operation span {
+    text-decoration: underline;
+}
+
+.stopInfo-container .route-operation span:hover {
+    text-decoration: none;
+}
+
+#stops-map {
+    margin-top: 10px;
+    position: relative;
+    height: auto;
+    min-height: 350px;
+    width: 90%;
+    border-radius: 10px; 
+}
+
+.stopInfo-container .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    width: 90%;
+}
+
+.stopInfo-container .footer button {
+    border-radius: 5px;
+    padding: 5px 25px;
+    background-color: white;
+    /* margin-right: 15px; */
+    cursor: pointer;
+}
+
+.stopInfo-container .footer .preview {
+    color: rgba(34, 137, 203, 255);
+    border: 1px solid rgba(34, 137, 203, 255);
+}
+
+.stopInfo-container .footer .preview:hover {
+    color: white;
+    background-color: rgba(34, 137, 203, 255);
+}
+
+.stopInfo-container .footer .back {
+    color: gray;
+    border: 1px solid gray;
+}
+
+.stopInfo-container .footer .back:hover {
+    font-weight: bold;
+}
+
+.stopInfo-container .footer .next {
+    color: rgba(42, 149, 69, 255);
+    border: 1px solid rgba(42, 149, 69, 255);
+}
+
+.stopInfo-container .footer .next:hover {
+    color: white;
+    background-color: rgba(42, 149, 69, 255);
+}
+
+#infowindow-success {
+    color: green;
+    margin-left: 5px;
+}
+
+#infowindow-assign {
+    margin-left: 5px;
+    color: rgba(34, 137, 203, 255);
+    background-color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+#infowindow-assign:hover {
+    text-decoration: none;
+}
