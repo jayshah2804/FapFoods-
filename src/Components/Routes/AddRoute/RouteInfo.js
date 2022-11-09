@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import TimingsInfo from './TimingsInfo';
 import "./RouteInfo.css";
 
 let prev = "";
 let current = "RouteInfo";
 let next = "";
+let error = {
+    routeName: "",
+    routeType: ""
+}
 function RouteInfo(props) {
+    const routeNameInputRef = useRef();
+    const routeTypeSelectRef = useRef();
     const [isNextClicked, setIsNextClicked] = useState();
+    const [isError, setIsError] = useState(error);
+
+    const routeNameChangeHandler = () => {
+        if (routeNameInputRef.current.value) {
+            setIsError(prev => ({ ...prev, routeName: "" }));
+        }
+    }
+    const routeTypeChangeHandler = () => {
+        if (routeTypeSelectRef.current.value !== "Route Type")
+            setIsError(prev => ({ ...prev, routeType: "" }));
+    }
 
     const nextWizard = (value) => {
         document.getElementById(current).classList.remove("in-progress");
@@ -51,9 +68,16 @@ function RouteInfo(props) {
     }
 
     const nextClickHandler = () => {
-        current = "RouteInfo";
-        nextWizard("TimingInfo");
-        setIsNextClicked(true);
+        if (routeNameInputRef.current.value && routeTypeSelectRef.current.value) {
+            current = "RouteInfo";
+            nextWizard("TimingInfo");
+            setIsNextClicked(true);
+        } else {
+            if (!routeNameInputRef.current.value)
+                setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));
+            if (routeTypeSelectRef.current.value === "Route Type")
+                setIsError(prev => ({ ...prev, routeType: "Route type is invalid" }));
+        }
     }
     const backClickHandler = () => {
         backWizard("TimingInfo");
@@ -86,13 +110,15 @@ function RouteInfo(props) {
             </div>
             {!isNextClicked &&
                 <div className='routeInfo-container'>
-                    <div>
-                        <input type="text" id="route-name" placeholder='Route Name' />
-                        <select>
+                    <div className='routeInfo-subContainer'>
+                        <input type="text" id="route-name" ref={routeNameInputRef} placeholder='Route Name' onChange={routeNameChangeHandler} />
+                        {isError.routeName && <p className='error-roureName' >{isError.routeName}</p>}
+                        <select ref={routeTypeSelectRef} onChange={routeTypeChangeHandler} >
                             <option disabled selected>Route Type</option>
                             <option>Pick Students</option>
-                            <option>Drop Students</option>
+                            <option>Intra City</option>
                         </select>
+                        {/* {isError.routeType && <p className='error-routeType'>{isError.routeType}</p>} */}
                     </div>
                     <button className='nextButton' onClick={nextClickHandler}>Next</button>
                 </div>

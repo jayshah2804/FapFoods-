@@ -8,6 +8,7 @@ import { Redirect, Route, useHistory } from "react-router-dom";
 import Trips from "./Components/Trips/Trips";
 import Support from "./Components/Support/Support";
 import Routes from "./Components/Routes/Route";
+import Stops from "./Components/Routes/Stops";
 
 let flag = false;
 function App() {
@@ -26,6 +27,9 @@ function App() {
       document.getElementById("trip-table").style.width = "78%";
       document.getElementById("my-table").style.width = "100%";
     }
+    if(document.getElementById("stopsInfo-map")) {
+      document.getElementById("stopsInfo-map").style.width = "52%";
+    }
     if(document.getElementById("support")){
       // document.getElementById("support").style.width = "calc(100vw - 320px )";
       document.getElementById("support").style.width = "77%";
@@ -43,6 +47,9 @@ function App() {
     if (document.getElementById("trip-table")) {
       document.getElementById("trip-table").style.width = "100%";
       document.getElementById("my-table").style.width = "100%";
+    }
+    if(document.getElementById("stopsInfo-map")) {
+      document.getElementById("stopsInfo-map").style.width = "73%";
     }
     if(document.getElementById("support")){
       // document.getElementById("support").style.width = "calc(100vw - 20px )";
@@ -85,8 +92,11 @@ function App() {
         <Route path="/support">
           <Support />
         </Route>
-        <Route path="/routes">
+        <Route path="/routes" exact>
           <Routes />
+        </Route>
+        <Route path="/routes/stops">
+          <Stops />
         </Route>
       </div>
       {/* <Route path="/dashboard">

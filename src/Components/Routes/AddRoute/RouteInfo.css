@@ -49,6 +49,17 @@
   outline: none;
 }
 
+.routeInfo-container .error-roureName {
+  position: absolute;
+  color: red;
+  font-size: 13px;
+  margin-left: 7%;
+}
+
+.routeInfo-container .error-routeType {
+  position: relative;
+}
+
 .add-route-container select {
   border: none;
   border-bottom: 1px solid gray;
@@ -166,4 +177,30 @@ option:not(:first-of-type) {
   border-color: #07c;
   background-color: white;
   border: 6px solid #07c;
+}
+
+
+@media only screen and (max-width: 768px){
+  .add-route-container {
+    min-width: 330px;
+  }
+  .routeInfo-container {
+    /* min-width: 330px; */
+    display: flex;
+    flex-direction: column;
+  }
+  .routeInfo-subContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .routeInfo-container .nextButton {
+    align-self: center;
+    margin-left: 0;
+  }
+  .routeInfo-container select {
+    margin-left: 6%;
+  }
+  .wizard-progress .step {
+    font-size: 11px;
+  }
 }

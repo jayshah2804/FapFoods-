@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 import photo from '../../Assets/admin.jpg';
 import startPoint from "../../Assets/Pin_icon_green50.png";
 import studentDummyImage from "../../Assets/new_student_marker.png";
+import { useHistory } from 'react-router-dom';
 
 const DUMMY_DATA = [
   {
@@ -137,6 +138,7 @@ const flightPlanCoordinates = [
 const Main = () => {
   // const [options, setOptions] = useState(initial);  
   const [isRender, setIsRender] = useState();
+  const history = useHistory();
 
   const script = document.createElement('script');
   script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
@@ -144,86 +146,10 @@ const Main = () => {
   document.body.appendChild(script);
 
   function myInitMap() {
-    // var map = new window.google.maps.Map(document.getElementById("map-modal"), {
-    //   center: { lat: 23.0225, lng: 72.5714 },
-    //   zoom: 11,
-    //   mapTypeControl: false,
-    // });
-    const map = new window.google.maps.Map(document.getElementById("map-modal"), {
-      zoom: 12,
-      center: { lat: RIDER_DATA[Math.round(RIDER_DATA.length/2)].location.lat, lng: RIDER_DATA[Math.round(RIDER_DATA.length/2)].location.lng },
-      disableDefaultUI: true,
-      fullscreenControl: true,
-      zoomControl: true
-    });
-
-    const infoWindow = new window.google.maps.InfoWindow();
-    let icon;
-    let myTitle;
-
-    const flightPath1 = new window.google.maps.Polyline({
-      path: flightPlanCoordinates,
-      geodesic: true,
-      strokeColor: "black",
-      strokeOpacity: 1.0,
-      strokeWeight: 7,
-    });
-
-    const flightPath = new window.google.maps.Polyline({
-      path: flightPlanCoordinates,
-      geodesic: true,
-      strokeColor: "rgba(34, 137, 203, 255)",
-      strokeOpacity: 1.0,
-      strokeWeight: 5,
-    });
-
-    flightPath1.setMap(map);
-    flightPath.setMap(map);
-
-    const assignButtonClickHandler = (e) => {
-      RIDER_DATA[e.target.parentElement.id].status = true;
-      flightPlanCoordinates.push(
-        {
-          lat: RIDER_DATA[e.target.parentElement.id].location.lat, 
-          lng: RIDER_DATA[e.target.parentElement.id].location.lng
-        });
-        // if(+e.target.parentElement.id === (RIDER_DATA.length - 1)){
-        //   flightPlanCoordinates.push(RIDER_DATA[0].location);
-        // }
-      setIsRender(prev => !prev);
-    }
-
-    RIDER_DATA.forEach((position, i) => {
-      if (i === 0) {
-        icon = startPoint;
-        myTitle = `<div><h3>${position.name.toString()}</h3></div>`;
-      }
-      else {
-        icon = studentDummyImage;
-        if (position.status)
-          myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><p>Assigned</div>`;
-        else
-          myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><div id=${i}><button id='myButton'>Assign rider</button></div></div>`;
-      }
-
-      const marker = new window.google.maps.Marker({
-        position: position.location,
-        map,
-        myTitle,
-        icon,
-        optimized: false,
-      });
-
-      marker.addListener("mouseover", () => {
-        // infoWindow.close();
-        infoWindow.setContent(marker.myTitle);
-        infoWindow.open(marker.getMap(), marker);
-        infoWindow.open(
-          setTimeout(() => {
-            document.getElementById("myButton").addEventListener('click', assignButtonClickHandler)
-          })
-        );
-      });
+    var map = new window.google.maps.Map(document.getElementById("map-modal"), {
+      center: { lat: 23.0225, lng: 72.5714 },
+      zoom: 11,
+      mapTypeControl: false,
     });
 
     let myInt = setInterval(() => {
@@ -231,10 +157,10 @@ const Main = () => {
         document.getElementsByClassName("gm-control-active")[0].style.marginTop = "40px";
         clearInterval(myInt);
       }
-      // if (document.getElementsByClassName("gm-svpc")[0]) {
-      //   document.getElementsByClassName("gm-svpc")[0].style.display = "none";
-      //   clearInterval(myInt);
-      // }
+      if (document.getElementsByClassName("gm-svpc")[0]) {
+        document.getElementsByClassName("gm-svpc")[0].style.display = "none";
+        clearInterval(myInt);
+      }
     })
   }
 
@@ -245,7 +171,7 @@ const Main = () => {
       <p className={classes.adminName}>Welcome Jay Shah</p>
       <p className={classes.adminText}>You can check all data of your Organization in Dashboard!</p>
       <div className={classes.cards}>
-        <div className={classes.text} title="Click to see Monthly Trip details">
+        <div className={classes.text} title="Click to see Monthly Trip details" onClick={() => history.push("/trips")} >
           <p>Trips</p>
           <span>328</span>
         </div>
@@ -253,7 +179,7 @@ const Main = () => {
           <p>Riders</p>
           <span>82</span>
         </div>
-        <div className={classes.text} title="Click to see Routes details">
+        <div className={classes.text} title="Click to see Routes details" onClick={() => history.push("/routes")} >
           <p>Routes</p>
           <span>4</span>
         </div>

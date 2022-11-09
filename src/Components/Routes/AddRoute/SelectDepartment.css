@@ -46,3 +46,17 @@
     color: white;
     background-color: rgba(42, 149, 69, 255);
 }
+
+.department-container .department-error {
+    color: red;
+    font-size: 13px;
+    margin: 5px 20px;
+    /* margin-left: 5%; */
+}
+
+@media only screen and (max-width: 768px){
+    .department-container .department-subcontainer {
+        display: flex;
+        flex-direction: column;
+    }
+}

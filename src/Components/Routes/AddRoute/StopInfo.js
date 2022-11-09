@@ -8,6 +8,7 @@ let studentCount = 0;
 let shuttleSeatingCapacity = 4;
 let myRecord = "";
 let previewRouteFlag = false;
+let prev_id;
 const RIDER_DATA = [
   {
     name: ["S.S. Divine School"],
@@ -58,14 +59,18 @@ const StopInfo = (props) => {
   document.body.appendChild(script);
 
   const undoRouteClickHandler = () => {
-    flightPlanCoordinates.pop();
-    RIDER_DATA[myRecord].status = false;
-    setIsRender(prev => !prev);
+    if (flightPlanCoordinates.length > 1) {
+      studentCount -= RIDER_DATA[prev_id].name.length;
+      flightPlanCoordinates.pop();
+      RIDER_DATA[myRecord].status = false;
+      setIsRender(prev => !prev);
+    }
   }
 
   const resetRouteClickHandler = () => {
     let response = window.confirm("It will reset all the routes created. Want to reset?");
     if (response) {
+      studentCount = 0;
       flightPlanCoordinates = [flightPlanCoordinates[0]];
       RIDER_DATA.map(data => data.status = false);
       setIsRender(prev => !prev);
@@ -73,9 +78,10 @@ const StopInfo = (props) => {
   }
 
   const previewClickHandler = () => {
-    previewRouteFlag = true;
-    if (flightPlanCoordinates.length > 1)
+    if (flightPlanCoordinates.length > 1) {
+      previewRouteFlag = true;
       flightPlanCoordinates.push(flightPlanCoordinates[0]);
+    }
     setIsRender(prev => !prev);
   }
 
@@ -117,9 +123,12 @@ const StopInfo = (props) => {
     flightPath.setMap(map);
 
     const assignButtonClickHandler = (e) => {
+      prev_id = e.target.parentElement.id;
       studentCount += RIDER_DATA[e.target.parentElement.id].name.length;
-      if (studentCount > shuttleSeatingCapacity)
+      if (studentCount > shuttleSeatingCapacity) {
+        studentCount -= RIDER_DATA[e.target.parentElement.id].name.length;
         alert("Shuttle seating capacity exceeded");
+      }
       else {
         if (previewRouteFlag) {
           flightPlanCoordinates.pop();
