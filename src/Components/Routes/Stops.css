@@ -1,6 +1,8 @@
 .stop-container {
-    width: 25%;
-    background-color: whitesmoke;
+    margin-top: 55px;
+    margin-left: 2%;
+    width: 30%;
+    /* background-color: whitesmoke; */
     /* height: calc(100vh-100px); */
     /* overflow-y: scroll; */
     /* overflow-x: hidden; */
@@ -63,7 +65,8 @@
 .stop-subcontainer .cross {
     cursor: pointer;
     display: inline-block;
-    display: none;
+    /* display: none; */
+    visibility: hidden;
     align-self: center;
     border: 1px solid black;
     height: 20px;
@@ -74,7 +77,8 @@
 }
 
 .myClassName{
-    display: inline-block !important;
+    /* display: inline-block !important; */
+    visibility: visible !important;
 }
 
 .stop-container .threedots {
@@ -100,14 +104,28 @@
     width: auto;
     font-size: 13px;
     margin-left: 10px;
-    background-color: rgb(226, 221, 221);
+    cursor: pointer;
+    /* background-color: rgb(226, 221, 221); */
+}
+
+.myStudentClass {
+    /* display: inline-block !important; */
+    visibility: visible !important;
+    font-weight: bold !important;
+}
+
+.studenNames-contaner p:hover {
+    font-weight: bold;
 }
 
 .studenNames-contaner span {
-    margin-left: 10px;
+    /* margin-left: 10px; */
+    margin-left: 5px;
     font-size: 13px;
     cursor: pointer;
     padding-right: 5px;
+    /* display: none; */
+    visibility: hidden;
 }
 
 #stopsInfo-map {

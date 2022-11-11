@@ -17,10 +17,10 @@ const SelectDepartment = (props) => {
             setIsError("");
     }
     const nextClickHandler = () => {
-        if (selectedDepartment) {
+        // if (selectedDepartment) {
             setIsDepartmentChanged(prev => !prev);
             props.nextWizard("StopInfo");
-        } else setIsError("Department is invalid");
+        // } else setIsError("Department is invalid");
         // document.getElementsByClassName("add-route-container")[0].style.width = "max-content";
     }
     const backClickHandler = () => {

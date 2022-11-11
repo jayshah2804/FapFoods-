@@ -68,16 +68,16 @@ function RouteInfo(props) {
     }
 
     const nextClickHandler = () => {
-        if (routeNameInputRef.current.value && routeTypeSelectRef.current.value) {
+        // if (routeNameInputRef.current.value && routeTypeSelectRef.current.value) {
             current = "RouteInfo";
             nextWizard("TimingInfo");
             setIsNextClicked(true);
-        } else {
-            if (!routeNameInputRef.current.value)
-                setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));
-            if (routeTypeSelectRef.current.value === "Route Type")
-                setIsError(prev => ({ ...prev, routeType: "Route type is invalid" }));
-        }
+        // } else {
+        //     if (!routeNameInputRef.current.value)
+        //         setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));
+        //     if (routeTypeSelectRef.current.value === "Route Type")
+        //         setIsError(prev => ({ ...prev, routeType: "Route type is invalid" }));
+        // }
     }
     const backClickHandler = () => {
         backWizard("TimingInfo");

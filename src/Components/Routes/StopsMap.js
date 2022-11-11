@@ -3,7 +3,7 @@ import startPoint from "../../Assets/Pin_icon_green50.png";
 import studentDummyImage from "../../Assets/new_student_marker.png";
 
 let flightPlanCoordinates = [];
-const StopsMap = ({stopData}) => {
+const StopsMap = ({ stopData }) => {
     // alert("here");
     const script = document.createElement('script');
     script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";

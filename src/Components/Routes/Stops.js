@@ -11,7 +11,8 @@ let indexToBeShift;
 const STOPS = [
     {
         stopName: "S.S. Divine School",
-        location: { lat: 23.04272371760406, lng: 72.53682455444338 }
+        location: { lat: 23.04272371760406, lng: 72.53682455444338 },
+        status: false
     },
     {
         stopName: "Craft Silicon",
@@ -19,7 +20,8 @@ const STOPS = [
             lat: 23.020922774165125,
             lng: 72.46970495605471
         },
-        studnets: ["Jay Shah"]
+        studnets: ["Jay Shah"],
+        status: false
     },
     {
         stopName: "Craft Silicon",
@@ -27,7 +29,8 @@ const STOPS = [
             lat: 23.020922774165125,
             lng: 72.46970495605471
         },
-        studnets: ["Het Desai"]
+        studnets: ["Het Desai"],
+        status: false
     },
     {
         stopName: "JEEP Ahmedabad",
@@ -35,7 +38,8 @@ const STOPS = [
             lat: 23.015234991655756,
             lng: 72.51416525268557
         },
-        studnets: ["Dev Shah"]
+        studnets: ["Dev Shah"],
+        status: false
     },
     {
         stopName: "Divya Bhaskar Office",
@@ -43,7 +47,8 @@ const STOPS = [
             lat: 23.034509283424683,
             lng: 72.55879721069338
         },
-        studnets: ["Darshan Kansara"]
+        studnets: ["Darshan Kansara"],
+        status: false
     },
     {
         stopName: "L.D. College of Enginnering",
@@ -51,7 +56,8 @@ const STOPS = [
             lat: 22.993429603752258,
             lng: 72.5378545227051
         },
-        studnets: ["Nihar Gupte", "Roshan Patel", "fghg"]
+        studnets: ["Nihar Gupte", "Roshan Patel", "fghg"],
+        status: false
     },
 ]
 
@@ -177,6 +183,14 @@ const Stops = () => {
                 })
             }
         }
+        for (let i = 0; i < document.getElementsByClassName("tempMyStudents").length; i++) {
+                document.getElementsByClassName("tempMyStudents")[i].addEventListener("mouseover", () => {
+                    document.getElementsByClassName("studentCross")[i].classList.add("myStudentClass");
+                })
+                document.getElementsByClassName("tempMyStudents")[i].addEventListener("mouseleave", () => {
+                    document.getElementsByClassName("studentCross")[i].classList.remove("myStudentClass");
+                })
+        }
     })
 
     return (
@@ -209,9 +223,9 @@ const Stops = () => {
                                     }
                                     <div className='studenNames-contaner'>
                                         {data?.studnets?.map((name, index) =>
-                                            <div style={{ marginRight: "5px", borderRadius: "0px", marginTop: "5px", display: "inline-block", backgroundColor: "rgb(226, 221, 221)" }}>
+                                            <div className="tempMyStudents" style={{ marginRight: "5px", borderRadius: "0px", marginTop: "5px", display: "inline-block" }}>
                                                 <p>{name}</p>
-                                                <span onClick={subCrossClickHandler} >X</span>
+                                                <span className='studentCross' onClick={subCrossClickHandler} >X</span>
                                             </div>
                                         )}
                                     </div>
@@ -228,3 +242,6 @@ const Stops = () => {
 }
 
 export default Stops
+
+
+// backgroundColor: "rgb(226, 221, 221)"

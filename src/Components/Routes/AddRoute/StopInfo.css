@@ -24,7 +24,7 @@
     color: rgb(226, 44, 29);
     font-weight: bold;
     cursor: pointer;
-    width: 90%;
+    width: 100%;
 }
 
 .stopInfo-container .route-operation span {
@@ -40,7 +40,7 @@
     position: relative;
     height: auto;
     min-height: 350px;
-    width: 90%;
+    width: 100%;
     border-radius: 10px; 
 }
 
@@ -49,7 +49,7 @@
     justify-content: space-between;
     align-items: center;
     margin: 20px 0;
-    width: 90%;
+    width: 100%;
 }
 
 .stopInfo-container .footer button {
