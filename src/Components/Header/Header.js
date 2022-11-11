@@ -121,8 +121,8 @@ const Nav = (props) => {
               <hr style={{ color: "gray" }} />
               <p className={classes.logout}
                 onClick={() => {
-                  window.location.reload();
                   history.push("/login");
+                  window.location.reload();
                 }}
               >
                 Logout

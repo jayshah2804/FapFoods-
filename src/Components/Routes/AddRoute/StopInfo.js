@@ -23,7 +23,13 @@ const RIDER_DATA = [
   },
   {
     stop: "Divya Bhaskar Office",
-    name: ["Jay Shah", "Darshan Patel"],
+    name: ["Jay Shah"],
+    location: { lat: 23.015234991655756, lng: 72.51416525268557 },
+    status: false
+  },
+  {
+    stop: "Divya Bhaskar Office",
+    name: ["Darshan Patel"],
     location: { lat: 23.015234991655756, lng: 72.51416525268557 },
     status: false
   },
@@ -83,7 +89,7 @@ const StopInfo = (props) => {
       flightPlanCoordinates.pop();
       STOP_DETAILS.pop();
       // filteredData[myRecord].status = false;
-      filteredData[myRecord[myRecord.length-1]].status = false;
+      filteredData[myRecord[myRecord.length - 1]].status = false;
       myRecord.pop();
       setIsRender(prev => !prev);
     }
@@ -173,6 +179,10 @@ const StopInfo = (props) => {
           stopName: filteredData[e.target.parentElement.id].stop,
           riders: filteredData[e.target.parentElement.id].name
         })
+        // console.log(STOP_DETAILS);
+        setTimeout(() => {
+          document.getElementById("asdf").click();
+        })
         setIsRender(prev => !prev);
       }
     }
@@ -185,9 +195,11 @@ const StopInfo = (props) => {
       else {
         icon = studentDummyImage;
         if (position.status)
-          myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><p id="infowindow-success">Assigned</div>`;
+          // myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><p id="infowindow-success">Assigned</div>`;
+          myTitle = `<div id="infowindow-container" ><h3>${position.stop.toString()}</h3><p id="infowindow-success">Assigned</div>`;
         else
-          myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><div id=${i}><span id='infowindow-assign'>Assign rider</span></div></div>`;
+          // myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><div id=${i}><span id='infowindow-assign'>Assign rider</span></div></div>`;
+          myTitle = `<div><div id="infowindow-container" ><h3>${position.stop.toString()}</h3><div id=${i}><span id='infowindow-assign'>Assign riders</span></div></div><div>${position.name.toString()}</div></div>`;
       }
 
       const marker = new window.google.maps.Marker({
@@ -223,9 +235,15 @@ const StopInfo = (props) => {
   }
 
   if (myFlag) {
-    setTimeout(() => {
-      document.getElementById("asdf").click();
-    });
+    let arr = [];
+    for (let i = 0; i < filteredData.length; i++) {
+      if (arr.includes(filteredData[i].stop)) {
+        // alert("here");
+        filteredData[i - 1].name.push(filteredData[i].name.toString());
+        filteredData.splice(i, 1);
+      }
+      arr.push(filteredData[i].stop);
+    }
     myFlag = false;
   }
 
@@ -260,6 +278,8 @@ const StopInfo = (props) => {
   const subCrossClickHandler = (e) => {
     let targetIndex = 0;
     for (let i = 0; i < STOP_DETAILS.length; i++) {
+      // console.log(STOP_DETAILS[i].riders);
+      // console.log(e.target.parentNode.children[0].innerText);
       if (STOP_DETAILS[i].riders?.includes(e.target.parentNode.children[0].innerText)) {
         targetIndex = i;
       }
@@ -275,7 +295,13 @@ const StopInfo = (props) => {
       }
       STOP_DETAILS = structuredClone(STOP_DETAILS);
       STOP_DETAILS[targetIndex].riders.length = holdingIndex;
-      // console.log(filteredData);
+
+      for (let i = 0; i < filteredData.length; i++) {
+        if (filteredData[i].stop === e.target.parentNode.children[0].innerText)
+          filteredData[i].status = false;
+      }
+      // console.log(STOP_DETAILS);
+      // console.log(RIDER_DATA);
       setIsRender(prev => !prev);
     } else {
       crossClickHandler(null, targetIndex);
@@ -309,8 +335,8 @@ const StopInfo = (props) => {
             if (current == items[it]) { currentpos = it; }
             if (items[i] == items[it]) { droppedpos = it; }
           }
-
-          filteredData.map((data, index) => {
+          // console.log(current, items[i]);
+          STOP_DETAILS.map((data, index) => {
             if (data.stopName === document.getElementById(current.id).innerText)
               indexToBeMove = index;
             if (data.stopName === document.getElementById(items[i].id).innerText)
@@ -318,16 +344,22 @@ const StopInfo = (props) => {
           })
           if (currentpos < droppedpos) {
             // items[i].parentNode.insertBefore(current, items[i].nextSibling);
-            filteredData.splice(+indexToBeShift + 1, 0, filteredData[indexToBeMove]);
-            filteredData.splice(indexToBeMove, 1);
+            STOP_DETAILS.splice(+indexToBeShift + 1, 0, STOP_DETAILS[indexToBeMove]);
+            STOP_DETAILS.splice(indexToBeMove, 1);
+            flightPlanCoordinates.splice(indexToBeShift + 1, 0, flightPlanCoordinates[indexToBeMove]);
+            flightPlanCoordinates.splice(indexToBeMove, 1);
           } else {
             // items[i].parentNode.insertBefore(current, items[i]);
-            filteredData.splice(indexToBeShift, 0, filteredData[indexToBeMove]);
-            filteredData.splice(+indexToBeMove + 1, 1);
+            STOP_DETAILS.splice(indexToBeShift, 0, STOP_DETAILS[indexToBeMove]);
+            STOP_DETAILS.splice(+indexToBeMove + 1, 1);
+            flightPlanCoordinates.splice(indexToBeShift, 0, flightPlanCoordinates[indexToBeMove]);
+            flightPlanCoordinates.splice(indexToBeMove + 1, 1);
           }
         }
-        let newList = structuredClone(filteredData);
-        setFilteredData(newList);
+        setIsRender(prev => !prev);
+        // let newList = structuredClone(filteredData);
+        // console.log(new);
+        // setFilteredData(newList);
       };
     }
   }
@@ -368,7 +400,7 @@ const StopInfo = (props) => {
                     {index === STOP_DETAILS.length - 1 &&
                       <img src={endPoint} className="connectedPoint" style={{ width: "15px" }} />
                     }
-                    <li id={index} className="stopNames" draggable>
+                    <li id={index + 10} className="stopNames" draggable>
                       <p>{data.stopName}</p>
                     </li>
                   </div>

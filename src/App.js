@@ -27,14 +27,14 @@ function App() {
       document.getElementById("trip-table").style.width = "78%";
       document.getElementById("my-table").style.width = "100%";
     }
-    if(document.getElementById("stopsInfo-map")) {
+    if (document.getElementById("stopsInfo-map")) {
       document.getElementById("stopsInfo-map").style.width = "52%";
     }
-    if(document.getElementById("support")){
+    if (document.getElementById("support")) {
       // document.getElementById("support").style.width = "calc(100vw - 320px )";
       document.getElementById("support").style.width = "77%";
     }
-  } else if(isSideMenuOpen && window.screen.width < 768){
+  } else if (isSideMenuOpen && window.screen.width < 768) {
     document.body.style.overflow = "hidden";
   }
 
@@ -48,10 +48,10 @@ function App() {
       document.getElementById("trip-table").style.width = "100%";
       document.getElementById("my-table").style.width = "100%";
     }
-    if(document.getElementById("stopsInfo-map")) {
+    if (document.getElementById("stopsInfo-map")) {
       document.getElementById("stopsInfo-map").style.width = "73%";
     }
-    if(document.getElementById("support")){
+    if (document.getElementById("support")) {
       // document.getElementById("support").style.width = "calc(100vw - 20px )";
       document.getElementById("support").style.width = "100%";
     }
@@ -77,28 +77,32 @@ function App() {
       <Route path="/login">
         <Login login={loginHandler} />
       </Route>
-      <Header sideMenuOpen={sideMenuHoverHandler} />
-      <div className="myContainer">
-        <SideMenu
-          sideMenuClose={sideMenuLeaveHandler}
-          property={isSideMenuOpen}
-        />
-        <Route path="/trips">
-          <Trips />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
-        <Route path="/support">
-          <Support />
-        </Route>
-        <Route path="/routes" exact>
-          <Routes />
-        </Route>
-        <Route path="/routes/stops">
-          <Stops />
-        </Route>
-      </div>
+      {isLoggedIn &&
+        <React.Fragment>
+          <Header sideMenuOpen={sideMenuHoverHandler} />
+          <div className="myContainer">
+            <SideMenu
+              sideMenuClose={sideMenuLeaveHandler}
+              property={isSideMenuOpen}
+            />
+            <Route path="/trips">
+              <Trips />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard />
+            </Route>
+            <Route path="/support">
+              <Support />
+            </Route>
+            <Route path="/routes" exact>
+              <Routes />
+            </Route>
+            <Route path="/routes/stops">
+              <Stops />
+            </Route>
+          </div>
+        </React.Fragment>
+      }
       {/* <Route path="/dashboard">
         {isLoggedIn ? (
           <React.Fragment>
