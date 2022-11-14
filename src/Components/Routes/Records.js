@@ -1,26 +1,27 @@
 import React, { useState } from "react";
-import Accordian from "./Accordian";
+import { useHistory } from "react-router-dom";
+// import Accordian from "./_Accordian";
 import "./Records.css";
 
 const Records = ({ data, headers }) => {
-    const func = (val) => {
-        if (val) {
-            document.getElementById(val).click();
-        }
-    }
+    const history = useHistory();
+    // const func = (val) => {
+    //     if (val) {
+    //         document.getElementById(val).click();
+    //     }
+    // }
     return (
         <React.Fragment>
             <table className="table" id="my-table">
                 <thead>
                     <tr>
                         {headers.map((data) => (
-                            // <th scope="col">{data}</th>
                             <th>{data}</th>
                         ))}
-                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
+                <tbody  onClick={() => history.push("/routes/stops")}>
                     {data.map(myData => <tr>
                         <td>{myData.route_id}</td>
                         <td>{myData.route}</td>
@@ -29,7 +30,7 @@ const Records = ({ data, headers }) => {
                         <td>{myData.zone_price}</td>
                         <td>{myData.route_type}</td>
                         <td width="20%" >{myData.department}</td>
-                        <td><Accordian myId={myData.id} forMyRender={func} /></td>
+                        {/* <td><Accordian myId={myData.id} forMyRender={func} /></td> */}
                     </tr>)}
                 </tbody>
             </table>

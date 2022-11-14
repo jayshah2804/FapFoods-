@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState } from 'react';
 import "./Stops.css";
 import StopsMap from './StopsMap';
@@ -8,6 +8,43 @@ import endPoint from "../../Assets/place_outline.png";
 
 let indexToBeMove;
 let indexToBeShift;
+const TIMINGS_DATA = [
+    {
+        day: "Monday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+    {
+        day: "Tuesday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+    {
+        day: "Wednesday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+    {
+        day: "Thursday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+    {
+        day: "Friday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+    {
+        day: "Saturday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+    {
+        day: "Sunday",
+        pickup: "11:00",
+        drop: "18:00"
+    },
+]
 const STOPS = [
     {
         stopName: "S.S. Divine School",
@@ -56,13 +93,14 @@ const STOPS = [
             lat: 22.993429603752258,
             lng: 72.5378545227051
         },
-        studnets: ["Nihar Gupte", "Roshan Patel", "fghg"],
+        studnets: ["Nihar Gupte", "Roshan Patel"],
         status: false
     },
 ]
 
 let myList;
 let myFLag = true;
+let a = "18:00";
 const Stops = () => {
     const [stopList, setStopList] = useState(STOPS);
 
@@ -184,60 +222,89 @@ const Stops = () => {
             }
         }
         for (let i = 0; i < document.getElementsByClassName("tempMyStudents").length; i++) {
-                document.getElementsByClassName("tempMyStudents")[i].addEventListener("mouseover", () => {
-                    document.getElementsByClassName("studentCross")[i].classList.add("myStudentClass");
-                })
-                document.getElementsByClassName("tempMyStudents")[i].addEventListener("mouseleave", () => {
-                    document.getElementsByClassName("studentCross")[i].classList.remove("myStudentClass");
-                })
+            document.getElementsByClassName("tempMyStudents")[i].addEventListener("mouseover", () => {
+                document.getElementsByClassName("studentCross")[i].classList.add("myStudentClass");
+            })
+            document.getElementsByClassName("tempMyStudents")[i].addEventListener("mouseleave", () => {
+                document.getElementsByClassName("studentCross")[i].classList.remove("myStudentClass");
+            })
         }
     })
-
+    const pickupTimeChangeHandler = (e) => {
+        TIMINGS_DATA[e.target.parentElement.id-15].pickup = e.target.value;
+    }
+    const dropTimeChangeHandler = (e) => {
+        TIMINGS_DATA[e.target.parentElement.id-15].drop = e.target.value;
+    }
     return (
-        <React.Fragment>
-            <div className='stop-container'>
-                <ul id='sortlist' className='stop-subcontainer'>
-                    {stopList.map((data, index) => {
-                        return (
-                            <div style={{ display: "flex", flexDirection: "column" }}>
-                                <div className='stopNames-container'>
-                                    <div style={{ display: "flex", gap: "10px" }}>
-                                        {index !== stopList.length - 1 &&
-                                            <img src={connectionPoint} className="connectedPoint" />
-                                        }
-                                        {index === stopList.length - 1 &&
-                                            <img src={endPoint} className="connectedPoint" style={{ width: "15px" }} />
-                                        }
-                                        <li id={index} className="stopNames" draggable>
-                                            <p>{data.stopName}</p>
-                                        </li>
-                                    </div>
-                                    <p className='cross' onClick={crossClickHandler} >X</p>
-                                </div>
-                                <div className='student-info'>
-                                    {index !== stopList.length - 1 &&
-                                        <img src={threedots} className="threedots" />
-                                    }
-                                    {index === stopList.length - 1 &&
-                                        <img src="" className='threedots' style={{ visibility: "hidden" }} />
-                                    }
-                                    <div className='studenNames-contaner'>
-                                        {data?.studnets?.map((name, index) =>
-                                            <div className="tempMyStudents" style={{ marginRight: "5px", borderRadius: "0px", marginTop: "5px", display: "inline-block" }}>
-                                                <p>{name}</p>
-                                                <span className='studentCross' onClick={subCrossClickHandler} >X</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </ul>
-                <button id="asdf" style={{ visibility: "hidden" }} onClick={() => slist(document.getElementById("sortlist"))}>click</button>
+        <div id="main-stop" style={{ display: "flex", flexDirection: "column", marginLeft: "15px", width: "100%" }}>
+            <h3 style={{ color: "gray", marginTop: "5px" }}>Timings</h3>
+            <div className='timing-details' style={{ display: "flex", justifyContent: "space-between" }} >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    <br />
+                    <span style={{ marginTop: "5px" }}>Pickup : </span>
+                    <span>Drop : </span>
+                </div>
+                {TIMINGS_DATA.map((data,index) => {
+                    return (
+                        <div id={index+15} style={{ display: "flex", flexDirection: "column" }}>
+                            <span>{data.day}</span>
+                            <input type="text" defaultValue={data.pickup} onChange={pickupTimeChangeHandler} onFocus={(e) => e.target.type = "time"} onBlur={(e) => e.target.type = "text"} />
+                            <input type="text" defaultValue={data.drop} onChange={dropTimeChangeHandler} onFocus={(e) => e.target.type = "time"} onBlur={(e) => e.target.type = "text"} />
+                        </div>
+                    )
+                })}
+                <button className='save' style={{ width: "100px" }} >Save Changes</button>
             </div>
-            <StopsMap stopData={stopList} />
-        </React.Fragment>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "0px" }} >
+                <div className='main-stop-container'>
+                    <div style={{ width: "100%" }}>
+                        <h3 style={{ color: "grey", marginBottom: "15px", marginLeft: "-8%" }}>Stops</h3>
+                        <ul id='sortlist' className='main-stop-subcontainer'>
+                            {stopList.map((data, index) => {
+                                return (
+                                    <div style={{ display: "flex", flexDirection: "column" }}>
+                                        <div className='stopNames-container'>
+                                            <div style={{ display: "flex", gap: "10px" }}>
+                                                {index !== stopList.length - 1 &&
+                                                    <img src={connectionPoint} className="connectedPoint" />
+                                                }
+                                                {index === stopList.length - 1 &&
+                                                    <img src={endPoint} className="connectedPoint" style={{ width: "15px" }} />
+                                                }
+                                                <li id={index} className="stopNames" draggable>
+                                                    <p>{data.stopName}</p>
+                                                </li>
+                                            </div>
+                                            <p className='cross' onClick={crossClickHandler} >X</p>
+                                        </div>
+                                        <div className='student-info'>
+                                            {index !== stopList.length - 1 &&
+                                                <img src={threedots} className="threedots" />
+                                            }
+                                            {index === stopList.length - 1 &&
+                                                <img src="" className='threedots' style={{ visibility: "hidden" }} />
+                                            }
+                                            <div className='studenNames-contaner'>
+                                                {data?.studnets?.map((name, index) =>
+                                                    <div className="tempMyStudents" style={{ marginRight: "5px", borderRadius: "0px", marginTop: "5px", display: "inline-block", width: "200px" }}>
+                                                        <em>{name}</em>
+                                                        <span className='studentCross' onClick={subCrossClickHandler} >X</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </ul>
+                        <button id="asdf" style={{ visibility: "hidden" }} onClick={() => slist(document.getElementById("sortlist"))}>click</button>
+                    </div>
+                    {/* </div> */}
+                </div>
+                <StopsMap stopData={stopList} />
+            </div>
+        </div>
     )
 }
 

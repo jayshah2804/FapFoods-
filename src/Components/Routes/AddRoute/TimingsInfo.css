@@ -66,12 +66,12 @@
     width: 100%;
 }
 
-input[type="time"] {
+.timingsInfo-container input[type="time"] {
     background: #fff;
     min-width: 150px;
 }
 
-input[type="time"]::before {
+.timingsInfo-container input[type="time"]::before {
     content: 'Time';
     color: #8a8787;
     position: absolute;
@@ -88,7 +88,7 @@ input[type="time"]::before {
     content: "Drop Time";
 }
 
-input[type="time"]:focus:before {
+.timingsInfo-container input[type="time"]:focus:before {
     width: 0;
     content: '';
 }

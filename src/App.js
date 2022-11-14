@@ -4,7 +4,7 @@ import Dashboard from "./Components/Dashboard/Main";
 import Login from "./Components/Home/Login";
 import React, { useCallback, useState } from "react";
 import SideMenu from "./Components/Header/SideMenu";
-import { Redirect, Route, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Trips from "./Components/Trips/Trips";
 import Support from "./Components/Support/Support";
 import Routes from "./Components/Routes/Route";
@@ -12,7 +12,7 @@ import Stops from "./Components/Routes/Stops";
 
 let flag = false;
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const history = useHistory();
 
@@ -29,6 +29,9 @@ function App() {
     }
     if (document.getElementById("stopsInfo-map")) {
       document.getElementById("stopsInfo-map").style.width = "52%";
+    }
+    if (document.getElementById("main-stop")) {
+      document.getElementById("main-stop").style.width = "75%";
     }
     if (document.getElementById("support")) {
       // document.getElementById("support").style.width = "calc(100vw - 320px )";
@@ -51,6 +54,9 @@ function App() {
     if (document.getElementById("stopsInfo-map")) {
       document.getElementById("stopsInfo-map").style.width = "73%";
     }
+    if (document.getElementById("main-stop")) {
+      document.getElementById("main-stop").style.width = "100%";
+    }
     if (document.getElementById("support")) {
       // document.getElementById("support").style.width = "calc(100vw - 20px )";
       document.getElementById("support").style.width = "100%";
@@ -71,13 +77,16 @@ function App() {
   };
   return (
     <div>
-      <Route path="/" exact>
-        <Redirect to="/login" />
-      </Route>
-      <Route path="/login">
-        <Login login={loginHandler} />
-      </Route>
-      {isLoggedIn &&
+      <Switch>
+        <Route path="/" exact>
+          <Redirect to="/login" />
+        </Route>
+        <Route path="/login">
+          <Login login={loginHandler} />
+        </Route>
+        <Route path="/">{!isLoggedIn && <Login login={loginHandler} />}</Route>
+      </Switch>
+      {isLoggedIn && (
         <React.Fragment>
           <Header sideMenuOpen={sideMenuHoverHandler} />
           <div className="myContainer">
@@ -102,7 +111,7 @@ function App() {
             </Route>
           </div>
         </React.Fragment>
-      }
+      )}
       {/* <Route path="/dashboard">
         {isLoggedIn ? (
           <React.Fragment>

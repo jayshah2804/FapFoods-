@@ -18,7 +18,7 @@ const StopsMap = ({ stopData }) => {
     // console.log(stopData);
 
     function myInitMap() {
-        const map = new window.google.maps.Map(document.getElementById("stopsInfo-map"), {
+        const map = new window.google.maps.Map(document.getElementById("main-stopsInfo-map"), {
             zoom: 12,
             center: { lat: stopData[Math.round(stopData.length / 2)].location.lat, lng: stopData[Math.round(stopData.length / 2)].location.lng },
             disableDefaultUI: true,
@@ -111,7 +111,7 @@ const StopsMap = ({ stopData }) => {
     window.myInitMap = myInitMap;
 
     return (
-        <div id='stopsInfo-map'></div>
+        <div id='main-stopsInfo-map'></div>
     )
 }
 

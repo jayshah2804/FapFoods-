@@ -1,7 +1,12 @@
-.stop-container {
-    margin-top: 55px;
+.main-stop-container {
+    margin-top: 35px;
     margin-left: 2%;
-    width: 30%;
+    width: 22%;
+    display: flex;
+    flex-direction: column;
+    /* gap: 10%; */
+    /* margin-right: 5%; */
+    /* gap: 100px; */
     /* height: 400px; */
     /* background-color: whitesmoke; */
     /* height: calc(100vh-100px); */
@@ -9,10 +14,42 @@
     /* overflow-x: hidden; */
 }
 
-.stop-subcontainer {
-    margin-top: 30px;
-    margin-left: 50px;
-    width: 100%;
+.timing-details input {
+    background-color: transparent;
+    border: none;
+    width: 60px;
+    padding-left: 2px;
+    margin-left: 7px;
+    margin-top: 5px;
+}
+
+.timing-details input:focus {
+    outline: none;
+    border-bottom: 1px solid gray;
+    width: 100px;
+}
+
+.main-stop-container .timing-details span {
+    font-size: 15px;
+}
+
+.main-stop-container .timing-details {
+    color: gray;
+}
+
+.main-stop-container .timing-details .drop {
+    border-left: 1px solid grey;
+    padding-left: 5px;
+}
+
+.main-stop-container .timing-details label {
+    color: black;
+}
+
+.main-stop-subcontainer {
+    /* margin-top: 30px; */
+    /* margin-left: 50px; */
+    width: 50%;
     text-overflow: clip;
     /* overflow-y: auto; */
     /* height: 500px;
@@ -20,7 +57,7 @@
     overflow-x: hidden; */
 }
 
-.stop-container li {
+.main-stop-container li {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: clip;
@@ -28,17 +65,33 @@
     align-self: flex-end;
 }
 
-.stop-container li p {
+.main-stop-container li p {
     font-size: 15px;
 }
 
-.stop-container .stopNames-container {
+.main-stop-container .stopNames-container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
 
-.stopNames-container .connectedPoint {
+.timing-details .save {
+    border: 1px solid rgba(42, 149, 69, 255);
+    background-color: rgba(42, 149, 69, 255);
+    border-radius: 5px;
+    color: white;
+    padding: 7px 21px;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-top: 10px;
+    margin-right: 2%;
+}
+
+.timing-details .save:hover {
+    background-color: green;
+}
+
+.main-stop-container .stopNames-container .connectedPoint {
     display: inline-block;
     height: 30px;
     width: 13px;
@@ -46,7 +99,7 @@
     margin-left: -15px;
 }
 
-.stop-subcontainer .stopNames {
+.main-stop-subcontainer .stopNames {
     border: 1px solid grey;
     border-radius: 5px;
     padding: 5px 10px;
@@ -58,7 +111,7 @@
     margin-bottom: 0;
 }
 
-.stop-subcontainer .stopNames:hover {
+.main-stop-subcontainer .stopNames:hover {
     border: 1px solid black;
 }
 
@@ -67,7 +120,7 @@
     border: 2px solid blue !important;
 }
 
-.stop-subcontainer .cross {
+.main-stop-subcontainer .cross {
     cursor: pointer;
     display: inline-block;
     /* display: none; */
@@ -78,52 +131,49 @@
     width: 20px;
     border-radius: 50%;
     margin-top: 8px;
-    padding-left: 4px ;
+    padding-left: 4px;
+    padding-right: 10px;
 }
 
-.myClassName{
-    /* display: inline-block !important; */
+.myClassName {
     visibility: visible !important;
 }
 
-.stop-container .threedots {
+.main-stop-container .threedots {
     display: inline-block;
     width: 30px;
     height: 30px;
     align-self: center;
 }
 
-.stop-container .student-info {
+.main-stop-container .student-info {
     display: flex;
     margin-left: -23px;
     gap: 5px;
 }
 
-.studenNames-contaner {
+.main-stop-container .studenNames-contaner {
     /* background-color: gray; */
     width: 200px;
 }
 
-.studenNames-contaner p {
-    display: inline-block;
+.main-stop-container .studenNames-contaner em {
     width: auto;
     font-size: 13px;
     margin-left: 10px;
     cursor: pointer;
-    /* background-color: rgb(226, 221, 221); */
 }
 
 .myStudentClass {
-    /* display: inline-block !important; */
     visibility: visible !important;
     font-weight: bold !important;
 }
 
-.studenNames-contaner p:hover {
+.main-stop-container .studenNames-contaner em:hover {
     font-weight: bold;
 }
 
-.studenNames-contaner span {
+.main-stop-container .studenNames-contaner span {
     /* margin-left: 10px; */
     margin-left: 5px;
     font-size: 13px;
@@ -133,11 +183,11 @@
     visibility: hidden;
 }
 
-#stopsInfo-map {
-    margin-top: 10px;
+#main-stopsInfo-map {
+    margin-top: 20px;
     position: relative;
     height: auto;
     min-height: 350px;
-    width: 73%;
+    width: 78%;
     border-radius: 10px;
 }

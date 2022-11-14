@@ -71,13 +71,19 @@
   font-size: 18px;
 }
 
+.cards div {
+  transition: transform 0.5s;
+}
+
 .cards div:nth-child(1) {
   background-color: rgba(34, 137, 203, 255);
+  /* transition: transform 1s; */
 }
 
 .cards div:hover {
   cursor: pointer;
   box-shadow: 0 0 20px rgba(33, 33, 33, 0.4);
+  transform: scale(1.05);
 }
 
 .cards div:nth-child(2) {

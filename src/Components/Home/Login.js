@@ -61,7 +61,7 @@ const Login = ({ login }) => {
         passwordError: "Password must be of 8 characters",
       }));
     if (emailInputRef.current.value && passwordInputRef.current.value) {
-      // fromIsValid && login(true);
+      // fromIsValid && setIsCall(true);
       fromIsValid && login(true);
     }
   };
