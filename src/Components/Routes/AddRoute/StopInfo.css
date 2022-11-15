@@ -1,3 +1,25 @@
+.stop-subcontainer::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  /* Track */
+  .stop-subcontainer::-webkit-scrollbar-track {
+    /* background: #f1f1f1;  */
+    /* border-radius: 30px; */
+  }
+  
+  /* Handle */
+  .stop-subcontainer::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 20px;
+  }
+  
+  /* Handle on hover */
+  .stop-subcontainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
 .stopInfo-container {
     margin: 50px 6%;
     margin-bottom: 20px;
@@ -124,6 +146,10 @@
     margin-left: 50px;
     width: 100%;
     text-overflow: clip;
+    height: 400px;
+    /* max-height: 400px; */
+    overflow-y: auto;
+    /* overflow-x: visible; */
     /* overflow-y: auto; */
     /* height: 500px;
     overflow-y: auto;
@@ -135,11 +161,16 @@
     overflow: hidden;
     text-overflow: clip;
     width: 200px;
+    height: 30px;
     align-self: flex-end;
 }
 
 .stop-container li p {
-    font-size: 15px;
+    font-size: 13px;
+}
+
+.stop-container li:hover {
+    cursor: move;
 }
 
 .stop-container .stopNames-container {
@@ -153,7 +184,7 @@
     height: 30px;
     width: 13px;
     align-self: flex-end;
-    margin-left: -15px;
+    /* margin-left: -15px; */
 }
 
 .stop-subcontainer .stopNames {
@@ -201,6 +232,7 @@
     width: 30px;
     height: 30px;
     align-self: center;
+    margin-left: 14px;
 }
 
 .stop-container .student-info {

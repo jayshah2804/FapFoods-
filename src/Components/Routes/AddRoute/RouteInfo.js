@@ -7,11 +7,13 @@ let current = "RouteInfo";
 let next = "";
 let error = {
     routeName: "",
-    routeType: ""
+    routeType: "",
+    shuttleType: ""
 }
 function RouteInfo(props) {
     const routeNameInputRef = useRef();
     const routeTypeSelectRef = useRef();
+    const shuttleTypeSelectRef = useRef();
     const [isNextClicked, setIsNextClicked] = useState();
     const [isError, setIsError] = useState(error);
 
@@ -23,6 +25,11 @@ function RouteInfo(props) {
     const routeTypeChangeHandler = () => {
         if (routeTypeSelectRef.current.value !== "Route Type")
             setIsError(prev => ({ ...prev, routeType: "" }));
+    }
+
+    const shuttleTypeChangeHandler = () => {
+        if (shuttleTypeSelectRef.current.value !== "Shuttle Type")
+            setIsError(prev => ({ ...prev, shuttleType: "" }));
     }
 
     const nextWizard = (value) => {
@@ -115,8 +122,16 @@ function RouteInfo(props) {
                         {isError.routeName && <p className='error-roureName' >{isError.routeName}</p>}
                         <select ref={routeTypeSelectRef} onChange={routeTypeChangeHandler} >
                             <option disabled selected>Route Type</option>
-                            <option>Pick Students</option>
-                            <option>Intra City</option>
+                            <option>Pickup Busbuddy</option>
+                            <option>Corporate Commuters</option>
+                            <option>Private Drive</option>
+                        </select>
+                        <select ref={shuttleTypeSelectRef} onChange={shuttleTypeChangeHandler} >
+                            <option disabled selected>Shuttle Type</option>
+                            <option>Basic</option>
+                            <option>Comfort</option>
+                            <option>Comfort plus</option>
+                            <option>Busbuddy</option>
                         </select>
                         {/* {isError.routeType && <p className='error-routeType'>{isError.routeType}</p>} */}
                     </div>

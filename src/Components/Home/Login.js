@@ -9,7 +9,7 @@ let DATA_ERROR = {
   emailError: "",
   passwordError: "",
 };
-let fromIsValid = false;
+let fromIsValid = true;
 let jay = 0;
 const Login = ({ login }) => {
   const emailInputRef = useRef();
@@ -17,6 +17,7 @@ const Login = ({ login }) => {
   const [isForgotPasswordClicked, setIsForgotPasswordClicked] = useState(false);
   const [error, setError] = useState(DATA_ERROR);
   const [isCall, setIsCall] = useState();
+  const [isApiError, setIsApiError] = useState();
 
 
   useEffect(() => {
@@ -36,9 +37,9 @@ const Login = ({ login }) => {
         redirect: 'follow'
       };
 
-      fetch("http://192.168.10.1:2030/api/v1/Authentication/AuthenticateUser", requestOptions)
+      fetch("/api/v1/Authentication/AuthenticateUser", requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => JSON.parse(result).Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password"))
         .catch(error => console.log('error', error));
     }
     if (jay > 1)
@@ -52,37 +53,43 @@ const Login = ({ login }) => {
     //   !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
     //     emailInputRef.current.value
     //   )
-    // )
+    // ) {
     //   // eslint-disable-line
+    //   fromIsValid = false;
     //   setError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
-    if (passwordInputRef.current.value.length < 8)
-      setError((prev) => ({
-        ...prev,
-        passwordError: "Password must be of 8 characters",
-      }));
+    // }
+    // if (passwordInputRef.current.value.length < 8) {
+    //   fromIsValid = false;
+    //   setError((prev) => ({
+    //     ...prev,
+    //     passwordError: "Password must be of 8 characters",
+    //   }));
+    // }
     if (emailInputRef.current.value && passwordInputRef.current.value) {
-      // fromIsValid && setIsCall(true);
       fromIsValid && login(true);
+      // fromIsValid && setIsCall(prev => !prev);
     }
   };
 
   const emailChangeHandler = () => {
-    if (                            // eslint-disable-next-line
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-        emailInputRef?.current?.value
-      )
-    ) {
-      // eslint-disable-line
-      fromIsValid = true;
-      setError((prev) => ({ ...prev, emailError: "" }));
-    } else fromIsValid = false;
+    // setIsApiError("");
+    // if (                            // eslint-disable-next-line
+    //   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+    //     emailInputRef?.current?.value
+    //   )
+    // ) {
+    //   // eslint-disable-line
+    //   fromIsValid = true;
+    //   setError((prev) => ({ ...prev, emailError: "" }));
+    // } else fromIsValid = false;
   };
 
   const passwordChangeHandler = () => {
-    if (passwordInputRef.current.value.length >= 8) {
-      fromIsValid = true;
-      setError((prev) => ({ ...prev, passwordError: "" }));
-    } else fromIsValid = false;
+    // setIsApiError("");
+    // if (passwordInputRef.current.value.length >= 8) {
+    //   fromIsValid = true;
+    //   setError((prev) => ({ ...prev, passwordError: "" }));
+    // } else fromIsValid = false;
   };
 
   const forgotPasswordHandler = () => {
@@ -92,6 +99,7 @@ const Login = ({ login }) => {
     <div className={classes.loginContainer}>
       <img src={littleImage} alt="" className={classes.logo} />
       <div className={classes.text}>Access Your Corporate Account</div>
+      <p className={classes.errorMessage}>{isApiError}</p>
       <form className={classes.form} onSubmit={loginHandler}>
         {!isForgotPasswordClicked && (
           <React.Fragment>

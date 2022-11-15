@@ -166,8 +166,8 @@ const Stops = () => {
                     holdingIndex++;
                 }
             }
+            stopList.length = holdingIndex;
             newList = structuredClone(stopList);
-            newList.length = holdingIndex;
         }
         setStopList(newList);
     }

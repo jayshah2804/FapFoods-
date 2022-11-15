@@ -2,15 +2,18 @@ import "./App.css";
 import Header from "./Components/Header/Header";
 import Dashboard from "./Components/Dashboard/Main";
 import Login from "./Components/Home/Login";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SideMenu from "./Components/Header/SideMenu";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Trips from "./Components/Trips/Trips";
 import Support from "./Components/Support/Support";
 import Routes from "./Components/Routes/Route";
 import Stops from "./Components/Routes/Stops";
+import Departments from "./Components/Departments/Departments";
+import AddDepartment from "./Components/Departments/AddDepartment";
 
 let flag = false;
+let prevURL = "";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
@@ -99,6 +102,12 @@ function App() {
             </Route>
             <Route path="/dashboard">
               <Dashboard />
+            </Route>
+            <Route path="/departments" exact>
+              <Departments />
+            </Route>
+            <Route path="/departments/add-new" exact>
+              <AddDepartment />
             </Route>
             <Route path="/support">
               <Support />

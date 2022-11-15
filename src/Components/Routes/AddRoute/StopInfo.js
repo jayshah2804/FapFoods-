@@ -85,7 +85,7 @@ const StopInfo = (props) => {
 
   const undoRouteClickHandler = () => {
     if (flightPlanCoordinates.length > 1) {
-      studentCount -= filteredData[prev_id].name.length;
+      // studentCount -= filteredData[prev_id].name.length;
       flightPlanCoordinates.pop();
       STOP_DETAILS.pop();
       // filteredData[myRecord].status = false;
@@ -98,7 +98,7 @@ const StopInfo = (props) => {
   const resetRouteClickHandler = () => {
     let response = window.confirm("It will reset all the routes created. Want to reset?");
     if (response) {
-      studentCount = 0;
+      // studentCount = 0;
       flightPlanCoordinates = [flightPlanCoordinates[0]];
       STOP_DETAILS = [{ stopName: RIDER_DATA[0].stop }];
       filteredData.map(data => data.status = false);
@@ -154,12 +154,12 @@ const StopInfo = (props) => {
 
     const assignButtonClickHandler = (e) => {
       prev_id = e.target.parentElement.id;
-      studentCount += filteredData[e.target.parentElement.id].name.length;
-      if (studentCount > shuttleSeatingCapacity) {
-        studentCount -= filteredData[e.target.parentElement.id].name.length;
-        alert("Shuttle seating capacity exceeded");
-      }
-      else {
+      // studentCount += filteredData[e.target.parentElement.id].name.length;
+      // if (studentCount > shuttleSeatingCapacity) {
+      //   studentCount -= filteredData[e.target.parentElement.id].name.length;
+      //   alert("Shuttle seating capacity exceeded");
+      // }
+      // else {
         if (previewRouteFlag) {
           flightPlanCoordinates.pop();
           previewRouteFlag = false;
@@ -184,7 +184,7 @@ const StopInfo = (props) => {
           document.getElementById("asdf").click();
         })
         setIsRender(prev => !prev);
-      }
+      // }
     }
 
     filteredData.forEach((position, i) => {
@@ -431,7 +431,7 @@ const StopInfo = (props) => {
       <div className='stopInfo-container'>
         <div className='sub-header'>
           <p>Select stops for the route</p>
-          <span>Shuttle capacity: {shuttleSeatingCapacity}</span>
+          {/* <span>Shuttle capacity: {shuttleSeatingCapacity}</span> */}
         </div>
         <div className='route-operation'>
           <span onClick={undoRouteClickHandler}>Undo route operation</span>

@@ -71,8 +71,17 @@
     min-width: 150px;
 }
 
-.timingsInfo-container input[type="time"]::before {
-    content: 'Time';
+.timingsInfo-container .pickuptime-input::before {
+    content: '';
+    color: #8a8787;
+    position: absolute;
+    background: #fff;
+    width: 150px;
+    margin-bottom: 5px;
+}
+
+.timingsInfo-container .droptime-input::before {
+    content: '';
     color: #8a8787;
     position: absolute;
     background: #fff;
