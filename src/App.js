@@ -36,6 +36,9 @@ function App() {
     if (document.getElementById("main-stop")) {
       document.getElementById("main-stop").style.width = "75%";
     }
+    if (document.getElementById("add-department")) {
+      document.getElementById("add-department").style.width = "78%";
+    }
     if (document.getElementById("support")) {
       // document.getElementById("support").style.width = "calc(100vw - 320px )";
       document.getElementById("support").style.width = "77%";
@@ -56,6 +59,9 @@ function App() {
     }
     if (document.getElementById("stopsInfo-map")) {
       document.getElementById("stopsInfo-map").style.width = "73%";
+    }
+    if (document.getElementById("add-department")) {
+      document.getElementById("add-department").style.width = "100%";
     }
     if (document.getElementById("main-stop")) {
       document.getElementById("main-stop").style.width = "100%";

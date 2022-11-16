@@ -26,6 +26,7 @@ const Records = ({ data, headers }) => {
                         <td>{myData.department_name}</td>
                         <td>{myData.admin_name}</td>
                         <td>{myData.admin_email}</td>
+                        <td>{myData.vehicle_category}</td>
                         <td><Accordian myId={myData.id} forMyRender={func} /></td>
                     </tr>)}
                 </tbody>

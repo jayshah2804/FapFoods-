@@ -13,13 +13,15 @@ const Department_DATA = [
         id: 1,
         department_name: "Sales and Marketing",
         admin_name: "Jay Shah",
-        admin_email: "jayshah9791@gmail.com"
+        admin_email: "jayshah9791@gmail.com",
+        vehicle_category: "Basic"
     },
     {
         id: 2,
         department_name: "Little School Testing",
         admin_name: "Unnati Shah",
-        admin_email: "unnati@gmail.com"
+        admin_email: "unnati@gmail.com",
+        vehicle_category: "Comfort"
     }
 ];
 
@@ -27,6 +29,7 @@ const TRIP_TITLE = [
     "Department Name",
     "Admin Name",
     "Admin Email",
+    "Vehicle Category",
     "Actions"
 ];
 

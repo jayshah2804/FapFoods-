@@ -10,6 +10,11 @@
     justify-content: space-between;
 }
 
+.add-department-container h3 {
+    padding: 15px;
+    padding-bottom: 5px;
+}
+
 .add-department-subcontainer>div {
     width: 23.5%;
     height: 150px;
@@ -24,7 +29,7 @@
 .add-department-subcontainer div footer {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    height: 4px;
+    height: 4.5px;
 }
 
 .add-department-subcontainer div:nth-child(1) footer {
@@ -52,6 +57,12 @@
     margin-top: 40px;
 }
 
+.create-department header {
+    font-weight: bolder;
+    padding: 25px;
+    padding-bottom: 0;
+}
+
 .create-department input {
     border: none;
     border-bottom: 1px solid gray;
@@ -60,6 +71,7 @@
     width: 320px;
     height: 25px;
     font-size: 15px;
+    padding: 5px;
     /* margin-left: 25px; */
 }
 
@@ -70,12 +82,27 @@
 .add-department-subcontainer select {
     border: none;
     border-bottom: 1px solid gray;
-    width: 80%;
+    width: 100%;
     height: 20px;
+    margin-top: 10px;
 }
 
 .add-department-subcontainer select:focus {
     outline: none;
+}
+
+.add-department-subcontainer main {
+    padding: 10px 15px;
+}
+
+.add-department-container main header span {
+    font-size: 14.5px;
+    font-weight: bold;
+}
+
+.add-department-container main .text {
+    font-size: 14.5px;
+    margin-top: 10px;
 }
 
 .create-department button {
@@ -100,7 +127,7 @@
     width: 30px;
 }
 
-.slider1 {
+.slider {
     background-color: #ccc;
     bottom: 0;
     cursor: pointer;
@@ -111,82 +138,75 @@
     transition: .4s;
 }
 
-.slider2 {
-    background-color: #ccc;
-    bottom: 0;
-    cursor: pointer;
-    left: -10px;
+.slider:before {
+    background-color: #fff;
+    bottom: 2px;
+    content: "";
+    height: 16px;
+    left: 3px;
     position: absolute;
+    transition: .4s;
+    width: 16px;
+}
+
+.first:checked+.slider {
+    background-color: #66bb6a;
+}
+
+.first:checked+.slider:before {
+    transform: translateX(18px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.multipleSelection {
+    width: 100%;
+    background-color: white;
+    /* border: 1px solid black; */
+    position: relative;
+}
+
+.selectBox {
+    position: relative;
+}
+
+.selectBox select {
+    width: 100%;
+    font-weight: bold;
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
     right: 0;
     top: 0;
-    transition: .4s;
+    bottom: 0;
 }
 
-.slider1:before {
-    background-color: #fff;
-    bottom: 2px;
-    content: "";
-    height: 16px;
-    left: 3px;
+#checkBoxes {
+    display: none;
     position: absolute;
-    transition: .4s;
-    width: 16px;
+    border: 1px gray solid;
+    border-top: none;
+    background-color: white;
+    width: 100%;
+    padding: 4px 5px;
+    font-size: 14px;
 }
 
-.slider2:before {
-    background-color: #fff;
-    bottom: 2px;
-    content: "";
-    height: 16px;
-    left: 3px;
-    position: absolute;
-    transition: .4s;
-    width: 16px;
+#checkBoxes span {
+    padding-left: 5px;
+    display: inline-block;
+    /* padding-top: -5px; */
+    /* font-size: 15px; */
 }
 
-.first:checked+.slider1 {
-    background-color: #66bb6a;
-}
-/* .second:checked+.slider1 {
-    background-color: #66bb6a;
-} */
-
-.first:checked+.slider1:before {
-    transform: translateX(18px);
-}
-
-/* .second:checked+.slider1:before {
-    transform: translateX(18px);
-} */
-
-.slider1.round {
-    border-radius: 34px;
-}
-
-.slider1.round:before {
-    border-radius: 50%;
-}
-
-
-/* .first:checked+.slider2 {
-    background-color: #66bb6a;
-} */
-.second:checked+.slider2 {
-    background-color: #66bb6a;
-}
-
-/* .first:checked+.slider2:before {
-    transform: translateX(18px);
-} */
-
-.second:checked+.slider2:before {
-    transform: translateX(18px);
-}
-
-.slider2.round {
-    border-radius: 34px;
-}
-
-.slider2.round:before {
-    border-radius: 50%;
+#checkBoxes input {
+    margin-top: 2px;
 }
