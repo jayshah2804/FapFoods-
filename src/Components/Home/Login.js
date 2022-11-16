@@ -100,7 +100,8 @@ const Login = ({ login }) => {
       <img src={littleImage} alt="" className={classes.logo} />
       <div className={classes.text}>Access Your Corporate Account</div>
       <p className={classes.errorMessage}>{isApiError}</p>
-      <form className={classes.form} onSubmit={loginHandler}>
+      {/* <form className={classes.form} onSubmit={loginHandler}> */}
+      <form className={classes.form}>
         {!isForgotPasswordClicked && (
           <React.Fragment>
             <input
@@ -133,6 +134,7 @@ const Login = ({ login }) => {
               type="submit"
               value="Login"
               className={classes.loginButton}
+              onClick={loginHandler}
             />
           </React.Fragment>
         )}
