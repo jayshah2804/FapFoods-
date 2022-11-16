@@ -4,6 +4,7 @@ import "./AddDepartment.css";
 var showVehicle = true;
 var showRide = true;
 let allow_inter_country = false;
+let lock_vehicle_type = false;
 const AddDepartment = () => {
     function showVehicleCheckboxes() {
         var checkboxes = document.getElementsByClassName("multipleSelection")[0].children[1];
@@ -52,6 +53,9 @@ const AddDepartment = () => {
         e.target.checked ? (allow_inter_country = "true") : (allow_inter_country = "false");
         // console.log(allow_inter_country);
     }
+    const lockVehicleTypeChangeHandler = (e) => {
+        e.target.checked ? (lock_vehicle_type = "true") : (lock_vehicle_type = "false");
+    }
     return (
         <div className='add-department-container' id='add-department'>
             <div>
@@ -75,6 +79,10 @@ const AddDepartment = () => {
                     <main>
                         <header style={{ display: "flex", justifyContent: "space-between" }}>
                             <span>Lock Vehicle Type</span>
+                            <label class="switch" for="checkbox2">
+                                <input type="checkbox" id="checkbox2" className='first' onChange={lockVehicleTypeChangeHandler} />
+                                <div class="slider round"></div>
+                            </label>
                             {/* <label class="switch2" for="checkbox">
                                     <input type="checkbox" id="checkbox" className='second' />
                                     <div class="slider2 round"></div>
