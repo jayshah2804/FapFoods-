@@ -21,7 +21,7 @@ const Records = ({ data, headers }) => {
                     </tr>
                 </thead>
                 {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
-                <tbody className="routes_records" onClick={() => history.push("/routes/stops")}>
+                <tbody className="routes_records" onClick={(e) => history.push(`/routes/${e.target.parentElement.children[0].innerText}`)}>
                     {data.map(myData => <tr>
                         <td>{myData.route_id}</td>
                         <td>{myData.route}</td>

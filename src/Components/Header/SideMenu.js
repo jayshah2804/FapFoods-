@@ -19,6 +19,9 @@ const DUMMY_MENU_DATA = [
     main: "Departments",
   },
   {
+    main: "All Staff",
+  },
+  {
     main: "Routes"
   },
   {

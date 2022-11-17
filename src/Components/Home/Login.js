@@ -21,7 +21,7 @@ const Login = ({ login }) => {
 
 
   useEffect(() => {
-    function myFunc() {
+    async function myFunc() {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -37,10 +37,21 @@ const Login = ({ login }) => {
         redirect: 'follow'
       };
 
-      fetch("/api/v1/Authentication/AuthenticateUser", requestOptions)
-        .then(response => response.text())
-        .then(result => JSON.parse(result).Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password"))
-        .catch(error => console.log('error', error));
+      try {
+        const response = await fetch("/api/v1/Authentication/AuthenticateUser", requestOptions);
+        if (!response.ok) {
+          throw new Error("Something went wrong. Please try again later!");
+        }
+        const data = await response.json();
+        data.Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password");
+      } catch (ex) {
+        setIsApiError(ex.message);
+      }
+
+      // fetch("/api/v1/Authentication/AuthenticateUser", requestOptions)
+      //   .then(response => response.text())
+      //   .then(result => JSON.parse(result).Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password"))
+      //   .catch(error => console.log('error', error));
     }
     if (jay > 1)
       myFunc();
@@ -49,47 +60,48 @@ const Login = ({ login }) => {
 
   const loginHandler = (event) => {
     event.preventDefault();
-    // if (                      // eslint-disable-next-line 
-    //   !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-    //     emailInputRef.current.value
-    //   )
-    // ) {
-    //   // eslint-disable-line
-    //   fromIsValid = false;
-    //   setError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
-    // }
-    // if (passwordInputRef.current.value.length < 8) {
-    //   fromIsValid = false;
-    //   setError((prev) => ({
-    //     ...prev,
-    //     passwordError: "Password must be of 8 characters",
-    //   }));
-    // }
+    // !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4,5,6,7})+$/.test(
+    if (                      // eslint-disable-next-line 
+      !/\S+@\S+\.\S+/.test(
+        emailInputRef.current.value
+      )
+    ) {
+      // eslint-disable-line
+      fromIsValid = false;
+      setError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
+    }
+    if (passwordInputRef.current.value.length < 8) {
+      fromIsValid = false;
+      setError((prev) => ({
+        ...prev,
+        passwordError: "Password must be of 8 characters",
+      }));
+    }
     if (emailInputRef.current.value && passwordInputRef.current.value) {
-      fromIsValid && login(true);
-      // fromIsValid && setIsCall(prev => !prev);
+      // fromIsValid && login(true);
+      fromIsValid && setIsCall(prev => !prev);
     }
   };
 
-  const emailChangeHandler = () => {
-    // setIsApiError("");
-    // if (                            // eslint-disable-next-line
-    //   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-    //     emailInputRef?.current?.value
-    //   )
-    // ) {
-    //   // eslint-disable-line
-    //   fromIsValid = true;
-    //   setError((prev) => ({ ...prev, emailError: "" }));
-    // } else fromIsValid = false;
+  const emailChangeHandler = () => { 
+    setIsApiError("");
+    if (                            // eslint-disable-next-line
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+        emailInputRef?.current?.value
+      )
+    ) {
+      // eslint-disable-line
+      fromIsValid = true;
+      setError((prev) => ({ ...prev, emailError: "" }));
+    } else fromIsValid = false;
   };
 
   const passwordChangeHandler = () => {
-    // setIsApiError("");
-    // if (passwordInputRef.current.value.length >= 8) {
-    //   fromIsValid = true;
-    //   setError((prev) => ({ ...prev, passwordError: "" }));
-    // } else fromIsValid = false;
+    setIsApiError("");
+    if (passwordInputRef.current.value.length >= 8) {
+      fromIsValid = true;
+      setError((prev) => ({ ...prev, passwordError: "" }));
+    } else fromIsValid = false;
   };
 
   const forgotPasswordHandler = () => {

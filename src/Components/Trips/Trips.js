@@ -3,6 +3,7 @@ import Records from "./Records";
 import ReactPaginate from "react-paginate";
 import "./Trips.css";
 import { CSVLink } from "react-csv";
+import { useLocation, useParams } from "react-router-dom";
 
 const TRIP_DATA = [
   {
@@ -309,7 +310,10 @@ let myClick = false;
 let prev_id = "1";
 
 function App(props) {
-  console.log(props);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  console.log(queryParams.get('department'));
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(7);
   const [filteredData, setFilteredData] = useState(TRIP_DATA);

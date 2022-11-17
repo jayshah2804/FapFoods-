@@ -18,16 +18,19 @@ const Records = ({ data, headers }) => {
                         {headers.map((data) => (
                             <th>{data}</th>
                         ))}
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
-                <tbody>
+                <tbody className="routes_records">
                     {data.map(myData => <tr>
-                        <td>{myData.department_name}</td>
-                        <td>{myData.admin_name}</td>
-                        <td>{myData.admin_email}</td>
-                        <td>{myData.vehicle_category}</td>
-                        <td><Accordian myId={myData.id} forMyRender={func} /></td>
+                        <td>{myData.name}</td>
+                        <td>{myData.mobile_no}</td>
+                        <td>{myData.superviser_name}</td>
+                        <td width="15%">{myData.department}</td>
+                        <td>{myData.status}</td>
+                        {/* <td width="20%" >{myData.department}</td> */}
+                        <td width="10%"><Accordian myId={myData.id} forMyRender={func} /></td>
                     </tr>)}
                 </tbody>
             </table>
@@ -36,5 +39,3 @@ const Records = ({ data, headers }) => {
 };
 
 export default Records;
-
-//git push origin HEAD:refs/heads/<origin>
