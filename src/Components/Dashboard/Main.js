@@ -175,7 +175,7 @@ const Main = () => {
           <p>Trips</p>
           <span>328</span>
         </div>
-        <div className={classes.text} title="Click to see Monthly Usage details">
+        <div className={classes.text} title="Click to see Monthly Usage details" onClick={() =>history.push("/staff")} >
           <p>Riders</p>
           <span>82</span>
         </div>

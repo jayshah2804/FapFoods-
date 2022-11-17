@@ -22,13 +22,17 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
       sideMenuClose(false);
       history.push("/support");
     }
-    else if(e.target.innerText === "Routes"){
+    else if (e.target.innerText === "Routes") {
       sideMenuClose(false);
       history.push("/routes");
     }
-    else if(e.target.innerText === "Departments"){
+    else if (e.target.innerText === "Departments") {
       sideMenuClose(false);
       history.push("/departments");
+    }
+    else if (e.target.innerText === "All Staff") {
+      sideMenuClose(false);
+      history.push("/staff");
     }
   };
 
@@ -37,6 +41,14 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
       setSubMenuIsActive(false);
     })
     if (e.target.innerText === "Trips") {
+      sideMenuClose(false);
+      history.push("/" + e.target.innerText.toLowerCase());
+    }
+    else if (e.target.innerText === "Admins") {
+      sideMenuClose(false);
+      history.push("/" + e.target.innerText.toLowerCase());
+    }
+    else if (e.target.innerText === "Departments") {
       sideMenuClose(false);
       history.push("/" + e.target.innerText.toLowerCase());
     }

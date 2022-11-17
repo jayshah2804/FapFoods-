@@ -11,6 +11,8 @@ import Routes from "./Components/Routes/Route";
 import Stops from "./Components/Routes/Stops";
 import Departments from "./Components/Departments/Departments";
 import AddDepartment from "./Components/Departments/AddDepartment";
+import Staff from "./Components/Staff/Staff";
+import Admins from "./Components/Admins/Admins";
 
 let flag = false;
 let prevURL = "";
@@ -115,13 +117,19 @@ function App() {
             <Route path="/departments/add-new" exact>
               <AddDepartment />
             </Route>
+            <Route path="/staff">
+              <Staff />
+            </Route>
+            <Route path="/admins">
+              <Admins />
+            </Route>
             <Route path="/support">
               <Support />
             </Route>
             <Route path="/routes" exact>
               <Routes />
             </Route>
-            <Route path="/routes/stops">
+            <Route path="/routes/:routeId">
               <Stops />
             </Route>
           </div>
