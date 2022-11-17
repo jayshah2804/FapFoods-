@@ -53,7 +53,7 @@
     border-radius: 10px;
     margin: 1%;
     background-color: white;
-    height: 250px;
+    height: 270px;
     margin-top: 40px;
 }
 
@@ -61,6 +61,7 @@
     font-weight: bolder;
     padding: 25px;
     padding-bottom: 0;
+    font-size: 18px;
 }
 
 .create-department input {
@@ -77,6 +78,15 @@
 
 .create-department input:focus {
     outline: none;
+}
+
+.create-department .sub-container {
+    display: flex;
+    gap: 50px;
+    /* justify-content: space-around; */
+    padding: 0 5px;
+    margin: 0 40px;
+    margin-top: 10px;
 }
 
 .add-department-subcontainer select {
@@ -107,7 +117,7 @@
 
 .create-department button {
     float: right;
-    margin: 60px;
+    margin: 40px 60px;
     padding: 7px 21px;
     color: white;
     background-color: rgba(42, 149, 69, 255);
@@ -118,6 +128,15 @@
 
 .create-department button:hover {
     background-color: green;
+}
+
+.create-department .sub-container span:nth-child(2n) {
+    color: gray;
+}
+
+.create-department .sub-container span:nth-child(2n+1) {
+    color: rgb(82, 80, 80);
+    font-weight: bolder;
 }
 
 .switch {
@@ -187,6 +206,7 @@
     right: 0;
     top: 0;
     bottom: 0;
+    cursor: pointer;
 }
 
 #checkBoxes {
@@ -200,7 +220,7 @@
     font-size: 14px;
 }
 
-#checkBoxes span {
+#checkBoxes label {
     padding-left: 5px;
     display: inline-block;
     /* padding-top: -5px; */

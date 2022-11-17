@@ -35,7 +35,7 @@ const ConfirmPassword = (props) => {
       fetch("/api/v1/Authentication/SetNewPassword", requestOptions)
         .then(response => response.text())
         .then(result => JSON.parse(result).Message === "Success" ? setIsResponse("success") : setIsResponse("fail"))
-        .catch(error => console.log('error', error));
+        .catch(error => setIsResponse("fail"));
     }
     if (jay > 1)
       myFunc();
@@ -63,7 +63,7 @@ const ConfirmPassword = (props) => {
 
   return (
     <div id="form">
-      {isResponse === "fail" && <p style={{color: "red"}}>some error occured</p>}
+      {isResponse === "fail" && <p style={{color: "red"}}>Some error occured, please try again later!</p>}
       {isError && <p style={{color: "red"}}>{isError}</p>}
       <input type="password" placeholder="Enter New Password" ref={newPassRef} id="input" />
       <input type="password" placeholder="Confirm New Password" ref={confirmPassRef} id="input" />
@@ -78,3 +78,5 @@ const ConfirmPassword = (props) => {
 };
 
 export default ConfirmPassword;
+
+//git push origin HEAD:refs/heads/<origin>
