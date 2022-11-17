@@ -308,7 +308,8 @@ const TRIP_TITLE = [
 let myClick = false;
 let prev_id = "1";
 
-function App() {
+function App(props) {
+  console.log(props);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(7);
   const [filteredData, setFilteredData] = useState(TRIP_DATA);

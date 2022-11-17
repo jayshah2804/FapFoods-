@@ -12,6 +12,7 @@ let buttonValue = "Send OTP";
 let jay = 0;
 let apiMsg = "";
 let flag = false;
+let OTP = "";
 const ForgotPassword = (props) => {
   const [isSendOtpClicked, setIsSendOtpClicked] = useState(false);
   const [isVerifyClicked, setIsVerifyClicked] = useState();
@@ -19,9 +20,12 @@ const ForgotPassword = (props) => {
   const [isResponse, setIsResponse] = useState();
   const [isError, setIsError] = useState();
   const emailInputRef = useRef();
+  const otpInputRef = useRef();
 
   useEffect(() => {
     function myFunc() {
+      // console.log("loading...");
+      // buttonValue = "Loading..."
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -39,8 +43,12 @@ const ForgotPassword = (props) => {
 
       fetch('/api/v1/Authentication/AuthenticateOTP', requestOptions)
         .then(response => response.text())
-        .then(result => JSON.parse(result).Message === "Success" ? setIsResponse("success") : setIsResponse("fail"))
+        .then(result => {
+          OTP = JSON.parse(result).OTP;
+          JSON.parse(result).Message === "Success" ? setIsResponse("success") : setIsResponse("fail")
+        })
         .catch(error => console.log('error', error));
+      // console.log("loading completed");
     }
     if (jay > 1)
       myFunc();
@@ -64,8 +72,12 @@ const ForgotPassword = (props) => {
       emailInputRef?.current?.value
     )) {
       if (buttonValue === "Verify") {
-        setIsVerifyClicked(true);
-        buttonValue = "Go to Login Page";
+        alert(OTP);
+        if (otpInputRef.current.value == OTP) {
+          setIsVerifyClicked(true);
+          buttonValue = "Go to Login Page";
+          setIsError("");
+        } else setIsError("Wrong OTP");
       } else {
         setIsCall(prev => !prev);
         flag = false;
@@ -97,7 +109,7 @@ const ForgotPassword = (props) => {
         onClick={backClickHandler}
       /> */}
       {isResponse === "fail" && <p style={{ color: "red" }}>Email does not Exist</p>}
-      {isError && <p style={{color: "red"}}>{isError}</p>}
+      {isError && <p style={{ color: "red" }}>{isError}</p>}
       {!isVerifyClicked && (
         <div id="form">
           <input
@@ -108,7 +120,7 @@ const ForgotPassword = (props) => {
           />
           {console.log(isSendOtpClicked)}
           {isSendOtpClicked && (
-            <input type="number" placeholder="Enter OTP" id="input" />
+            <input type="number" placeholder="Enter OTP" id="input" ref={otpInputRef} />
             // <OtpVerification />
           )}
           <input
