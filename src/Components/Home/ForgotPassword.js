@@ -31,7 +31,7 @@ const ForgotPassword = (props) => {
 
       var raw = JSON.stringify({
         emailID: emailInputRef.current.value,
-        otpNumber: ""
+        eventID: "1"
       })
 
       var requestOptions = {

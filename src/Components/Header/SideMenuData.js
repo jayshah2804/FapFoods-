@@ -8,11 +8,15 @@ import { useHistory } from "react-router-dom";
 
 import classes from "./SideMenuData.module.css";
 
+
+let dptName = "";
 const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
   const [subMenuIsAvtive, setSubMenuIsActive] = useState(false);
   const history = useHistory();
 
   const mainMenuClickHandler = (e) => {
+    dptName = e.target.innerText;
+    console.log(dptName);
     setSubMenuIsActive((prev) => !prev);
     if (e.target.innerText === "Dashboard") {
       sideMenuClose(false);
@@ -51,6 +55,10 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
     else if (e.target.innerText === "Departments") {
       sideMenuClose(false);
       history.push("/" + e.target.innerText.toLowerCase());
+    }
+    else if (e.target.innerText === "Staff Members") {
+      sideMenuClose(false);
+      history.push(`/staff?department=${dptName}`)
     }
   };
 
