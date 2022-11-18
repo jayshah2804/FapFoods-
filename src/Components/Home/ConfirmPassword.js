@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-// import {bcrypt} from 'bcrypt';
+// const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 let jay = 0;

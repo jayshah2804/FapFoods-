@@ -34,13 +34,13 @@ const Records = ({ data, headers, departments }) => {
                     </tr>
                 </thead>
                 {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
-                <tbody className="routes_records">
+                <tbody>
                     {data.map(myData => <tr>
                         <td>{myData.name}</td>
                         <td>{myData.email}</td>
                         <td>{myData.mobile_no}</td>
-                        <td width="20%">{myData.role}</td>
-                        <td style={{ fontSize: "20px" }}><BiUser onClick={editAdminClickHandler} title="Click to Edit user as Admin" style={{ color: "rgba(42, 149, 69, 255)", marginRight: "15px" }} /></td>
+                        <td width="30%">{myData.role}</td>
+                        <td style={{ fontSize: "20px" }}><BiUser onClick={editAdminClickHandler} title="Click to Edit user as Admin" style={{ color: "rgba(42, 149, 69, 255)", marginRight: "15px", cursor: "pointer" }} /></td>
                         {/* <td width="20%" >{myData.department}</td> */}
                     </tr>)}
                 </tbody>
