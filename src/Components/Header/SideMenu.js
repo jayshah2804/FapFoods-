@@ -9,11 +9,11 @@ const DUMMY_MENU_DATA = [
   },
   {
     main: "Student Department",
-    sub: ["Employees", "Deleted Employees", "Private Drive"],
+    sub: ["Staff Members", "Deleted Staff Members", "Private Drive"],
   },
   {
     main: "S.S Divine School",
-    sub: ["Departments", "Admins", "Trips", "Budget & Insurance"],
+    sub: ["Departments", "Admins", "Trips"],
   },
   {
     main: "Departments",

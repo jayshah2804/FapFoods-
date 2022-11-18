@@ -2,7 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+// import {bcrypt} from 'bcrypt';
 
+const saltRounds = 10;
 let jay = 0;
 let isValid = false;
 const ConfirmPassword = (props) => {

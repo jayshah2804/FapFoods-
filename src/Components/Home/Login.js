@@ -4,6 +4,8 @@ import classes from "./Login.module.css";
 import littleImage from "../../Assets/Little_logo_login.png";
 import ForgotPassword from "./ForgotPassword";
 import { useEffect } from "react";
+import useHttp from "../../Hooks/use-http";
+import { useCallback } from "react";
 
 let DATA_ERROR = {
   emailError: "",
@@ -15,48 +17,34 @@ const Login = ({ login }) => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const [isForgotPasswordClicked, setIsForgotPasswordClicked] = useState(false);
-  const [error, setError] = useState(DATA_ERROR);
+  const [formError, setFormError] = useState(DATA_ERROR);
   const [isCall, setIsCall] = useState();
   const [isApiError, setIsApiError] = useState();
 
+  const authenticateUser = (data) => {
+    if (!data.Message)
+      setIsApiError(data + " Please try again later");
+    else
+      data.Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password");
+  };
+
+  const { sendRequest } = useHttp();
 
   useEffect(() => {
-    async function myFunc() {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify({
-        emailID: emailInputRef.current.value,
-        password: passwordInputRef.current.value
-      })
-
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-      };
-
-      try {
-        const response = await fetch("/api/v1/Authentication/AuthenticateUser", requestOptions);
-        if (!response.ok) {
-          throw new Error("Something went wrong. Please try again later!");
-        }
-        const data = await response.json();
-        data.Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password");
-      } catch (ex) {
-        setIsApiError(ex.message);
-      }
-
-      // fetch("/api/v1/Authentication/AuthenticateUser", requestOptions)
-      //   .then(response => response.text())
-      //   .then(result => JSON.parse(result).Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password"))
-      //   .catch(error => console.log('error', error));
-    }
     if (jay > 1)
-      myFunc();
+      sendRequest({
+        url: "/api/v1/Authentication/AuthenticateUser",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: emailInputRef.current.value,
+          password: passwordInputRef.current.value
+        }
+      }, authenticateUser);
     jay++;
-  }, [isCall])
+  }, [isCall, sendRequest])
 
   const loginHandler = (event) => {
     event.preventDefault();
@@ -68,11 +56,11 @@ const Login = ({ login }) => {
     ) {
       // eslint-disable-line
       fromIsValid = false;
-      setError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
+      setFormError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
     }
     if (passwordInputRef.current.value.length < 8) {
       fromIsValid = false;
-      setError((prev) => ({
+      setFormError((prev) => ({
         ...prev,
         passwordError: "Password must be of 8 characters",
       }));
@@ -83,7 +71,7 @@ const Login = ({ login }) => {
     }
   };
 
-  const emailChangeHandler = () => { 
+  const emailChangeHandler = () => {
     setIsApiError("");
     if (                            // eslint-disable-next-line
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
@@ -92,7 +80,7 @@ const Login = ({ login }) => {
     ) {
       // eslint-disable-line
       fromIsValid = true;
-      setError((prev) => ({ ...prev, emailError: "" }));
+      setFormError((prev) => ({ ...prev, emailError: "" }));
     } else fromIsValid = false;
   };
 
@@ -100,7 +88,7 @@ const Login = ({ login }) => {
     setIsApiError("");
     if (passwordInputRef.current.value.length >= 8) {
       fromIsValid = true;
-      setError((prev) => ({ ...prev, passwordError: "" }));
+      setFormError((prev) => ({ ...prev, passwordError: "" }));
     } else fromIsValid = false;
   };
 
@@ -123,8 +111,8 @@ const Login = ({ login }) => {
               ref={emailInputRef}
               onChange={emailChangeHandler}
             />
-            {error && (
-              <p className={classes.errorMessage}>{error.emailError}</p>
+            {formError && (
+              <p className={classes.errorMessage}>{formError.emailError}</p>
             )}
             <input
               type="password"
@@ -133,8 +121,8 @@ const Login = ({ login }) => {
               ref={passwordInputRef}
               onChange={passwordChangeHandler}
             />
-            {error && (
-              <p className={classes.errorMessage}>{error.passwordError}</p>
+            {formError && (
+              <p className={classes.errorMessage}>{formError.passwordError}</p>
             )}
             <div
               className={classes.forgotPassword}

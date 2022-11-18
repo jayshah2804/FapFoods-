@@ -92,11 +92,13 @@
 }
 
 .cards div:nth-child(3) {
-  background-color: rgba(42, 149, 69, 255);
+  background-color: rgba(42, 149, 69, 255); 
+  /* green */
 }
 
 .cards div:nth-child(4) {
   background-color: rgba(245, 174, 48, 255);
+  /* yellow */
 }
 
 .chart {
