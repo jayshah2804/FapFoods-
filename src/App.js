@@ -21,6 +21,11 @@ function App() {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const history = useHistory();
 
+  useEffect(() => {
+    let status = localStorage.getItem("login");
+    status === "false" ? setIsLoggedIn(false) : setIsLoggedIn(true);
+  }, []);
+
   if (isSideMenuOpen && window.screen.width >= 768) {
     if (document.getElementById("myContainer")) {
       document.getElementById("myContainer").style.overflowX = "scroll";
@@ -75,6 +80,7 @@ function App() {
   }
 
   const loginHandler = useCallback((loggedValue) => {
+    localStorage.setItem("login", true);
     history.push("/dashboard");
     setIsLoggedIn(loggedValue);
   }, []);
