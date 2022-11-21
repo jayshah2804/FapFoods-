@@ -69,7 +69,8 @@ const Nav = (props) => {
     <React.Fragment>
       <div className={classes.container}>
         <div className={classes.sub}>
-          <CgMenuMotion className={classes.menuIcon}
+          <CgMenuMotion
+            className={classes.menuIcon}
             onMouseEnter={sideMenuClickHandler}
           />
           <img src={littleLogo} alt="" className={classes.littleLogo} />
@@ -82,18 +83,14 @@ const Nav = (props) => {
           {isNotificationIconClicked && (
             <div className={classes.notificationPanel}>
               <div className={classes.topBorder}></div>
-              <div className={classes.header} >Notification</div>
+              <div className={classes.header}>Notification</div>
               <hr />
               {NOTIFICATION_DATA.map((ele) => {
                 return (
-                  <div className={classes.data} >
-                    <span className={classes.title} >{ele.title}</span>
-                    <span className={classes.status}>
-                      {ele.status}
-                    </span>
-                    <p className={classes.time} >
-                      {ele.time}
-                    </p>
+                  <div className={classes.data}>
+                    <span className={classes.title}>{ele.title}</span>
+                    <span className={classes.status}>{ele.status}</span>
+                    <p className={classes.time}>{ele.time}</p>
                   </div>
                 );
               })}
@@ -108,18 +105,18 @@ const Nav = (props) => {
           {isAdminPhotoClicked && (
             <div className={classes.adminPanel}>
               <div className={classes.header}>
-                <p className={classes.adminName}>
-                  Jay Shah
-                </p>
-                <p className={classes.adminOrg}>
-                  Admin of the eximious global
-                </p>
+                <p className={classes.adminName}>Jay Shah</p>
+                <p className={classes.adminOrg}>Admin of the eximious global</p>
               </div>
-              <p className={classes.changePassword} onClick={changePasswordHandler} >
+              <p
+                className={classes.changePassword}
+                onClick={changePasswordHandler}
+              >
                 Change Password
               </p>
               <hr style={{ color: "gray" }} />
-              <p className={classes.logout}
+              <p
+                className={classes.logout}
                 onClick={() => {
                   history.push("/login");
                   localStorage.setItem("login", "false");
