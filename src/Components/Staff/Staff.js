@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Records from "./Records";
 import ReactPaginate from "react-paginate";
 // import "./Route.css";
 import { CSVLink } from "react-csv";
-import { Route } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
+import useHttp from "../../Hooks/use-http";
 // import AddRoute from "./AddRoute/RouteInfo";
 
 const STAFF_DATA = [
@@ -139,13 +140,53 @@ const STAFF_TITLE = [
 
 let myClick = false;
 let prev_id = "1";
-
+let staffListFlag = 0;
 function Routes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(7);
-    const [filteredData, setFilteredData] = useState(STAFF_DATA);
+    const [filteredData, setFilteredData] = useState([]);
     const searchInputRef = useRef();
     const [isAddRouteClicked, setIsAddRouteClicked] = useState();
+
+    const search = useLocation().search;
+    const id = new URLSearchParams(search).get('departmentId');
+
+    // console.log("myID", id);
+
+    const authenticateUser = (data) => {
+        let staff_data = [];
+        for (let i = 0; i < data.StaffList.length; i++) {
+            staff_data.push({
+                id: i + 1,
+                name: data.StaffList[i].OfficialName,
+                mobile_no: data.StaffList[i].MobileNumber,
+                superviser_name: data.StaffList[i].SupervisorName,
+                department: data.StaffList[i].DepartmentName,
+                status: data.StaffList[i].Status
+            })
+        }
+        // console.log(department_data);
+        setFilteredData(staff_data)
+        console.log(data.StaffList);
+    };
+
+    const { sendRequest } = useHttp();
+
+    useEffect(() => {
+        if (staffListFlag > 0)
+            sendRequest({
+                url: "/api/v1/Staff/GetStaffList",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    emailID: "hitesh.kripalani@eximiousglobal.com",
+                    corporateID: id ? id : "",
+                }
+            }, authenticateUser);
+        staffListFlag++;
+    }, [sendRequest])
 
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;

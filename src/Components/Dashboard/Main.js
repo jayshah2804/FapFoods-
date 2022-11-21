@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classes from './Main.module.css';
 import Chart from 'react-apexcharts';
 import photo from '../../Assets/admin.jpg';
 import startPoint from "../../Assets/Pin_icon_green50.png";
 import studentDummyImage from "../../Assets/new_student_marker.png";
 import { useHistory } from 'react-router-dom';
+import useHttp from "../../Hooks/use-http";
 
 const DUMMY_DATA = [
   {
@@ -39,111 +40,46 @@ const DUMMY_DATA = [
   }
 ];
 
-const initial = {
-  series: [{
-    name: "No. of Trips",
-    data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-  }],
-  options: {
-    chart: {
-      background: "#fff",
-      height: 200,
-      type: 'line',
-      zoom: {
-        enabled: false
-      },
-      toolbar: {
-        show: true,
-        tools: {
-          download: false
-        }
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    colors: ["rgba(42,149,69,255)"],
-    markers: {
-      size: [6]
-    },
-    stroke: {
-      curve: 'straight',
-      width: 2
-    },
-    title: {
-      text: 'Monthly Trips',
-      align: 'left',
-      // margin: 20
-    },
-    // grid: {
-    //   row: {
-    //     colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-    //     opacity: 0.5
-    //   },
-    // },
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-      title: {
-        text: "No. of Trips"
-      }
-    },
-    // background: {
-    //   enabled: true,
-    //   borderRadius: 20
-    // }
-  },
-};
-
-const RIDER_DATA = [
-  {
-    name: ["S.S. Divine School"],
-    location: { lat: 23.020922774165125, lng: 72.46970495605471 }
-  },
-  {
-    name: ["Jay Shah", "Darshan Patel"],
-    location: { lat: 23.015234991655756, lng: 72.51416525268557 },
-    status: false
-  },
-  {
-    name: ["Dev Shah", "Vijay Kansara"],
-    location: { lat: 22.993429603752258, lng: 72.5378545227051 },
-    status: false
-  },
-  {
-    name: ["Het Desai"],
-    location: { lat: 23.034509283424683, lng: 72.55879721069338 },
-    status: false
-  },
-  {
-    name: ["Roshan Patel"],
-    location: { lat: 23.03489120423814, lng: 72.56658725087891 },
-    status: false
-  },
-  {
-    name: ["Nihar Gupte"],
-    location: { lat: 23.04272371760406, lng: 72.53682455444338 },
-    status: false
-  },
-  {
-    name: ["Vinay Joshi"],
-    location: { lat: 23.006702868171974, lng: 72.53030142211917 },
-    status: false
-  },
-];
-
-const flightPlanCoordinates = [
-  { lat: RIDER_DATA[0].location.lat, lng: RIDER_DATA[0].location.lng },
-];
-
+let divFlag = 0;
 const Main = () => {
   // const [options, setOptions] = useState(initial);  
   const [isRender, setIsRender] = useState();
+  const [listData, setListData] = useState({});
   const history = useHistory();
 
   const script = document.createElement('script');
   script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
   script.async = true;
   document.body.appendChild(script);
+
+  const authenticateUser = (data) => {
+    let myData = {
+      riders: data.Rider,
+      routes: data.Route,
+      trips: data.Trip,
+      activeTrips: data.ActiveTrip
+    }
+    console.log(myData);
+    setListData(myData);
+    // setFilteredData(department_data)
+  };
+
+  const { sendRequest } = useHttp();
+
+  useEffect(() => {
+    if (divFlag > 0)
+      sendRequest({
+        url: "/api/v1/Dashboard/GetDashboard",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: "hitesh.kripalani@eximiousglobal.com"
+        }
+      }, authenticateUser);
+    divFlag++;
+  }, [sendRequest])
 
   function myInitMap() {
     var map = new window.google.maps.Map(document.getElementById("map-modal"), {
@@ -168,24 +104,29 @@ const Main = () => {
 
   return (
     <div className={classes.container} id="myContainer">
-      <p className={classes.adminName}>Welcome Jay Shah</p>
-      <p className={classes.adminText}>You can check all data of your Organization in Dashboard!</p>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <p className={classes.adminName}>Welcome Jay Shah</p>
+          <p className={classes.adminText}>You can check all data of your Organization in Dashboard!</p>
+        </div>
+        <button style={{ height: "35px", alignSelf: "center" }} onClick={() => history.push("/new-registration")} className={classes.newCorpButton}>Add New Corporate</button>
+      </div>
       <div className={classes.cards}>
         <div className={classes.text} title="Click to see Monthly Trip details" onClick={() => history.push("/trips")} >
           <p>Trips</p>
-          <span>328</span>
+          <span>{listData.trips}</span>
         </div>
-        <div className={classes.text} title="Click to see Monthly Usage details" onClick={() =>history.push("/staff")} >
+        <div className={classes.text} title="Click to see Monthly Usage details" onClick={() => history.push("/staff")} >
           <p>Riders</p>
-          <span>82</span>
+          <span>{listData.riders}</span>
         </div>
         <div className={classes.text} title="Click to see Routes details" onClick={() => history.push("/routes")} >
           <p>Routes</p>
-          <span>4</span>
+          <span>{listData.routes}</span>
         </div>
         <div className={classes.text} title="Click to see Active Trips details">
           <p>Active Trips</p>
-          <span>2</span>
+          <span>{listData.activeTrips}</span>
         </div>
       </div>
       {/* <div className={classes.tripChart}>

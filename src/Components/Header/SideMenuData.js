@@ -10,11 +10,13 @@ import classes from "./SideMenuData.module.css";
 
 
 let dptName = "";
-const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
+let idOfOrg = "";
+const SideMenuData = ({ main, corpId, sub, deptId, myActiveMenu, sideMenuClose }) => {
   const [subMenuIsAvtive, setSubMenuIsActive] = useState(false);
   const history = useHistory();
 
   const mainMenuClickHandler = (e) => {
+    idOfOrg = e.target.id;
     dptName = e.target.innerText;
     console.log(dptName);
     setSubMenuIsActive((prev) => !prev);
@@ -32,7 +34,7 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
     }
     else if (e.target.innerText === "Departments") {
       sideMenuClose(false);
-      history.push("/departments");
+      history.push(`/departments`);
     }
     else if (e.target.innerText === "All Staff") {
       sideMenuClose(false);
@@ -54,11 +56,11 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
     }
     else if (e.target.innerText === "Departments") {
       sideMenuClose(false);
-      history.push("/" + e.target.innerText.toLowerCase());
+      history.push(`/departments?corporateId=${idOfOrg}`);
     }
     else if (e.target.innerText === "Staff Members") {
       sideMenuClose(false);
-      history.push(`/staff?department=${dptName}`)
+      history.push(`/staff?departmentId=${e.target.id}`)
     }
   };
 
@@ -72,7 +74,7 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
         >
           {main}
         </NavLink> */}
-        <div className={classes.mainMenu} onClick={mainMenuClickHandler}>
+        <div id={corpId} className={classes.mainMenu} onClick={mainMenuClickHandler}>
           {main}
         </div>
         {sub && (
@@ -85,7 +87,7 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
         <div>
           {sub &&
             sub.map((ele) => (
-              <p className={classes.subMenu} onClick={subMenuClickHandler} style={{ cursor: "pointer" }}>
+              <p id={deptId} className={classes.subMenu} onClick={subMenuClickHandler} style={{ cursor: "pointer" }}>
                 {ele}
               </p>
             ))}

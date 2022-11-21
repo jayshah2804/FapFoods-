@@ -17,8 +17,10 @@ const Accordian = (props) => {
         setIsClicked(prev => !prev);
     }
     const subListClickHandler = (e) => {
+        console.log(e.target.parentNode.parentNode.parentNode.children[0].children[0].id);
         if (e.target.innerText !== "Statement")
-            history.push(`${e.target.innerText.toLowerCase()}?department=${e.target.parentNode.parentNode.parentNode.parentNode.children[0].innerText.toLowerCase()}`);
+            history.push(`${e.target.innerText.toLowerCase()}?departmentId=${e.target.parentNode.parentNode.parentNode.children[0].children[0].id}`);
+        // history.push(`${e.target.innerText.toLowerCase()}?department=${e.target.parentNode.parentNode.parentNode.parentNode.children[0].innerText.toLowerCase()}`);
     }
     return (
         <div style={{ position: "relative" }}><button id={props.myId} className="actions" onClick={actionsClickHandler} >Actions</button>

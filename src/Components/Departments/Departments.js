@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Records from "./Records";
 import ReactPaginate from "react-paginate";
 // import "./Route.css";
 import { CSVLink } from "react-csv";
 import AddDepartment from "./AddDepartment";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import useHttp from "../../Hooks/use-http";
 // import { Route } from "react-router-dom";
 // import AddRoute from "./AddRoute/RouteInfo";
 
@@ -36,13 +37,51 @@ const TRIP_TITLE = [
 let myClick = false;
 let prev_id = "1";
 
+let deptListFlag = 0;
 function Routes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(7);
-    const [filteredData, setFilteredData] = useState(Department_DATA);
+    const [filteredData, setFilteredData] = useState([]);
     const searchInputRef = useRef();
-    const [isAddRouteClicked, setIsAddRouteClicked] = useState();
+    // const [isAddRouteClicked, setIsAddRouteClicked] = useState();
     const history = useHistory();
+
+    const search = useLocation().search;
+    const id = new URLSearchParams(search).get('corporateId');
+
+    const authenticateUser = (data) => {
+        let department_data = [];
+        for (let i = 0; i < data.DepartMentList.length; i++) {
+            department_data.push({
+                id: data.DepartMentList[i].DepartmentID,
+                department_name: data.DepartMentList[i].DepartmentName,
+                admin_name: data.DepartMentList[i].AdminName,
+                admin_email: data.DepartMentList[i].AdminEmail,
+                vehicle_category: data.DepartMentList[i].VehicalCategory
+            })
+        }
+        // console.log(department_data);
+        setFilteredData(department_data)
+    };
+
+    const { sendRequest } = useHttp();
+
+    useEffect(() => {
+        // alert("here");
+        if (deptListFlag > 0)
+            sendRequest({
+                url: "/api/v1/Department/DepartmentList",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    emailID: "hitesh.kripalani@eximiousglobal.com",
+                    corporateID: id ? id : "62bd903e0f0bd"
+                }
+            }, authenticateUser);
+        deptListFlag++;
+    }, [sendRequest])
 
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
