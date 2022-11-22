@@ -122,7 +122,7 @@ const Nav = (props) => {
               <p className={classes.logout}
                 onClick={() => {
                   history.push("/login");
-                  localStorage.setItem("login", "false");
+                  sessionStorage.setItem("login", "false");
                   window.location.reload();
                 }}
               >

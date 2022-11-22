@@ -50,15 +50,18 @@ function Routes() {
     const id = new URLSearchParams(search).get('corporateId');
 
     const authenticateUser = (data) => {
+        console.log(data.DepartMentList);
         let department_data = [];
-        for (let i = 0; i < data.DepartMentList.length; i++) {
-            department_data.push({
-                id: data.DepartMentList[i].DepartmentID,
-                department_name: data.DepartMentList[i].DepartmentName,
-                admin_name: data.DepartMentList[i].AdminName,
-                admin_email: data.DepartMentList[i].AdminEmail,
-                vehicle_category: data.DepartMentList[i].VehicalCategory
-            })
+        if (data.DepartMentList) {
+            for (let i = 0; i < data.DepartMentList.length; i++) {
+                department_data.push({
+                    id: data.DepartMentList[i].DepartmentID,
+                    department_name: data.DepartMentList[i].DepartmentName,
+                    admin_name: data.DepartMentList[i].AdminName,
+                    admin_email: data.DepartMentList[i].AdminEmail,
+                    vehicle_category: data.DepartMentList[i].VehicalCategory
+                })
+            }
         }
         // console.log(department_data);
         setFilteredData(department_data)
@@ -76,8 +79,8 @@ function Routes() {
                     'Content-Type': 'application/json',
                 },
                 body: {
-                    emailID: "hitesh.kripalani@eximiousglobal.com",
-                    corporateID: id ? id : "62bd903e0f0bd"
+                    emailID: sessionStorage.getItem("user"),
+                    corporateID: id ? id : sessionStorage.getItem("corpId")
                 }
             }, authenticateUser);
         deptListFlag++;

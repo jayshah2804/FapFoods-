@@ -59,7 +59,7 @@ const Main = () => {
       trips: data.Trip,
       activeTrips: data.ActiveTrip
     }
-    console.log(myData);
+    // console.log(myData);
     setListData(myData);
     // setFilteredData(department_data)
   };
@@ -75,7 +75,7 @@ const Main = () => {
           'Content-Type': 'application/json',
         },
         body: {
-          emailID: "hitesh.kripalani@eximiousglobal.com"
+          emailID: sessionStorage.getItem("user")
         }
       }, authenticateUser);
     divFlag++;
