@@ -8,11 +8,17 @@ import { useHistory } from "react-router-dom";
 
 import classes from "./SideMenuData.module.css";
 
-const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
+
+let dptName = "";
+let idOfOrg = "";
+const SideMenuData = ({ main, corpId, sub, deptId, myActiveMenu, sideMenuClose }) => {
   const [subMenuIsAvtive, setSubMenuIsActive] = useState(false);
   const history = useHistory();
 
   const mainMenuClickHandler = (e) => {
+    idOfOrg = e.target.id;
+    dptName = e.target.innerText;
+    console.log(dptName);
     setSubMenuIsActive((prev) => !prev);
     if (e.target.innerText === "Dashboard") {
       sideMenuClose(false);
@@ -22,13 +28,17 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
       sideMenuClose(false);
       history.push("/support");
     }
-    else if(e.target.innerText === "Routes"){
+    else if (e.target.innerText === "Routes") {
       sideMenuClose(false);
       history.push("/routes");
     }
-    else if(e.target.innerText === "Departments"){
+    else if (e.target.innerText === "Departments") {
       sideMenuClose(false);
-      history.push("/departments");
+      history.push(`/departments`);
+    }
+    else if (e.target.innerText === "All Staff") {
+      sideMenuClose(false);
+      history.push("/staff");
     }
   };
 
@@ -39,6 +49,18 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
     if (e.target.innerText === "Trips") {
       sideMenuClose(false);
       history.push("/" + e.target.innerText.toLowerCase());
+    }
+    else if (e.target.innerText === "Admins") {
+      sideMenuClose(false);
+      history.push("/" + e.target.innerText.toLowerCase());
+    }
+    else if (e.target.innerText === "Departments") {
+      sideMenuClose(false);
+      history.push(`/departments?corporateId=${idOfOrg}`);
+    }
+    else if (e.target.innerText === "Staff Members") {
+      sideMenuClose(false);
+      history.push(`/staff?departmentId=${e.target.id}`)
     }
   };
 
@@ -52,7 +74,7 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
         >
           {main}
         </NavLink> */}
-        <div className={classes.mainMenu} onClick={mainMenuClickHandler}>
+        <div id={corpId} className={classes.mainMenu} onClick={mainMenuClickHandler}>
           {main}
         </div>
         {sub && (
@@ -65,7 +87,7 @@ const SideMenuData = ({ main, sub, myActiveMenu, sideMenuClose }) => {
         <div>
           {sub &&
             sub.map((ele) => (
-              <p className={classes.subMenu} onClick={subMenuClickHandler} style={{ cursor: "pointer" }}>
+              <p id={deptId} className={classes.subMenu} onClick={subMenuClickHandler} style={{ cursor: "pointer" }}>
                 {ele}
               </p>
             ))}

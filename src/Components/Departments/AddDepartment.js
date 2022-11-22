@@ -1,10 +1,15 @@
 import React from 'react';
+import { useState } from 'react';
 import "./AddDepartment.css";
 
 var showVehicle = true;
 var showRide = true;
-let allow_inter_country = false;
+let allow_inter_country = "No";
+let lock_vehicle_type = "No";
+let preferredVehicles = ["Null"];
+let enableSerices = ["Null"];
 const AddDepartment = () => {
+    const [selectionChange, setSelectionChange] = useState();
     function showVehicleCheckboxes() {
         var checkboxes = document.getElementsByClassName("multipleSelection")[0].children[1];
 
@@ -13,17 +18,20 @@ const AddDepartment = () => {
             showVehicle = false;
         } else {
             let length = document.getElementsByClassName("multipleSelection")[0].children[1].children.length;
-            let arr = [];
+            preferredVehicles = [];
             for (let i = 0; i < length; i++) {
                 if (document.getElementsByClassName("multipleSelection")[0].children[1].children[i]?.checked)
-                    arr.push(document.getElementsByClassName("multipleSelection")[0].children[1].children[i].value)
+                    preferredVehicles.push(document.getElementsByClassName("multipleSelection")[0].children[1].children[i].value)
             }
-            if (arr.toString())
-                document.getElementsByTagName("select")[0].children[0].innerText = arr.toString();
-            else
+            if (preferredVehicles.toString())
+                document.getElementsByTagName("select")[0].children[0].innerText = preferredVehicles.toString();
+            else {
                 document.getElementsByTagName("select")[0].children[0].innerText = "Select";
+                preferredVehicles = ["Null"];
+            }
             checkboxes.style.display = "none";
             showVehicle = true;
+            setSelectionChange(prev => !prev);
         }
     }
     function showRideCheckboxes() {
@@ -34,23 +42,31 @@ const AddDepartment = () => {
             showRide = false;
         } else {
             let length = document.getElementsByClassName("multipleSelection")[1].children[1].children.length;
-            let arr = [];
+            enableSerices = [];
             for (let i = 0; i < length; i++) {
                 if (document.getElementsByClassName("multipleSelection")[1].children[1].children[i]?.checked)
-                    arr.push(document.getElementsByClassName("multipleSelection")[1].children[1].children[i].value)
+                    enableSerices.push(document.getElementsByClassName("multipleSelection")[1].children[1].children[i].value)
             }
-            if (arr.toString())
-                document.getElementsByTagName("select")[1].children[0].innerText = arr.toString();
-            else
+            if (enableSerices.toString())
+                document.getElementsByTagName("select")[1].children[0].innerText = enableSerices.toString();
+            else {
                 document.getElementsByTagName("select")[1].children[0].innerText = "Select";
+                enableSerices = ["Null"];
+            }
             checkboxes.style.display = "none";
             showRide = true;
+            setSelectionChange(prev => !prev);
         }
     }
 
     const interCountryChangeHandler = (e) => {
-        e.target.checked ? (allow_inter_country = "true") : (allow_inter_country = "false");
+        e.target.checked ? allow_inter_country = "Yes" : allow_inter_country = "No";
+        setSelectionChange(prev => !prev);
         // console.log(allow_inter_country);
+    }
+    const lockVehicleTypeChangeHandler = (e) => {
+        e.target.checked ? lock_vehicle_type = "Yes" : lock_vehicle_type = "No";
+        setSelectionChange(prev => !prev);
     }
     return (
         <div className='add-department-container' id='add-department'>
@@ -75,6 +91,10 @@ const AddDepartment = () => {
                     <main>
                         <header style={{ display: "flex", justifyContent: "space-between" }}>
                             <span>Lock Vehicle Type</span>
+                            <label class="switch" for="checkbox2">
+                                <input type="checkbox" id="checkbox2" className='first' onChange={lockVehicleTypeChangeHandler} />
+                                <div class="slider round"></div>
+                            </label>
                             {/* <label class="switch2" for="checkbox">
                                     <input type="checkbox" id="checkbox" className='second' />
                                     <div class="slider2 round"></div>
@@ -98,11 +118,11 @@ const AddDepartment = () => {
                             </div>
 
                             <div id="checkBoxes">
-                                <input type="checkbox" value="Basic" id="first" /><span>Basic</span>
+                                <input type="checkbox" value="Basic" id="first" /><label htmlFor='first' >Basic</label>
                                 <br />
-                                <input type="checkbox" value="Comfort" id="second" /><span>Comfort</span>
+                                <input type="checkbox" value="Comfort" id="second" /><label htmlFor='second'>Comfort</label>
                                 <br />
-                                <input type="checkbox" value="Comfort Plus" id="third" /><span>Comfort Plus</span>
+                                <input type="checkbox" value="Comfort Plus" id="third" /><label htmlFor='third'>Comfort Plus</label>
                                 <br />
                             </div>
                         </div>
@@ -124,9 +144,9 @@ const AddDepartment = () => {
                             </div>
 
                             <div id="checkBoxes">
-                                <input type="checkbox" value="Ride" id="first" /><span>Ride</span>
+                                <input type="checkbox" value="Ride" id="first1" /><label htmlFor='first1'>Ride</label>
                                 <br />
-                                <input type="checkbox" value="Food" id="second" /><span>Food</span>
+                                <input type="checkbox" value="Food" id="second1" /><label htmlFor='second1'>Food</label>
                                 <br />
                             </div>
                         </div>
@@ -137,6 +157,21 @@ const AddDepartment = () => {
             </div>
             <div className='create-department'>
                 <header>Create Department</header>
+                <br />
+                <div className='sub-container'>
+                    <div>
+                        <span>Allow Inter Country: </span><span>{allow_inter_country}</span>
+                    </div>
+                    <div>
+                        <span>Lock Vehicle Type: </span><span>{lock_vehicle_type}</span>
+                    </div>
+                    <div>
+                        <span>Preferred Vehicle Categories: </span><span>{preferredVehicles.toString()}</span>
+                    </div>
+                    <div>
+                        <span>Enabled Services: </span><span>{enableSerices.toString()}</span>
+                    </div>
+                </div>
                 <div style={{ display: "flex", alignItems: "center", margin: "0px 40px", gap: "100px" }}>
                     <input type="text" placeholder='Department Name' />
                     <input type="text" placeholder='Admin Name' />

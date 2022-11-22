@@ -11,129 +11,172 @@ import Routes from "./Components/Routes/Route";
 import Stops from "./Components/Routes/Stops";
 import Departments from "./Components/Departments/Departments";
 import AddDepartment from "./Components/Departments/AddDepartment";
+import Staff from "./Components/Staff/Staff";
+import Admins from "./Components/Admins/Admins";
+import NewRegistration from "./Components/AddNewCorp/NewRegistration";
 
 let flag = false;
 let prevURL = "";
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-  const history = useHistory();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+    const history = useHistory();
 
-  if (isSideMenuOpen && window.screen.width >= 768) {
-    if (document.getElementById("myContainer")) {
-      document.getElementById("myContainer").style.overflowX = "scroll";
-      document.getElementById("myContainer").style.width = "75%";
-      // document.getElementById("myContainer").style.width = "calc(100vw-420px)";
-      flag = true;
-    }
-    if (document.getElementById("trip-table")) {
-      document.getElementById("trip-table").style.width = "78%";
-      document.getElementById("my-table").style.width = "100%";
-    }
-    if (document.getElementById("stopsInfo-map")) {
-      document.getElementById("stopsInfo-map").style.width = "52%";
-    }
-    if (document.getElementById("main-stop")) {
-      document.getElementById("main-stop").style.width = "75%";
-    }
-    if (document.getElementById("add-department")) {
-      document.getElementById("add-department").style.width = "78%";
-    }
-    if (document.getElementById("support")) {
-      // document.getElementById("support").style.width = "calc(100vw - 320px )";
-      document.getElementById("support").style.width = "77%";
-    }
-  } else if (isSideMenuOpen && window.screen.width < 768) {
-    document.body.style.overflow = "hidden";
-  }
+    useEffect(() => {
+        let status = localStorage.getItem("login");
+        if (status === null)
+            setIsLoggedIn(false);
+        else
+            status === "false" ? setIsLoggedIn(false) : setIsLoggedIn(true);
+    }, []);
 
-  if (!isSideMenuOpen && window.screen.width >= 768) {
-    if (document.getElementById("myContainer")) {
-      if (flag)
-        document.getElementById("myContainer").style.overflowX = "visible";
-      document.getElementById("myContainer").style.width = "100%";
+    if (isSideMenuOpen && window.screen.width >= 768) {
+        if (document.getElementById("myContainer")) {
+            document.getElementById("myContainer").style.overflowX = "scroll";
+            document.getElementById("myContainer").style.width = "75%";
+            // document.getElementById("myContainer").style.width = "calc(100vw-420px)";
+            flag = true;
+        }
+        if (document.getElementById("new-reg")) {
+            document.getElementById("new-reg").style.width = "80%";
+            for (let i = 0; i < document.getElementsByTagName("input").length; i++) {
+                document.getElementsByTagName("input")[i].style.width = "250px";
+                document.getElementsByTagName("input")[i].style.marginRight = "50px";
+            }
+            for (let i = 0; i < document.getElementsByTagName("select").length; i++) {
+                document.getElementsByTagName("select")[i].style.width = "250px";
+                document.getElementsByTagName("select")[i].style.marginRight = "50px";
+            }
+        }
+        if (document.getElementById("trip-table")) {
+            document.getElementById("trip-table").style.width = "78%";
+            document.getElementById("my-table").style.width = "100%";
+        }
+        if (document.getElementById("stopsInfo-map")) {
+            document.getElementById("stopsInfo-map").style.width = "52%";
+        }
+        if (document.getElementById("main-stop")) {
+            document.getElementById("main-stop").style.width = "75%";
+        }
+        if (document.getElementById("add-department")) {
+            document.getElementById("add-department").style.width = "78%";
+        }
+        if (document.getElementById("support")) {
+            // document.getElementById("support").style.width = "calc(100vw - 320px )";
+            document.getElementById("support").style.width = "77%";
+        }
+    } else if (isSideMenuOpen && window.screen.width < 768) {
+        document.body.style.overflow = "hidden";
     }
-    if (document.getElementById("trip-table")) {
-      document.getElementById("trip-table").style.width = "100%";
-      document.getElementById("my-table").style.width = "100%";
-    }
-    if (document.getElementById("stopsInfo-map")) {
-      document.getElementById("stopsInfo-map").style.width = "73%";
-    }
-    if (document.getElementById("add-department")) {
-      document.getElementById("add-department").style.width = "100%";
-    }
-    if (document.getElementById("main-stop")) {
-      document.getElementById("main-stop").style.width = "100%";
-    }
-    if (document.getElementById("support")) {
-      // document.getElementById("support").style.width = "calc(100vw - 20px )";
-      document.getElementById("support").style.width = "100%";
-    }
-  }
 
-  const loginHandler = useCallback((loggedValue) => {
-    history.push("/dashboard");
-    setIsLoggedIn(loggedValue);
-  }, []);
+    if (!isSideMenuOpen && window.screen.width >= 768) {
+        if (document.getElementById("myContainer")) {
+            if (flag)
+                document.getElementById("myContainer").style.overflowX = "visible";
+            document.getElementById("myContainer").style.width = "100%";
+        }
+        if (document.getElementById("new-reg")) {
+            document.getElementById("new-reg").style.width = "100vw";
+            for (let i = 0; i < document.getElementsByTagName("input").length; i++) {
+                document.getElementsByTagName("input")[i].style.width = "300px";
+                document.getElementsByTagName("input")[i].style.marginRight = "100px";
+            }
+            for (let i = 0; i < document.getElementsByTagName("select").length; i++) {
+                document.getElementsByTagName("select")[i].style.width = "300px";
+                document.getElementsByTagName("select")[i].style.marginRight = "100px";
+            }
+        }
+        if (document.getElementById("trip-table")) {
+            document.getElementById("trip-table").style.width = "100%";
+            document.getElementById("my-table").style.width = "100%";
+        }
+        if (document.getElementById("stopsInfo-map")) {
+            document.getElementById("stopsInfo-map").style.width = "73%";
+        }
+        if (document.getElementById("add-department")) {
+            document.getElementById("add-department").style.width = "100%";
+        }
+        if (document.getElementById("main-stop")) {
+            document.getElementById("main-stop").style.width = "100%";
+        }
+        if (document.getElementById("support")) {
+            // document.getElementById("support").style.width = "calc(100vw - 20px )";
+            document.getElementById("support").style.width = "100%";
+        }
+    }
 
-  const sideMenuHoverHandler = () => {
-    setIsSideMenuOpen(true);
-  };
+    const loginHandler = useCallback((loggedValue) => {
+        localStorage.setItem("login", true);
+        history.push("/dashboard");
+        setIsLoggedIn(loggedValue);
+    }, []);
 
-  const sideMenuLeaveHandler = () => {
-    setIsSideMenuOpen(false);
-  };
-  return (
-    <div>
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to="/login" />
-        </Route>
-        <Route path="/login">
-          <Login login={loginHandler} />
-        </Route>
-        <Route path="/">{!isLoggedIn && <Login login={loginHandler} />}</Route>
-      </Switch>
-      {isLoggedIn && (
-        <React.Fragment>
-          <Header sideMenuOpen={sideMenuHoverHandler} />
-          <div className="myContainer">
-            <SideMenu
-              sideMenuClose={sideMenuLeaveHandler}
-              property={isSideMenuOpen}
-            />
-            <Route path="/trips">
-              <Trips />
-            </Route>
-            <Route path="/dashboard">
-              <Dashboard />
-            </Route>
-            <Route path="/departments" exact>
-              <Departments />
-            </Route>
-            <Route path="/departments/add-new" exact>
-              <AddDepartment />
-            </Route>
-            <Route path="/support">
-              <Support />
-            </Route>
-            <Route path="/routes" exact>
-              <Routes />
-            </Route>
-            <Route path="/routes/stops">
-              <Stops />
-            </Route>
-          </div>
-        </React.Fragment>
-      )}
-      {/* <Route path="/dashboard">
+    const sideMenuHoverHandler = () => {
+        setIsSideMenuOpen(true);
+    };
+
+    const sideMenuLeaveHandler = () => {
+        setIsSideMenuOpen(false);
+    };
+    return (
+        <div>
+            <Switch>
+                <Route path="/" exact>
+                    <Redirect to="/login" />
+                </Route>
+                <Route path="/login">
+                    <Login login={loginHandler} />
+                </Route>
+                <Route path="/">{!isLoggedIn && <Login login={loginHandler} />}</Route>
+            </Switch>
+            {isLoggedIn && (
+                <React.Fragment>
+                    <Header sideMenuOpen={sideMenuHoverHandler} />
+                    <div className="myContainer">
+                        <SideMenu
+                            sideMenuClose={sideMenuLeaveHandler}
+                            property={isSideMenuOpen}
+                        />
+                        <Route path="/trips">
+                            <Trips />
+                        </Route>
+                        <Route path="/dashboard">
+                            <Dashboard />
+                        </Route>
+                        <Route path="/new-registration">
+                            <NewRegistration />
+                        </Route>
+                        <Route path="/departments" exact>
+                            <Departments />
+                        </Route>
+                        <Route path="/departments/add-new" exact>
+                            <AddDepartment />
+                        </Route>
+                        <Route path="/staff">
+                            <Staff />
+                        </Route>
+                        <Route path="/admins">
+                            <Admins />
+                        </Route>
+                        <Route path="/support">
+                            <Support />
+                        </Route>
+                        <Route path="/routes" exact>
+                            <Routes />
+                        </Route>
+                        <Route path="/routes/:routeId">
+                            <Stops />
+                        </Route>
+                    </div>
+                </React.Fragment>
+            )}
+            {/* <Route path="/dashboard">
         {isLoggedIn ? (
           <React.Fragment>
             <Header sideMenuOpen={sideMenuHoverHandler} />
             <div className="myContainer"> */}
-      {/* {isSideMenuOpen && <SideMenu sideMenuClose={sideMenuLeaveHandler} />} */}
-      {/* <SideMenu
+            {/* {isSideMenuOpen && <SideMenu sideMenuClose={sideMenuLeaveHandler} />} */}
+            {/* <SideMenu
                 sideMenuClose={sideMenuLeaveHandler}
                 property={isSideMenuOpen}
               />
@@ -144,8 +187,8 @@ function App() {
           <Redirect to="/login" />
         )}
       </Route> */}
-    </div>
-  );
+        </div>
+    );
 }
 
 export default App;

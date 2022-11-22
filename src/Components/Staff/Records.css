@@ -1,0 +1,59 @@
+.alert_studentDisble {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(33, 33, 33, 0.4);
+    background-color: white;
+    border-radius: 10px;
+    min-width: 400px;
+    min-height: 150px;
+    height: auto;
+    width: auto;
+}
+
+.alert_studentDisble header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: rgb(226, 44, 29);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: white;
+}
+
+.alert_studentDisble footer {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.alert_studentDisble footer button {
+    padding: 4px 18px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.alert_studentDisble footer button:nth-child(1) {
+    background-color: rgba(42, 149, 69, 255);
+    border: 1px solid rgba(42, 149, 69, 255);
+    color: white;
+}
+
+.alert_studentDisble footer button:nth-child(2) {
+    background-color: white;
+    color: rgb(226, 44, 29);
+    border: 1px solid rgb(226, 44, 29);
+}
+
+.alert_studentDisble main {
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.alert_studentDisble footer {
+    padding: 25px 15px;
+    color: grey;
+    font-weight: bold;
+}

@@ -29,6 +29,15 @@
   /* padding: 10px 0; */
 }
 
+.container .newCorpButton {
+  background-color: rgba(34, 137, 203, 255);
+  color: white;
+  border: 1px solid rgba(34, 137, 203, 255);
+  border-radius: 5px;
+  padding: 0px 25px;
+  cursor: pointer;
+}
+
 .adminName {
   font-weight: bold;
   font-size: 18px;
@@ -92,11 +101,13 @@
 }
 
 .cards div:nth-child(3) {
-  background-color: rgba(42, 149, 69, 255);
+  background-color: rgba(42, 149, 69, 255); 
+  /* green */
 }
 
 .cards div:nth-child(4) {
   background-color: rgba(245, 174, 48, 255);
+  /* yellow */
 }
 
 .chart {

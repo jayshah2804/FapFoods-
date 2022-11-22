@@ -1,11 +1,11 @@
-.department_actions {
+.staff_actions {
     position: absolute;
-    left: 80px;
+    left: 60px;
     box-shadow: 0 0 20px rgba(33, 33, 33, .3);
     z-index: 99;
     border-radius: 5px;
     background-color: white;
-    padding: 10px 20px;
+    padding: 10px 25px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -13,7 +13,8 @@
     gap: 10px
 }
 
-.department_actions p:hover {
+.staff_actions p:hover {
     text-decoration: underline;
+    cursor: pointer;
     /* font-weight: bold; */
 }

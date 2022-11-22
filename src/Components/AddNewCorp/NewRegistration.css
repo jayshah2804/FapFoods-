@@ -1,0 +1,79 @@
+.new-corp-conatiner {
+    width: 100vw;
+    padding: 10px;
+}
+
+.new-corp-conatiner header {
+    font-weight: bold;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.new-corp-subcontainer {
+    width: 100%;
+    margin-top: 10px;
+    padding: 20px;
+    height: 90%;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-top: 30px;
+}
+
+.new-corp-conatiner input {
+    border: none;
+    width: 300px;
+    border-bottom: 1px solid gray;
+    margin-right: 100px;
+}
+
+.new-corp-conatiner input:focus {
+    outline: none;
+}
+
+.new-corp-conatiner input::placeholder {
+    font-size: 15.5px;
+}
+
+.new-corp-conatiner select {
+    border: none;
+    width: 300px;
+    border-bottom: 1px solid gray;
+    margin-right: 100px;
+    font-size: 15.5px;
+}
+
+.new-corp-conatiner select:focus {
+    outline: none;
+}
+
+.new-corp-subcontainer button {
+    border-radius: 5px;
+    padding: 7px 30px;
+    cursor: pointer;
+}
+
+.new-corp-subcontainer button:nth-child(1) {
+    background-color: white;
+    color: gray;
+    border: 1px solid grey;
+    margin-right: 20px;
+}
+
+.new-corp-subcontainer button:nth-child(1):hover {
+    font-weight: bolder;
+}
+
+.new-corp-subcontainer button:nth-child(2) {
+    margin-right: 50px;
+    background-color: rgba(42, 149, 69, 255);
+    border: 1px solid rgba(42, 149, 69, 255);
+    color: white;
+}
+
+.new-corp-subcontainer button:nth-child(2):hover {
+    background-color: green;
+}

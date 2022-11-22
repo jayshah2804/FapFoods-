@@ -4,6 +4,8 @@ import classes from "./Login.module.css";
 import littleImage from "../../Assets/Little_logo_login.png";
 import ForgotPassword from "./ForgotPassword";
 import { useEffect } from "react";
+import useHttp from "../../Hooks/use-http";
+import { useCallback } from "react";
 
 let DATA_ERROR = {
   emailError: "",
@@ -15,81 +17,79 @@ const Login = ({ login }) => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const [isForgotPasswordClicked, setIsForgotPasswordClicked] = useState(false);
-  const [error, setError] = useState(DATA_ERROR);
+  const [formError, setFormError] = useState(DATA_ERROR);
   const [isCall, setIsCall] = useState();
   const [isApiError, setIsApiError] = useState();
 
+  const authenticateUser = (data) => {
+    if (!data.Message)
+      setIsApiError(data + " Please try again later");
+    else
+      data.Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password");
+  };
+
+  const { sendRequest } = useHttp();
 
   useEffect(() => {
-    function myFunc() {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify({
-        emailID: emailInputRef.current.value,
-        password: passwordInputRef.current.value
-      })
-
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-      };
-
-      fetch("/api/v1/Authentication/AuthenticateUser", requestOptions)
-        .then(response => response.text())
-        .then(result => JSON.parse(result).Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password"))
-        .catch(error => console.log('error', error));
-    }
     if (jay > 1)
-      myFunc();
+      sendRequest({
+        url: "/api/v1/Authentication/AuthenticateUser",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: emailInputRef.current.value,
+          password: passwordInputRef.current.value
+        }
+      }, authenticateUser);
     jay++;
-  }, [isCall])
+  }, [isCall, sendRequest])
 
   const loginHandler = (event) => {
     event.preventDefault();
-    // if (                      // eslint-disable-next-line 
-    //   !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-    //     emailInputRef.current.value
-    //   )
-    // ) {
-    //   // eslint-disable-line
-    //   fromIsValid = false;
-    //   setError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
-    // }
-    // if (passwordInputRef.current.value.length < 8) {
-    //   fromIsValid = false;
-    //   setError((prev) => ({
-    //     ...prev,
-    //     passwordError: "Password must be of 8 characters",
-    //   }));
-    // }
+    // !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4,5,6,7})+$/.test(
+    if (                      // eslint-disable-next-line 
+      !/\S+@\S+\.\S+/.test(
+        emailInputRef.current.value
+      )
+    ) {
+      // eslint-disable-line
+      fromIsValid = false;
+      setFormError((prev) => ({ ...prev, emailError: "Email is Invalid" }));
+    }
+    if (passwordInputRef.current.value.length < 8) {
+      fromIsValid = false;
+      setFormError((prev) => ({
+        ...prev,
+        passwordError: "Password must be of 8 characters",
+      }));
+    }
     if (emailInputRef.current.value && passwordInputRef.current.value) {
-      fromIsValid && login(true);
-      // fromIsValid && setIsCall(prev => !prev);
+      // fromIsValid && login(true);
+      fromIsValid && setIsCall(prev => !prev);
     }
   };
 
   const emailChangeHandler = () => {
-    // setIsApiError("");
-    // if (                            // eslint-disable-next-line
-    //   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-    //     emailInputRef?.current?.value
-    //   )
-    // ) {
-    //   // eslint-disable-line
-    //   fromIsValid = true;
-    //   setError((prev) => ({ ...prev, emailError: "" }));
-    // } else fromIsValid = false;
+    setIsApiError("");
+    if (                            // eslint-disable-next-line
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+        emailInputRef?.current?.value
+      )
+    ) {
+      // eslint-disable-line
+      fromIsValid = true;
+      setFormError((prev) => ({ ...prev, emailError: "" }));
+    } else fromIsValid = false;
   };
 
   const passwordChangeHandler = () => {
-    // setIsApiError("");
-    // if (passwordInputRef.current.value.length >= 8) {
-    //   fromIsValid = true;
-    //   setError((prev) => ({ ...prev, passwordError: "" }));
-    // } else fromIsValid = false;
+    setIsApiError("");
+    if (passwordInputRef.current.value.length >= 8) {
+      fromIsValid = true;
+      setFormError((prev) => ({ ...prev, passwordError: "" }));
+    } else fromIsValid = false;
   };
 
   const forgotPasswordHandler = () => {
@@ -100,7 +100,8 @@ const Login = ({ login }) => {
       <img src={littleImage} alt="" className={classes.logo} />
       <div className={classes.text}>Access Your Corporate Account</div>
       <p className={classes.errorMessage}>{isApiError}</p>
-      <form className={classes.form} onSubmit={loginHandler}>
+      {/* <form className={classes.form} onSubmit={loginHandler}> */}
+      <form className={classes.form}>
         {!isForgotPasswordClicked && (
           <React.Fragment>
             <input
@@ -110,8 +111,8 @@ const Login = ({ login }) => {
               ref={emailInputRef}
               onChange={emailChangeHandler}
             />
-            {error && (
-              <p className={classes.errorMessage}>{error.emailError}</p>
+            {formError && (
+              <p className={classes.errorMessage}>{formError.emailError}</p>
             )}
             <input
               type="password"
@@ -120,8 +121,8 @@ const Login = ({ login }) => {
               ref={passwordInputRef}
               onChange={passwordChangeHandler}
             />
-            {error && (
-              <p className={classes.errorMessage}>{error.passwordError}</p>
+            {formError && (
+              <p className={classes.errorMessage}>{formError.passwordError}</p>
             )}
             <div
               className={classes.forgotPassword}
@@ -133,6 +134,7 @@ const Login = ({ login }) => {
               type="submit"
               value="Login"
               className={classes.loginButton}
+              onClick={loginHandler}
             />
           </React.Fragment>
         )}
