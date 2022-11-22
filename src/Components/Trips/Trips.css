@@ -77,7 +77,8 @@
 }
 
 .datepicker input:focus {
-  border: 1px solid rgb(194, 191, 191);
+  border: 1px solid black;
+  outline: none;
 }
 
 .datepicker input::placeholder {

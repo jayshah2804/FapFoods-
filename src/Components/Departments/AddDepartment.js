@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import useHttp from '../../Hooks/use-http';
 import "./AddDepartment.css";
 
 var showVehicle = true;
@@ -8,8 +10,64 @@ let allow_inter_country = "No";
 let lock_vehicle_type = "No";
 let preferredVehicles = ["Null"];
 let enableSerices = ["Null"];
+const formError = {
+    vehicleCategoryError: "",
+    enabledServicesError: "",
+    departmentNameError: "",
+    adminNameError: "",
+    adminEmailError: ""
+}
+
+let isFormValid = false;
+let addDeptFlag = 0;
 const AddDepartment = () => {
     const [selectionChange, setSelectionChange] = useState();
+    const [isFormError, setIsFormError] = useState(formError);
+    const [isCall, setIsCall] = useState(false);
+    const departmentNameInputRef = useRef();
+    const adminNameInputRef = useRef();
+    const adminEmailInputRef = useRef();
+    const history = useHistory();
+
+
+    const authenticateUser = (data) => {
+        if (data.Message === "Success") {
+            history.push("/departments");
+            window.location.reload();
+        }
+        else
+            alert(data.SystemMessage)
+        // console.log(data);
+    };
+
+    const { sendRequest } = useHttp();
+
+    useEffect(() => {
+        // alert("here");
+        if (addDeptFlag > 1)
+            sendRequest({
+                url: "/api/v1/Department/AddEditDepartment",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    emailID: sessionStorage.getItem("user"),
+                    adminEmail: adminEmailInputRef.current.value,
+                    adminName: adminNameInputRef.current.value,
+                    buttonMark: "I",
+                    departmentID: "",
+                    departmentname: departmentNameInputRef.current.value,
+                    parentID: sessionStorage.getItem("corpId"),
+                    interCountryTrips: allow_inter_country === "Yes" ? "Y" : "N",
+                    lockVehicleType: lock_vehicle_type === "Yes" ? "Y" : "N",
+                    allowedVehicleType: preferredVehicles.toString(),
+                    availableServices: enableSerices.toString()
+                }
+            }, authenticateUser);
+        addDeptFlag++;
+    }, [sendRequest, isCall])
+
     function showVehicleCheckboxes() {
         var checkboxes = document.getElementsByClassName("multipleSelection")[0].children[1];
 
@@ -68,6 +126,27 @@ const AddDepartment = () => {
         e.target.checked ? lock_vehicle_type = "Yes" : lock_vehicle_type = "No";
         setSelectionChange(prev => !prev);
     }
+
+    const createDepartmentClickedHandler = () => {
+        setIsCall(prev => !prev);
+        // if (preferredVehicles.toString() === "Null") {
+        //     setIsFormError(prev => ({ ...prev, vehicleCategoryError: "vehicle category is invalid" }));
+        // }
+        // if (enableSerices.toString() === "Null") {
+        //     setIsFormError(prev => ({ ...prev, enabledServicesError: "enabled service is invalid" }));
+        // }
+        // let obj = {
+        //     allow_inter_country: allow_inter_country,
+        //     lock_vehicle_type: lock_vehicle_type,
+        //     preferredVehicles: preferredVehicles.toString(),
+        //     enableSerices: enableSerices.toString(),
+        //     department_name: departmentNameInputRef.current.value,
+        //     admin_name: adminNameInputRef.current.value,
+        //     admin_email: adminEmailInputRef.current.value
+        // }
+        // console.log(obj);
+    }
+
     return (
         <div className='add-department-container' id='add-department'>
             <div>
@@ -95,10 +174,6 @@ const AddDepartment = () => {
                                 <input type="checkbox" id="checkbox2" className='first' onChange={lockVehicleTypeChangeHandler} />
                                 <div class="slider round"></div>
                             </label>
-                            {/* <label class="switch2" for="checkbox">
-                                    <input type="checkbox" id="checkbox" className='second' />
-                                    <div class="slider2 round"></div>
-                                </label> */}
                         </header>
                         <div className='text'>If set to 'YES' this will restrict all staff in this corporate from changing the approved vehicle type when requesting for a trip</div>
                     </main>
@@ -173,12 +248,12 @@ const AddDepartment = () => {
                     </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", margin: "0px 40px", gap: "100px" }}>
-                    <input type="text" placeholder='Department Name' />
-                    <input type="text" placeholder='Admin Name' />
-                    <input type="email" placeholder='Admin Email' />
+                    <input type="text" placeholder='Department Name' ref={departmentNameInputRef} />
+                    <input type="text" placeholder='Admin Name' ref={adminNameInputRef} />
+                    <input type="email" placeholder='Admin Email' ref={adminEmailInputRef} />
                 </div>
                 <br />
-                <button>Create Department</button>
+                <button onClick={createDepartmentClickedHandler} >Create Department</button>
             </div>
         </div>
     )

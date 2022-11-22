@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Records from "./Records";
 import ReactPaginate from "react-paginate";
 import "./Route.css";
 import { CSVLink } from "react-csv";
-import { Route } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import AddRoute from "./AddRoute/RouteInfo";
+import useHttp from "../../Hooks/use-http";
 
 const TRIP_DATA = [
     {
@@ -171,13 +172,59 @@ const TRIP_TITLE = [
 
 let myClick = false;
 let prev_id = "1";
+let routeListFlag = 0;
+let route_details = [];
 
 function Routes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(7);
-    const [filteredData, setFilteredData] = useState(TRIP_DATA);
+    const [filteredData, setFilteredData] = useState([]);
     const searchInputRef = useRef();
     const [isAddRouteClicked, setIsAddRouteClicked] = useState();
+
+    const search = useLocation().search;
+    const id = new URLSearchParams(search).get('departmentId');
+
+    const authenticateUser = (data) => {
+        console.log(data.RouteList);
+        // console.log(data);
+        let route_list = [];
+        if (data.RouteList) {
+            for (let i = 0; i < data.RouteList.length; i++) {
+                route_list.push({
+                    id: i + 1,
+                    route_id: data.RouteList[i].RouteID,
+                    route: data.RouteList[i].RouteName,
+                    city: data.RouteList[i].City,
+                    country: data.RouteList[i].Country,
+                    zone_price: data.RouteList[i].ZonePrice,
+                    route_type: data.RouteList[i].RouteTypeName,
+                    department: data.RouteList[i].Deplartmentname
+                })
+            }
+        }
+        route_details = route_list;
+        setFilteredData(route_list);
+    };
+
+    const { sendRequest } = useHttp();
+
+    useEffect(() => {
+        if (routeListFlag > 0)
+            sendRequest({
+                url: "/api/v1/Route/GetRoutList",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    emailID: sessionStorage.getItem("user"),
+                    corporateID: id ? id : sessionStorage.getItem("corpId"),
+                    departmentID: ""
+                }
+            }, authenticateUser);
+        routeListFlag++;
+    }, [sendRequest]);
 
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -211,14 +258,14 @@ function Routes() {
 
     const routeSearchHandler = (e) => {
         // if (e.target.value)
-            setFilteredData(TRIP_DATA.filter(data => data.route.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.route_id.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.city.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.country.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.zone_price.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.route_type.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.department.toLowerCase().includes(e.target.value.toLowerCase())
-            ));
+        setFilteredData(route_details.filter(data => data.route.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.route_id.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.city.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.country.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.zone_price.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.route_type.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.department.toLowerCase().includes(e.target.value.toLowerCase())
+        ));
         // else setFilteredData(TRIP_DATA);
     };
 
@@ -238,7 +285,7 @@ function Routes() {
                                 ref={searchInputRef}
                             />
                         </div>
-                        <CSVLink data={TRIP_DATA} className="export_csv">
+                        <CSVLink data={route_details} className="export_csv">
                             Export
                         </CSVLink>
                     </div>

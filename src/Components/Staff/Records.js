@@ -13,28 +13,43 @@ const Records = ({ data, headers }) => {
     }
     return (
         <React.Fragment>
-            <table className="table" id="my-table">
-                <thead>
-                    <tr>
-                        {headers.map((data) => (
-                            <th>{data}</th>
-                        ))}
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
-                <tbody>
-                    {data.map(myData => <tr>
-                        <td>{myData.name}</td>
-                        <td>{myData.mobile_no}</td>
-                        <td>{myData.superviser_name}</td>
-                        <td width="15%">{myData.department}</td>
-                        <td>{myData.status}</td>
-                        {/* <td width="20%" >{myData.department}</td> */}
-                        <td width="10%"><Accordian myId={myData.id} forMyRender={func} setIsStudentDisableClicked={setIsStudentDisableClicked} /></td>
-                    </tr>)}
-                </tbody>
-            </table>
+            {data[0] ?
+                <table className="table" id="my-table">
+                    <thead>
+                        <tr>
+                            {headers.map((data) => (
+                                <th>{data}</th>
+                            ))}
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map(myData => <tr>
+                            <td>{myData.name}</td>
+                            <td>{myData.mobile_no}</td>
+                            <td>{myData.superviser_name}</td>
+                            <td width="15%">{myData.department}</td>
+                            <td>{myData.status}</td>
+                            {/* <td width="20%" >{myData.department}</td> */}
+                            <td width="10%"><Accordian myId={myData.id} forMyRender={func} setIsStudentDisableClicked={setIsStudentDisableClicked} /></td>
+                        </tr>)}
+                    </tbody>
+                </table>
+                :
+                <React.Fragment>
+                    <table className="table" id="my-table">
+                        <thead>
+                            <tr>
+                                {headers.map((data) => (
+                                    <th>{data}</th>
+                                ))}
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
+                </React.Fragment>
+            }
             {isStudentDisbaleClicked &&
                 <div className="alert_studentDisble">
                     <header>

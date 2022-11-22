@@ -37,7 +37,9 @@ const SideMenu = (props) => {
   const { sendRequest } = useHttp();
 
   const authenticateUser = (data) => {
-    // console.log(data.MenuList[0]);
+    console.log(data.MenuList);
+    sessionStorage.setItem("corpId", data.MenuList[0].CorporateID);
+    // console.log(data.MenuList);
     let sideMenu = [];
     sideMenu.push({
       main: "Dashboard"
@@ -47,12 +49,14 @@ const SideMenu = (props) => {
         corpId: data.MenuList[0].CorporateID,
         sub: ["Departments", "Admins", "Trips"]
       });
-    for (let i = 0; i < data.MenuList.length; i++) {
-      sideMenu.push({
-        main: data.MenuList[i].DepartMentName,
-        deptId: data.MenuList[i].DepartmentID,
-        sub: ["Staff Members", "Deleted Staff Members", "Private Drive"]
-      });
+    if (data.MenuList[0].DepartMentName) {
+      for (let i = 0; i < data.MenuList.length; i++) {
+        sideMenu.push({
+          main: data.MenuList[i].DepartMentName,
+          deptId: data.MenuList[i].DepartmentID,
+          sub: ["Staff Members", "Private Drive"]
+        });
+      }
     }
     sideMenu.push({
       main: "Departments",
@@ -74,7 +78,6 @@ const SideMenu = (props) => {
     // else
     //   data.Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password");
   };
-
   useEffect(() => {
     if (sideMenuFlag > 0) {
       sendRequest({
@@ -84,12 +87,12 @@ const SideMenu = (props) => {
           'Content-Type': 'application/json',
         },
         body: {
-          emailID: "hitesh.kripalani@eximiousglobal.com"
+          emailID: sessionStorage.getItem("user")
         }
       }, authenticateUser);
     }
     sideMenuFlag++;
-  }, []);
+  },[]);
 
   const currentActiveMenuHandler = (data) => {
     console.log(data);

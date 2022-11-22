@@ -22,6 +22,7 @@ const Login = ({ login }) => {
   const [isApiError, setIsApiError] = useState();
 
   const authenticateUser = (data) => {
+    sessionStorage.setItem("user", emailInputRef.current.value);
     if (!data.Message)
       setIsApiError(data + " Please try again later");
     else

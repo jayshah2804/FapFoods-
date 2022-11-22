@@ -141,6 +141,7 @@ const STAFF_TITLE = [
 let myClick = false;
 let prev_id = "1";
 let staffListFlag = 0;
+let staff_details = [];
 function Routes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(7);
@@ -154,20 +155,24 @@ function Routes() {
     // console.log("myID", id);
 
     const authenticateUser = (data) => {
+        // console.log(data);
         let staff_data = [];
-        for (let i = 0; i < data.StaffList.length; i++) {
-            staff_data.push({
-                id: i + 1,
-                name: data.StaffList[i].OfficialName,
-                mobile_no: data.StaffList[i].MobileNumber,
-                superviser_name: data.StaffList[i].SupervisorName,
-                department: data.StaffList[i].DepartmentName,
-                status: data.StaffList[i].Status
-            })
+        if (data.StaffList) {
+            for (let i = 0; i < data.StaffList.length; i++) {
+                staff_data.push({
+                    id: i + 1,
+                    name: data.StaffList[i].OfficialName,
+                    mobile_no: data.StaffList[i].MobileNumber,
+                    superviser_name: data.StaffList[i].SupervisorName,
+                    department: data.StaffList[i].DepartmentName,
+                    status: data.StaffList[i].Status
+                })
+            }
         }
         // console.log(department_data);
+        staff_details = staff_data;
         setFilteredData(staff_data)
-        console.log(data.StaffList);
+        console.log(staff_data);
     };
 
     const { sendRequest } = useHttp();
@@ -181,12 +186,12 @@ function Routes() {
                     'Content-Type': 'application/json',
                 },
                 body: {
-                    emailID: "hitesh.kripalani@eximiousglobal.com",
+                    emailID: sessionStorage.getItem("user"),
                     corporateID: id ? id : "",
                 }
             }, authenticateUser);
         staffListFlag++;
-    }, [sendRequest])
+    }, [sendRequest]);
 
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -220,7 +225,7 @@ function Routes() {
 
     const routeSearchHandler = (e) => {
         // if (e.target.value)
-        setFilteredData(STAFF_DATA.filter(data =>
+        setFilteredData(staff_details.filter(data =>
             data.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
             data.mobile_no.toLowerCase().includes(e.target.value.toLowerCase()) ||
             data.superviser_name.toLowerCase().includes(e.target.value.toLowerCase()) ||
@@ -246,7 +251,7 @@ function Routes() {
                                 ref={searchInputRef}
                             />
                         </div>
-                        <CSVLink data={STAFF_DATA} className="export_csv">
+                        <CSVLink data={staff_details} className="export_csv">
                             Export
                         </CSVLink>
                     </div>
