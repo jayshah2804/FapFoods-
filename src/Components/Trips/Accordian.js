@@ -10,6 +10,8 @@ import startPoint from "../../Assets/Pin_icon_green50.png";
 import endPoint from "../../Assets/Pin_icon50.png";
 
 import classes from "./Accordian.module.css";
+import useHttp from "../../Hooks/use-http";
+import { useEffect } from "react";
 
 const RIDER_TITLE = [
   "Rider Name",
@@ -83,8 +85,55 @@ const RIDER_DATA = [
 
 let parent_prev_id;
 let prev_active_status;
+let rider_dataFlag = 0;
+let previous_id;
+let currentId;
+let rider_details = "";
+let current_journeyId;
 const Accordian = (props) => {
   const [isActive, setIsActive] = useState(false);
+  const [riderData, setRiderData] = useState([]);
+
+  const authenticateUser = (data) => {
+    console.log(data.TripdetailList);
+    let trip_rider_list = [];
+    for (let i = 0; i < data.TripdetailList.length; i++) {
+      trip_rider_list.push({
+        id: i + 1,
+        rider_name: data.TripdetailList[i].RiderName,
+        pickup_location: data.TripdetailList[i].PickupAddress,
+        shuttle_arrival_time: data.TripdetailList[i].ShuttleArriveTime,
+        boarding_time: data.TripdetailList[i].BoardingTime,
+        boarding_lat_lng: data.TripdetailList[i].PickupLatitude + "," + data.TripdetailList[i].PickupLongitude,
+        drop_location: data.TripdetailList[i].DropOffAddress,
+        alighting_time: data.TripdetailList[i].AlightingTime,
+        alighting_lat_lng: data.TripdetailList[i].DropoffLatitude + "," + data.TripdetailList[i].DropoffLongitude
+      })
+    }
+    rider_details = trip_rider_list;
+    setRiderData(rider_details);
+  };
+
+  const { sendRequest } = useHttp();
+
+  useEffect(() => {
+    if (rider_dataFlag > 12) {
+      if (currentId !== previous_id || (currentId === previous_id && !prev_active_status)) { }
+      // console.log(currentId, previous_id, prev_active_status);
+    }
+    sendRequest({
+      url: "/api/v1/ShuttleTrips/ShuttleTripsDetails",
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        emailID: sessionStorage.getItem("user"),
+        journeyID: current_journeyId
+      }
+    }, authenticateUser);
+    rider_dataFlag++;
+  }, [sendRequest, isActive]);
 
   const myInterval = setInterval(() => {
     if (document.getElementsByClassName("gm-svpc")[0])
@@ -103,8 +152,6 @@ const Accordian = (props) => {
   document.body.appendChild(script);
 
   function myInitMap() {
-    const image =
-      "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
     const map = new window.google.maps.Map(document.getElementById("map"), {
       zoom: 15,
       center: { lat: 23.03489120423814, lng: 72.56658725087891 },
@@ -112,7 +159,7 @@ const Accordian = (props) => {
     });
 
     const flightPlanCoordinates = [
-      { lat: 23.037569650831212, lng: 72.55877665822754},
+      { lat: 23.037569650831212, lng: 72.55877665822754 },
       { lat: 23.03489120423814, lng: 72.56658725087891 },
       { lat: 23.03248207530169, lng: 72.56562165563355 },
       { lat: 23.032583894197987, lng: 72.56023406982422 },
@@ -139,13 +186,6 @@ const Accordian = (props) => {
     const infoWindow = new window.google.maps.InfoWindow();
     let icon;
     let myTitle;
-    // const myImage = {
-    //   url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
-    //   // url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5t9xxQSxtcsppMb9apHlsWTIZO6KAGL-7OA&usqp=CAU",
-    //   size: new window.google.maps.Size(20, 32),
-    //   origin: new window.google.maps.Point(0, 0),
-    //   anchor: new window.google.maps.Point(0, 32),
-    // }
     tourStops.forEach(([position], i) => {
       if (i === 0) {
         icon = startPoint;
@@ -153,9 +193,9 @@ const Accordian = (props) => {
       }
       else {
         icon = studentDummyImage;
-        myTitle = `<div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i-1].rider_name}</h3></div>`;
+        myTitle = `<div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i - 1].rider_name}</h3></div>`;
       }
-      if(i === RIDER_DATA.length - 1) {
+      if (i === RIDER_DATA.length - 1) {
         icon = endPoint;
       }
 
@@ -166,7 +206,7 @@ const Accordian = (props) => {
         icon,
         optimized: false,
       });
-      
+
       marker.addListener("mouseover", () => {
         console.log(marker);
         infoWindow.close();
@@ -178,16 +218,20 @@ const Accordian = (props) => {
       //   infoWindow.setContent("Jay Shah");
       //   infoWindow.open(marker.getMap(), marker);
       // })
-    }); 
+    });
   }
 
   window.myInitMap = myInitMap;
 
   const tableRowClickHandler = (e) => {
+    current_journeyId = e.target.parentElement.children[1].innerText; 
+    // console.log(e.target.parentElement.children[1].innerText);
     if (parent_prev_id !== e.target.parentElement.id && !prev_active_status)
       props.formyRender(parent_prev_id);
     setIsActive(prev => !prev);
     parent_prev_id = e.target.parentElement.id;
+    previous_id = currentId;;
+    currentId = e.target.parentElement.id;
     prev_active_status = isActive;
   }
 
@@ -196,11 +240,11 @@ const Accordian = (props) => {
       <tr onClick={tableRowClickHandler} id={props.id + "tr"} >
         <td>
           <div className={classes.driverInfo} >
-            <img
+            {/* <img
               src={photo}
               alt=""
               className={classes.driverPhoto}
-            />
+            /> */}
             <div className={classes.div}>
               <p>{props.driver_name}</p>
               <p className={classes.carInfo}>{props.car_info}</p>
@@ -232,11 +276,11 @@ const Accordian = (props) => {
                 ))}
               </tr>
               <tbody>
-                {RIDER_DATA.map((data) => {
+                {riderData.map((data) => {
                   return (
                     <tr id="myHandler">
                       <td className={classes.riderName} >
-                        <img src={photo} alt="" />
+                        {/* <img src={photo} alt="" /> */}
                         <p>{data.rider_name}</p>
                       </td>
                       <td>{data.pickup_location} </td>

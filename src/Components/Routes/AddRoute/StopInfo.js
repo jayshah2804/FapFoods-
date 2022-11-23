@@ -17,8 +17,8 @@ let indexToBeMove;
 let indexToBeShift;
 const RIDER_DATA = [
   {
-    stop: "S.S. Divine School",
-    name: ["S.S. Divine School"],
+    stop: "Eximious Global",
+    name: ["Eximious Global"],
     location: { lat: 23.020922774165125, lng: 72.46970495605471 }
   },
   {

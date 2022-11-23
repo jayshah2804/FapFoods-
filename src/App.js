@@ -14,6 +14,7 @@ import AddDepartment from "./Components/Departments/AddDepartment";
 import Staff from "./Components/Staff/Staff";
 import Admins from "./Components/Admins/Admins";
 import NewRegistration from "./Components/AddNewCorp/NewRegistration";
+import DocumentsUpload from "./Components/Documents Upload/DocumentsUpload";
 
 let flag = false;
 let prevURL = "";
@@ -166,6 +167,9 @@ function App() {
                         </Route>
                         <Route path="/routes/:routeId">
                             <Stops />
+                        </Route>
+                        <Route path="/documents-upload">
+                            <DocumentsUpload />
                         </Route>
                     </div>
                 </React.Fragment>

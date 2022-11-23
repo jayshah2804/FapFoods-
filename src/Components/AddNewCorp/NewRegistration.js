@@ -234,7 +234,7 @@ const NewRegistration = () => {
             e.target.parentElement.children[0].innerText = a[0].split("\\")[2];
             if (corporateLogoInputRef.current.value) {
                 getBase64(e.target.files[0]).then(
-                    data => console.log(data)
+                    data => corporateLogo = data
                 );
                 isFormValid = true;
                 setFormError(prev => ({ ...prev, corporateLogoError: "" }));

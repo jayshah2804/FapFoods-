@@ -4,6 +4,8 @@ import ReactPaginate from "react-paginate";
 import "./Trips.css";
 import { CSVLink } from "react-csv";
 import { useLocation, useParams } from "react-router-dom";
+import useHttp from "../../Hooks/use-http";
+import { useEffect } from "react";
 
 const TRIP_DATA = [
   {
@@ -309,16 +311,60 @@ const TRIP_TITLE = [
 let myClick = false;
 let prev_id = "1";
 
+let tripListFlag = 0;
+let total_trip_data = "";
+
 function App(props) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   console.log(queryParams.get('department'));
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(7);
-  const [filteredData, setFilteredData] = useState(TRIP_DATA);
+  const [filteredData, setFilteredData] = useState([]);
   const startDateRef = useRef();
   const endDateRef = useRef();
+
+  const authenticateUser = (data) => {
+    let trip_list = [];
+    for(let i = 0; i < data.TripList.length; i++){
+      trip_list.push({
+        id: i+1,
+        driver_name: data.TripList[i].DriverName,
+        car_info: data.TripList[i].VehicaleModel + "," + data.TripList[i].VehicaleNumber,
+        journey_id: data.TripList[i].DriverTripID,
+        trip_date: data.TripList[i].StartedOnDate,
+        pickup_time: data.TripList[i].StartedOnTime,
+        drop_time: data.TripList[i].EndedOnTime,
+        total_trip_time: data.TripList[i].TotalTripTime,
+        total_trip_km: data.TripList[i].TripDistance
+      })
+    }
+    total_trip_data = trip_list;
+    setFilteredData(trip_list);
+  };
+
+  const { sendRequest } = useHttp();
+
+  useEffect(() => {
+    if (tripListFlag > 0)
+      sendRequest({
+        url: "/api/v1/ShuttleTrips/GetShuttleTrips",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: sessionStorage.getItem("user"),
+          corporateID: sessionStorage.getItem("corpId"),
+          departmentID: "",
+          fromDate: "2018-01-01",
+          toDate: "2022-11-23"
+        }
+      }, authenticateUser);
+      tripListFlag++;
+  }, [sendRequest]);
+
 
   function formatDate(date = new Date(), format = "mm/dd/yy") {
     const map = {
@@ -382,18 +428,18 @@ function App(props) {
 
     if (e.target.innerText === "Today") {
       let todayDate = formatDate();
-      setFilteredData(TRIP_DATA.filter((data) => data.trip_date === todayDate));
+      setFilteredData(total_trip_data.filter((data) => data.trip_date === todayDate));
     } else if (e.target.innerText === "This Week") {
       let todayDate = formatDate();
       setFilteredData(
-        TRIP_DATA.filter(
+        total_trip_data.filter(
           (data) => differenceInDays(data.trip_date, todayDate) <= 7
         )
       );
     } else if (e.target.innerText === "This Month") {
       let todayDate = formatDate();
       setFilteredData(
-        TRIP_DATA.filter(
+        total_trip_data.filter(
           (data) => differenceInDays(data.trip_date, todayDate) <= 31
         )
       );
@@ -419,7 +465,7 @@ function App(props) {
 
   const allDataButtonClickHandler = () => {
     myClick = false;
-    setFilteredData(TRIP_DATA);
+    setFilteredData(total_trip_data);
   };
 
   const inputFromDateBlurHandler = (e) => {
