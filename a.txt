@@ -1,0 +1,14 @@
+if (props.property) {
+    document.getElementById("mySidemenu").style.width = "300px";
+    window.addEventListener("popstate", function (event) {
+      document.getElementById("mySidemenu").style.minWidth = "300px";
+      // The URL changed...
+      this.window.removeEventListener("popstate");
+    });
+    flag = true;
+  } else {
+    if (flag) {
+      document.getElementById("mySidemenu").style.minWidth = null;
+      document.getElementById("mySidemenu").style.width = "0px";
+    }
+  }
