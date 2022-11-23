@@ -68,6 +68,9 @@ const SideMenu = (props) => {
         main: "Routes"
       },
       {
+        main: "Documents Upload"
+      },
+      {
         main: "Query & Support"
       })
 
@@ -92,7 +95,7 @@ const SideMenu = (props) => {
       }, authenticateUser);
     }
     sideMenuFlag++;
-  },[]);
+  }, []);
 
   const currentActiveMenuHandler = (data) => {
     console.log(data);

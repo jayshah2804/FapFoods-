@@ -40,6 +40,10 @@ const SideMenuData = ({ main, corpId, sub, deptId, myActiveMenu, sideMenuClose }
       sideMenuClose(false);
       history.push("/staff");
     }
+    else if(e.target.innerText === "Documents Upload") {
+      sideMenuClose(false);
+      history.push("/documents-upload");
+    }
   };
 
   const subMenuClickHandler = (e) => {

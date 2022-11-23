@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Accordian from "./Accordian";
-// import "./Records.css";
+
+import tripsIcon from "../../Assets/tripsIcon.png";
+import statementIcon from "../../Assets/statementIcon.png";
+import staffIcon from "../../Assets/staffIcon.png";
+import adminIcon from "../../Assets/adminIcon.png";
+
+import "./Records.css";
 
 const Records = ({ data, headers }) => {
     const history = useHistory();
@@ -9,6 +15,11 @@ const Records = ({ data, headers }) => {
         if (val) {
             document.getElementById(val).click();
         }
+    }
+    const subListClickHandler = (e) => {
+        let dptId = e.target.parentElement.id;
+        if (e.target.alt !== "statement" && dptId)
+            history.push(`${e.target.alt}?departmentId=${dptId}`);
     }
     return (
         <React.Fragment>
@@ -28,7 +39,13 @@ const Records = ({ data, headers }) => {
                             <td>{myData.admin_name}</td>
                             <td>{myData.admin_email}</td>
                             <td>{myData.vehicle_category}</td>
-                            <td><Accordian myId={myData.id} forMyRender={func} /></td>
+                            <td id={myData.id} onClick={subListClickHandler} className="department-data" >
+                                <img src={tripsIcon} alt="trips" title="Click to see Trips Details" />
+                                <img src={statementIcon} alt="statement" title="Click to see Statement" />
+                                <img src={staffIcon} alt="staff" title="Click to see Staff Details" />
+                                <img src={adminIcon} alt="admins" title="Click to see Admin Details" />
+                            </td>
+                            {/* <td><Accordian myId={myData.id} forMyRender={func} /></td> */}
                         </tr>)}
                     </tbody>
                 </table>
