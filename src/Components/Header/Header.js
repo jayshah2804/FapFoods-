@@ -3,12 +3,14 @@ import { CgMenuMotion } from "react-icons/cg";
 import { IoMdNotificationsOutline } from "react-icons/io";
 
 import classes from "./Header.module.css";
-import orgLogo from "../../Assets/eximious-logo.png";
+import adminAlternative from "../../Assets/adminAlternative.png";
 import littleLogo from "../../Assets/Little_logo.jpg";
-import adminPhoto from "../../Assets/admin.jpg";
+import loadingGif from "../../Assets/loading-gif.gif";
 import { useHistory } from "react-router-dom";
 import ChangePassword from "../Dashboard/ChangePassword";
 import { GrClose } from "react-icons/gr";
+import useHttp from "../../Hooks/use-http";
+import { useEffect } from "react";
 
 const NOTIFICATION_DATA = [
   {
@@ -32,14 +34,38 @@ const NOTIFICATION_DATA = [
   },
 ];
 
+let headerFlag = 0;
 const Nav = (props) => {
   const history = useHistory();
+  const [adminData, setAdminData] = useState([]);
   const [isAdminPhotoClicked, setIsAdminPhotoClicked] = useState(false);
   const [isNotificationIconClicked, setIsNotificationIconClicked] =
     useState(false);
   const [isChangePasswordClicked, setIsChangePasswordClicked] = useState(false);
   const [isSaveNewPasswordClicked, setIsSaveNewPasswordClicked] =
     useState(false);
+
+  const authenticateUser = (data) => {
+    setAdminData(data.AdminInformation[0]);
+  };
+
+  const { isLoading, sendRequest } = useHttp();
+
+  useEffect(() => {
+    if (headerFlag > 0) {
+      sendRequest({
+        url: "/api/v1/Dashboard/GetDashboard",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: sessionStorage.getItem("user")
+        }
+      }, authenticateUser);
+    }
+    headerFlag++;
+  }, [sendRequest]);
 
   const sideMenuClickHandler = () => {
     props.sideMenuOpen();
@@ -75,7 +101,13 @@ const Nav = (props) => {
           <img src={littleLogo} alt="" className={classes.littleLogo} />
         </div>
         <div className={classes.orgDetails}>
-          <img src={orgLogo} alt="" className={classes.logo} />
+
+          {isLoading ?
+            <div style={{height: "80px"}}>
+              <img style={{ marginTop: "25px", height: "25px" }} src={loadingGif} alt="" className={classes.logo} />
+            </div> :
+            <img src={adminData.CorporateImage} alt="" className={classes.logo} />
+          }
           <div className={classes.notificationIcon}>
             <IoMdNotificationsOutline onClick={notificationIconClicked} />
           </div>
@@ -100,7 +132,7 @@ const Nav = (props) => {
             </div>
           )}
           <img
-            src={adminPhoto}
+            src={adminData.AdminImage ? adminData.AdminImage : adminAlternative}
             alt=""
             className={classes.adminPhoto}
             onClick={adminPhotoClickHandler}
@@ -109,12 +141,14 @@ const Nav = (props) => {
             <div className={classes.adminPanel}>
               <div className={classes.header}>
                 <p className={classes.adminName}>
-                  Jay Shah
+                  {adminData?.AdminName}
                 </p>
                 <p className={classes.adminOrg}>
-                  Admin of the eximious global
+                  Admin of {adminData?.Corporate}
                 </p>
               </div>
+              <p className={classes.changePassword}>Change Photo</p>
+              <hr />
               <p className={classes.changePassword} onClick={changePasswordHandler} >
                 Change Password
               </p>

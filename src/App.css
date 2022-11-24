@@ -68,6 +68,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -80,10 +81,12 @@ body {
     overflow-y: scroll; */
     /* height: 100vh; */
   }
+
   #myContainer {
     overflow-x: hidden;
     overflow-y: scroll;
   }
+
   #mySidemenu {
     position: absolute;
     /* z-index: 999; */

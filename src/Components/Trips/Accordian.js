@@ -3,15 +3,11 @@ import { MdArrowRight } from "react-icons/md";
 import { MdArrowDropDown } from "react-icons/md";
 import photo from "../../Assets/admin.jpg";
 
-import studentDropImage from "../../Assets/student_dummy_photo.png";
-// import studentDummyImage from "../../Assets/student_dummy_photo.png";
-import studentDummyImage from "../../Assets/new_student_marker.png";
-import startPoint from "../../Assets/Pin_icon_green50.png";
-import endPoint from "../../Assets/Pin_icon50.png";
-
 import classes from "./Accordian.module.css";
 import useHttp from "../../Hooks/use-http";
 import { useEffect } from "react";
+import RiderInfoMap from "./RiderInfoMap";
+import Loading from "../../Loading/Loading";
 
 const RIDER_TITLE = [
   "Rider Name",
@@ -100,6 +96,8 @@ const Accordian = (props) => {
     for (let i = 0; i < data.TripdetailList.length; i++) {
       trip_rider_list.push({
         id: i + 1,
+        startingLocationLat: data.TripdetailList[i].startinglat,
+        startingLocationLong: data.TripdetailList[i].startinglong,
         rider_name: data.TripdetailList[i].RiderName,
         pickup_location: data.TripdetailList[i].PickupAddress,
         shuttle_arrival_time: data.TripdetailList[i].ShuttleArriveTime,
@@ -107,125 +105,38 @@ const Accordian = (props) => {
         boarding_lat_lng: data.TripdetailList[i].PickupLatitude + "," + data.TripdetailList[i].PickupLongitude,
         drop_location: data.TripdetailList[i].DropOffAddress,
         alighting_time: data.TripdetailList[i].AlightingTime,
-        alighting_lat_lng: data.TripdetailList[i].DropoffLatitude + "," + data.TripdetailList[i].DropoffLongitude
+        alighting_lat_lng: data.TripdetailList[i].DropoffLatitude + "," + data.TripdetailList[i].DropoffLongitude,
+        route_name: data.TripdetailList[i].RouteName
       })
     }
     rider_details = trip_rider_list;
     setRiderData(rider_details);
   };
 
-  const { sendRequest } = useHttp();
+  const { isLoading, sendRequest } = useHttp();
 
   useEffect(() => {
-    if (rider_dataFlag > 12) {
-      if (currentId !== previous_id || (currentId === previous_id && !prev_active_status)) { }
-      // console.log(currentId, previous_id, prev_active_status);
-    }
-    sendRequest({
-      url: "/api/v1/ShuttleTrips/ShuttleTripsDetails",
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: {
-        emailID: sessionStorage.getItem("user"),
-        journeyID: current_journeyId
+    if (rider_dataFlag > 13) {
+      if (currentId !== previous_id || (currentId === previous_id && !prev_active_status)) {
+        // console.log(currentId, previous_id, prev_active_status);
+        sendRequest({
+          url: "/api/v1/ShuttleTrips/ShuttleTripsDetails",
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: {
+            emailID: sessionStorage.getItem("user"),
+            journeyID: current_journeyId
+          }
+        }, authenticateUser);
       }
-    }, authenticateUser);
+    }
     rider_dataFlag++;
   }, [sendRequest, isActive]);
 
-  const myInterval = setInterval(() => {
-    if (document.getElementsByClassName("gm-svpc")[0])
-      document.getElementsByClassName("gm-svpc")[0].style.display = "none";
-    if (document.getElementsByClassName("gm-style-mtc")[0]) {
-      document.getElementsByClassName("gm-style-mtc")[0].style.display = "none";
-      document.getElementsByClassName("gm-style-mtc")[1].style.display = "none";
-      clearInterval(myInterval);
-    }
-  }, 100);
-
-  const script = document.createElement("script");
-  script.src =
-    "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
-  script.async = true;
-  document.body.appendChild(script);
-
-  function myInitMap() {
-    const map = new window.google.maps.Map(document.getElementById("map"), {
-      zoom: 15,
-      center: { lat: 23.03489120423814, lng: 72.56658725087891 },
-      // mapTypeId: "terrain",
-    });
-
-    const flightPlanCoordinates = [
-      { lat: 23.037569650831212, lng: 72.55877665822754 },
-      { lat: 23.03489120423814, lng: 72.56658725087891 },
-      { lat: 23.03248207530169, lng: 72.56562165563355 },
-      { lat: 23.032583894197987, lng: 72.56023406982422 },
-    ];
-
-    const flightPath = new window.google.maps.Polyline({
-      path: flightPlanCoordinates,
-      geodesic: true,
-      strokeColor: "blue",
-      strokeOpacity: 0.9,
-      strokeWeight: 6,
-    });
-
-    flightPath.setMap(map);
-
-    const tourStops = [
-      [{ lat: 23.037569650831212, lng: 72.55877665822754 }],
-      [{ lat: 23.03489120423814, lng: 72.56658725087891 }],
-      [{ lat: 23.03248207530169, lng: 72.56562165563355 }],
-      [{ lat: 23.032583894197987, lng: 72.56023406982422 }],
-      [{ lat: 23.032583894197987, lng: 72.56023406982423 }]
-    ];
-
-    const infoWindow = new window.google.maps.InfoWindow();
-    let icon;
-    let myTitle;
-    tourStops.forEach(([position], i) => {
-      if (i === 0) {
-        icon = startPoint;
-        myTitle = `<div><h3>S.S Divine School</h3></div>`;
-      }
-      else {
-        icon = studentDummyImage;
-        myTitle = `<div id="infowindow-container" ><img src=${studentDropImage} id="dummy-student-image" /><h3>${RIDER_DATA[i - 1].rider_name}</h3></div>`;
-      }
-      if (i === RIDER_DATA.length - 1) {
-        icon = endPoint;
-      }
-
-      const marker = new window.google.maps.Marker({
-        position,
-        map,
-        myTitle,
-        icon,
-        optimized: false,
-      });
-
-      marker.addListener("mouseover", () => {
-        console.log(marker);
-        infoWindow.close();
-        infoWindow.setContent(marker.myTitle);
-        infoWindow.open(marker.getMap(), marker);
-      });
-      // document.getElementById("myHandler").addEventListener("click", () => {
-      //   infoWindow.setPosition([{ lat: 23.037569650831212, lng: 72.55877665822754 }]);
-      //   infoWindow.setContent("Jay Shah");
-      //   infoWindow.open(marker.getMap(), marker);
-      // })
-    });
-  }
-
-  window.myInitMap = myInitMap;
-
   const tableRowClickHandler = (e) => {
-    current_journeyId = e.target.parentElement.children[1].innerText; 
-    // console.log(e.target.parentElement.children[1].innerText);
+    current_journeyId = e.target.parentElement.children[1].innerText;
     if (parent_prev_id !== e.target.parentElement.id && !prev_active_status)
       props.formyRender(parent_prev_id);
     setIsActive(prev => !prev);
@@ -267,35 +178,39 @@ const Accordian = (props) => {
       </tr>
       {isActive && (
         <td colSpan="7">
-          <div id="map"></div>
-          <div className={classes.rideTableContainer}>
-            <table className={classes.riderTable}>
-              <tr>
-                {RIDER_TITLE.map((data) => (
-                  <th>{data}</th>
-                ))}
-              </tr>
-              <tbody>
-                {riderData.map((data) => {
-                  return (
-                    <tr id="myHandler">
-                      <td className={classes.riderName} >
-                        {/* <img src={photo} alt="" /> */}
-                        <p>{data.rider_name}</p>
-                      </td>
-                      <td>{data.pickup_location} </td>
-                      <td>{data.shuttle_arrival_time} </td>
-                      <td>{data.boarding_time} </td>
-                      <td>{data.boarding_lat_lng} </td>
-                      <td>{data.drop_location} </td>
-                      <td>{data.alighting_time} </td>
-                      <td>{data.alighting_lat_lng} </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          {isLoading ? <Loading datatable="true" /> :
+            <React.Fragment>
+              <RiderInfoMap RIDER_DATA={riderData} />
+              <div className={classes.rideTableContainer}>
+                <table className={classes.riderTable}>
+                  <tr>
+                    {RIDER_TITLE.map((data) => (
+                      <th>{data}</th>
+                    ))}
+                  </tr>
+                  <tbody>
+                    {riderData.map((data) => {
+                      return (
+                        <tr id="myHandler">
+                          <td className={classes.riderName} >
+                            {/* <img src={photo} alt="" /> */}
+                            <p>{data.rider_name}</p>
+                          </td>
+                          <td>{data.pickup_location} </td>
+                          <td>{data.shuttle_arrival_time} </td>
+                          <td>{data.boarding_time} </td>
+                          <td>{data.boarding_lat_lng} </td>
+                          <td>{data.drop_location} </td>
+                          <td>{data.alighting_time} </td>
+                          <td>{data.alighting_lat_lng} </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </React.Fragment>
+          }
         </td>
       )}
     </React.Fragment>

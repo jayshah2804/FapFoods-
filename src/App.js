@@ -153,6 +153,9 @@ function App() {
                         <Route path="/departments/add-new" exact>
                             <AddDepartment />
                         </Route>
+                        <Route path="/edit">
+                            <AddDepartment />
+                        </Route>
                         <Route path="/staff">
                             <Staff />
                         </Route>

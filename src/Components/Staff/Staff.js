@@ -175,7 +175,7 @@ function Routes() {
         console.log(staff_data);
     };
 
-    const { sendRequest } = useHttp();
+    const { isLoading, sendRequest } = useHttp();
 
     useEffect(() => {
         if (staffListFlag > 0)
@@ -226,11 +226,11 @@ function Routes() {
     const routeSearchHandler = (e) => {
         // if (e.target.value)
         setFilteredData(staff_details.filter(data =>
-            data.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.mobile_no.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.superviser_name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.department.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.status.toLowerCase().includes(e.target.value.toLowerCase())
+            data.name?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.mobile_no?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.superviser_name?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.department?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.status?.toLowerCase().includes(e.target.value.toLowerCase())
         ));
         // else setFilteredData(TRIP_DATA);
     };
@@ -256,7 +256,7 @@ function Routes() {
                         </CSVLink>
                     </div>
                 </div>
-                <Records data={currentRecords} headers={STAFF_TITLE} />
+                <Records data={currentRecords} headers={STAFF_TITLE} isLoading={isLoading} />
                 <div className="footer">
                     <p>
                         Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}

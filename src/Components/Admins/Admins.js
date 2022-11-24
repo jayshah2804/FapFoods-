@@ -3,8 +3,10 @@ import Records from "./Records";
 import ReactPaginate from "react-paginate";
 // import "./Route.css";
 import { CSVLink } from "react-csv";
-import { Route } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import AddAdmin from "./AddAdmin";
+import useHttp from "../../Hooks/use-http";
+import { useEffect } from "react";
 // import AddRoute from "./AddRoute/RouteInfo";
 
 const DEPARTMENTS_LIST = [
@@ -92,13 +94,56 @@ const ADMIN_TITLE = [
 
 let myClick = false;
 let prev_id = "1";
+let adminListFlag = 0;
+let adminData = "";
 
 function Admin() {
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(7);
-  const [filteredData, setFilteredData] = useState(STAFF_DATA);
+  const [filteredData, setFilteredData] = useState([]);
   const searchInputRef = useRef();
   const [isAddAdminClicked, setIsAddAdminClicked] = useState();
+
+  const search = useLocation().search;
+  const id = new URLSearchParams(search).get('departmentId');
+
+  const authenticateUser = (data) => {
+    console.log(data.AdminInformation);
+    let admin_data = [];
+    if (data.AdminInformation) {
+      for (let i = 0; i < data.AdminInformation.length; i++) {
+        admin_data.push({
+          id: i + 1,
+          name: data.AdminInformation[i].AdminName,
+          mobile_no: data.AdminInformation[i].AdminContactNo,
+          email: data.AdminInformation[i].AdminEmailID,
+          role: data.AdminInformation[i].DepartmentName,
+        })
+      }
+    }
+    adminData = admin_data;
+    setFilteredData(admin_data);
+  };
+
+  const { isLoading, sendRequest } = useHttp();
+
+  useEffect(() => {
+    if (adminListFlag > 0) {
+      sendRequest({
+        url: "/api/v1/AdminRole/GetAdminInformation",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: sessionStorage.getItem("user"),
+          corporateID: id ? "" : sessionStorage.getItem("corpId"),
+          departmentID: id ? id : ""
+        }
+      }, authenticateUser);
+    }
+    adminListFlag++;
+  }, [sendRequest, id]);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -131,14 +176,12 @@ function Admin() {
   }
 
   const routeSearchHandler = (e) => {
-    // if (e.target.value)
-    setFilteredData(STAFF_DATA.filter(data =>
-      data.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      data.mobile_no.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      data.email.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      data.role.toLowerCase().includes(e.target.value.toLowerCase())
+    setFilteredData(adminData.filter(data =>
+      data.name?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      data.mobile_no?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      data.email?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      data.role?.toLowerCase().includes(e.target.value.toLowerCase())
     ));
-    // else setFilteredData(TRIP_DATA);
   };
 
   return (
@@ -157,12 +200,12 @@ function Admin() {
                 ref={searchInputRef}
               />
             </div>
-            <CSVLink data={STAFF_DATA} className="export_csv">
+            <CSVLink data={filteredData} className="export_csv">
               Export
             </CSVLink>
           </div>
         </div>
-        <Records data={currentRecords} headers={ADMIN_TITLE} departments={DEPARTMENTS_LIST} />
+        <Records data={currentRecords} headers={ADMIN_TITLE} departments={DEPARTMENTS_LIST} isLoading={isLoading} />
         <div className="footer">
           <p>
             Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}
