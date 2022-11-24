@@ -1,0 +1,77 @@
+.documents-upload-container {
+  width: 100%;
+  height: calc(100vh-85px);
+  /* height: 100vh; */
+}
+
+.documents-upload-container h3 {
+  padding: 20px 15px;
+}
+
+.documents-upload {
+  background-color: white;
+  border-radius: 10px;
+  margin: 0px 15px;
+  height: 90%;
+  padding: 15px;
+}
+
+.documents-upload .fill {
+  background-color: rgb(255, 237, 212);
+  /* opacity: 0.6; */
+  color: rgb(245, 185, 74);
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.documents-upload .success {
+  background-color: rgb(165, 232, 165);
+  /* opacity: 0.6; */
+  color: green;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.documents-upload main .border {
+  border-bottom: 1px solid rgb(190, 187, 187);
+}
+
+.documents-upload main header {
+  font-weight: bold;
+  padding-top: 15px;
+  /* padding-bottom: 10px; */
+}
+
+.documents-upload main .text {
+  font-size: 14.5px;
+  padding: 10px 5px;
+}
+
+.documents-upload input {
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: none;
+  border-bottom: 1px solid gray;
+  margin-right: 3%;
+  width: 23%;
+  height: 25px;
+}
+
+.documents-upload input:focus {
+  outline: none;
+}
+
+.documents-upload .upload-document {
+  border: 1px dashed gray;
+  border-radius: 10px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  font-size: 10px;
+  padding: 10px;
+  color: gray;
+  cursor: pointer;
+}
