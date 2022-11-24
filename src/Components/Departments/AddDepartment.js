@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import useHttp from '../../Hooks/use-http';
 import "./AddDepartment.css";
 
@@ -18,33 +18,91 @@ const formError = {
     adminEmailError: ""
 }
 
+const defaultValues = {
+    allowInterCountry: false,
+    lockVehicleType: false,
+    preferredVehicleCategory: "",
+    enabledServices: "",
+    departmentname: "",
+    adminName: "",
+    adminEmail: ""
+}
+
 let isFormValid = false;
 let addDeptFlag = 0;
+let type = "";
 const AddDepartment = () => {
     const [selectionChange, setSelectionChange] = useState();
     const [isFormError, setIsFormError] = useState(formError);
     const [isCall, setIsCall] = useState(false);
+    const [departmentDefaultDetails, setDepartmentDefaultDetails] = useState(defaultValues);
     const departmentNameInputRef = useRef();
     const adminNameInputRef = useRef();
     const adminEmailInputRef = useRef();
     const history = useHistory();
 
+    const search = useLocation().search;
+    const id = new URLSearchParams(search).get('departmentId');
+    if (id && type !== "create") type = "edit";
 
     const authenticateUser = (data) => {
-        if (data.Message === "Success") {
-            history.push("/departments");
-            window.location.reload();
+        if (type === "edit") {
+            if (data?.DepartMentDetails) {
+                let department_data = {};
+                if (data.DepartMentDetails[0].InterCountryTrips === "Y")
+                    document.getElementsByTagName("input")[0].click();
+                if (data.DepartMentDetails[0].LockVehicleType === "Y")
+                    document.getElementsByTagName("input")[1].click();
+                if (data.DepartMentDetails[0].AllowedVehicleTypes.toLowerCase().includes("basic"))
+                    document.getElementsByTagName("input")[2].click();
+                if (data.DepartMentDetails[0].AllowedVehicleTypes.toLowerCase().includes("comfort"))
+                    document.getElementsByTagName("input")[3].click();
+                if (data.DepartMentDetails[0].AllowedVehicleTypes.toLowerCase().includes("plus"))
+                    document.getElementsByTagName("input")[4].click();
+                showVehicleCheckboxes();
+                showVehicleCheckboxes();
+                if (data.DepartMentDetails[0].AvailableServices.toLowerCase().includes("ride"))
+                    document.getElementsByTagName("input")[5].click();
+                if (data.DepartMentDetails[0].AvailableServices.toLowerCase().includes("food"))
+                    document.getElementsByTagName("input")[6].click();
+                showRideCheckboxes();
+                showRideCheckboxes();
+                department_data.preferredVehicleCategory = data.DepartMentDetails[0].AllowedVehicleTypes;
+                department_data.enabledServices = data.DepartMentDetails[0].AvailableServices;
+                department_data.departmentname = data.DepartMentDetails[0].DepartmentName;
+                department_data.adminName = data.DepartMentDetails[0].AdminName;
+                department_data.adminEmail = data.DepartMentDetails[0].AdminEmailID;
+                setDepartmentDefaultDetails(department_data);
+                setIsCall(false);
+            }
+        } else if (type === "create") {
+            if (data.Message === "Success") {
+                history.push("/departments");
+                window.location.reload();
+            }
+            else
+                alert(data.SystemMessage)
+            setIsCall(false);
         }
-        else
-            alert(data.SystemMessage)
-        // console.log(data);
     };
 
     const { sendRequest } = useHttp();
 
     useEffect(() => {
-        // alert("here");
-        if (addDeptFlag > 1)
+        if (!isCall && id && addDeptFlag > 0)
+            sendRequest({
+                url: "/api/v1/Department/GetDepartmentDetails",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    emailID: sessionStorage.getItem("user"),
+                    departmentID: id
+                }
+            }, authenticateUser);
+
+        if (addDeptFlag > 0 && isCall)
             sendRequest({
                 url: "/api/v1/Department/AddEditDepartment",
                 method: "POST",
@@ -55,8 +113,8 @@ const AddDepartment = () => {
                     emailID: sessionStorage.getItem("user"),
                     adminEmail: adminEmailInputRef.current.value,
                     adminName: adminNameInputRef.current.value,
-                    buttonMark: "I",
-                    departmentID: "",
+                    buttonMark: id ? "M" : "I",
+                    departmentID: id ? id : "",
                     departmentname: departmentNameInputRef.current.value,
                     parentID: sessionStorage.getItem("corpId"),
                     interCountryTrips: allow_inter_country === "Yes" ? "Y" : "N",
@@ -128,23 +186,8 @@ const AddDepartment = () => {
     }
 
     const createDepartmentClickedHandler = () => {
-        setIsCall(prev => !prev);
-        // if (preferredVehicles.toString() === "Null") {
-        //     setIsFormError(prev => ({ ...prev, vehicleCategoryError: "vehicle category is invalid" }));
-        // }
-        // if (enableSerices.toString() === "Null") {
-        //     setIsFormError(prev => ({ ...prev, enabledServicesError: "enabled service is invalid" }));
-        // }
-        // let obj = {
-        //     allow_inter_country: allow_inter_country,
-        //     lock_vehicle_type: lock_vehicle_type,
-        //     preferredVehicles: preferredVehicles.toString(),
-        //     enableSerices: enableSerices.toString(),
-        //     department_name: departmentNameInputRef.current.value,
-        //     admin_name: adminNameInputRef.current.value,
-        //     admin_email: adminEmailInputRef.current.value
-        // }
-        // console.log(obj);
+        type = "create";
+        setIsCall(true);
     }
 
     return (
@@ -180,13 +223,13 @@ const AddDepartment = () => {
                     <footer></footer>
                 </div>
                 <div>
-                    <main>
+                    <main onMouseEnter={showVehicleCheckboxes} onMouseLeave={showVehicleCheckboxes} >
                         <header>
                             <span>Preferred Vehicle Categories</span>
                         </header>
                         <div class="multipleSelection">
-                            <div class="selectBox" onClick={showVehicleCheckboxes}>
-                                <select>
+                            <div class="selectBox">
+                                <select >
                                     <option>Select</option>
                                 </select>
                                 <div class="overSelect"></div>
@@ -206,12 +249,12 @@ const AddDepartment = () => {
                     <footer></footer>
                 </div>
                 <div>
-                    <main>
+                    <main onMouseEnter={showRideCheckboxes} onMouseLeave={showRideCheckboxes}>
                         <header>
                             <span>Enabled Services</span>
                         </header>
                         <div class="multipleSelection">
-                            <div class="selectBox" onClick={showRideCheckboxes}>
+                            <div class="selectBox">
                                 <select>
                                     <option>Select</option>
                                 </select>
@@ -248,12 +291,12 @@ const AddDepartment = () => {
                     </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", margin: "0px 40px", gap: "100px" }}>
-                    <input type="text" placeholder='Department Name' ref={departmentNameInputRef} />
-                    <input type="text" placeholder='Admin Name' ref={adminNameInputRef} />
-                    <input type="email" placeholder='Admin Email' ref={adminEmailInputRef} />
+                    <input defaultValue={departmentDefaultDetails.departmentname} type="text" placeholder='Department Name' ref={departmentNameInputRef} />
+                    <input defaultValue={departmentDefaultDetails.adminName} type="text" placeholder='Admin Name' ref={adminNameInputRef} />
+                    <input defaultValue={departmentDefaultDetails.adminEmail} type="email" placeholder='Admin Email' ref={adminEmailInputRef} />
                 </div>
                 <br />
-                <button onClick={createDepartmentClickedHandler} >Create Department</button>
+                <button onClick={createDepartmentClickedHandler} >{!id ? "Create Department" : "Edit Department"}</button>
             </div>
         </div>
     )

@@ -4,8 +4,9 @@ import { useHistory } from "react-router-dom";
 // import { FiUserX } from "react-icons/fi";
 import { BiUser } from "react-icons/bi";
 import "./Records.css";
+import Loading from "../../Loading/Loading";
 
-const Records = ({ data, headers, departments }) => {
+const Records = ({ isLoading, data, headers, departments }) => {
     const [editAdminClicked, setEditAdminClicked] = useState(false);
     const [isCheckChanged, setIsCheckChanged] = useState();
     const history = useHistory();
@@ -24,27 +25,45 @@ const Records = ({ data, headers, departments }) => {
 
     return (
         <React.Fragment>
-            <table className="table" id="my-table">
-                <thead>
-                    <tr>
-                        {headers.map((data) => (
-                            <th>{data}</th>
-                        ))}
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
-                <tbody>
-                    {data.map(myData => <tr>
-                        <td>{myData.name}</td>
-                        <td>{myData.email}</td>
-                        <td>{myData.mobile_no}</td>
-                        <td width="30%">{myData.role}</td>
-                        <td style={{ fontSize: "20px" }}><BiUser onClick={editAdminClickHandler} title="Click to Edit user as Admin" style={{ color: "rgba(42, 149, 69, 255)", marginRight: "15px", cursor: "pointer" }} /></td>
-                        {/* <td width="20%" >{myData.department}</td> */}
-                    </tr>)}
-                </tbody>
-            </table>
+            {data[0] ?
+                <table className="table" id="my-table">
+                    <thead>
+                        <tr>
+                            {headers.map((data) => (
+                                <th>{data}</th>
+                            ))}
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
+                    <tbody>
+                        {data.map(myData => <tr>
+                            <td>{myData.name}</td>
+                            <td>{myData.email}</td>
+                            <td>{myData.mobile_no}</td>
+                            <td width="30%">{myData.role}</td>
+                            <td style={{ fontSize: "20px" }}><BiUser onClick={editAdminClickHandler} title="Click to Edit user as Admin" style={{ color: "rgba(42, 149, 69, 255)", marginRight: "15px", cursor: "pointer" }} /></td>
+                            {/* <td width="20%" >{myData.department}</td> */}
+                        </tr>)}
+                    </tbody>
+                </table>
+                :
+                <React.Fragment>
+                    <table className="table" id="my-table">
+                        <thead>
+                            <tr>
+                                {headers.map((data) => (
+                                    <th>{data}</th>
+                                ))}
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    {isLoading ? <Loading datatable="true" /> :
+                        <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
+                    }
+                </React.Fragment>
+            }
             {editAdminClicked &&
                 <div className="admin-container">
                     <header>

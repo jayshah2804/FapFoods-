@@ -36,8 +36,9 @@ const TRIP_TITLE = [
 
 let myClick = false;
 let prev_id = "1";
-
+let departmentDetails = "";
 let deptListFlag = 0;
+
 function Routes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(7);
@@ -63,11 +64,12 @@ function Routes() {
                 })
             }
         }
+        departmentDetails = department_data;
         // console.log(department_data);
         setFilteredData(department_data)
     };
 
-    const { sendRequest } = useHttp();
+    const { isLoading , sendRequest } = useHttp();
 
     useEffect(() => {
         // alert("here");
@@ -118,12 +120,13 @@ function Routes() {
     }
 
     const routeSearchHandler = (e) => {
-        if (e.target.value)
-            setFilteredData(Department_DATA.filter(data => data.department_name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        // if (e.target.value)
+            setFilteredData(departmentDetails.filter(data => data.department_name.toLowerCase().includes(e.target.value.toLowerCase()) ||
                 data.admin_name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                data.admin_email.toLowerCase().includes(e.target.value.toLowerCase())
+                data.admin_email.toLowerCase().includes(e.target.value.toLowerCase()) || 
+                data.vehicle_category?.toLowerCase().includes(e.target.value.toLowerCase()) 
             ));
-        else setFilteredData(Department_DATA);
+        // else setFilteredData(Department_DATA);
     };
 
     return (
@@ -147,7 +150,7 @@ function Routes() {
                         </CSVLink>
                     </div>
                 </div>
-                <Records data={currentRecords} headers={TRIP_TITLE} />
+                <Records data={currentRecords} headers={TRIP_TITLE} isLoading={isLoading} />
                 <div className="footer">
                     <p>
                         Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}

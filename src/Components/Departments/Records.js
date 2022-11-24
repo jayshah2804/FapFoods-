@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Accordian from "./Accordian";
 
+import editIcon from "../../Assets/editIcon.png";
 import tripsIcon from "../../Assets/tripsIcon.png";
 import statementIcon from "../../Assets/statementIcon.png";
 import staffIcon from "../../Assets/staffIcon.png";
 import adminIcon from "../../Assets/adminIcon.png";
 
 import "./Records.css";
+import Loading from "../../Loading/Loading";
 
-const Records = ({ data, headers }) => {
+const Records = ({ isLoading, data, headers }) => {
     const history = useHistory();
     const func = (val) => {
         if (val) {
@@ -18,11 +20,14 @@ const Records = ({ data, headers }) => {
     }
     const subListClickHandler = (e) => {
         let dptId = e.target.parentElement.id;
+        console.log(e.target.alt !== "statement" && dptId);
+        // if(e.target.alt === "edit"){}
         if (e.target.alt !== "statement" && dptId)
             history.push(`${e.target.alt}?departmentId=${dptId}`);
     }
     return (
         <React.Fragment>
+            { }
             {data[0] ?
                 <table className="table" id="my-table">
                     <thead>
@@ -40,6 +45,7 @@ const Records = ({ data, headers }) => {
                             <td>{myData.admin_email}</td>
                             <td>{myData.vehicle_category}</td>
                             <td id={myData.id} onClick={subListClickHandler} className="department-data" >
+                                <img src={editIcon} alt="edit" title="Click to edit department Details" />
                                 <img src={tripsIcon} alt="trips" title="Click to see Trips Details" />
                                 <img src={statementIcon} alt="statement" title="Click to see Statement" />
                                 <img src={staffIcon} alt="staff" title="Click to see Staff Details" />
@@ -60,8 +66,10 @@ const Records = ({ data, headers }) => {
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                    </table>
-                    <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
+                    </table> 
+                    {isLoading ? <Loading datatable="true" /> :
+                        <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
+                    }
                 </React.Fragment>
             }
         </React.Fragment>

@@ -6,6 +6,7 @@ import startPoint from "../../Assets/Pin_icon_green50.png";
 import studentDummyImage from "../../Assets/new_student_marker.png";
 import { useHistory } from 'react-router-dom';
 import useHttp from "../../Hooks/use-http";
+import Loading from "../../Loading/Loading";
 
 const DUMMY_DATA = [
   {
@@ -45,26 +46,31 @@ const Main = () => {
   // const [options, setOptions] = useState(initial);  
   const [isRender, setIsRender] = useState();
   const [listData, setListData] = useState({});
+  const [isApiError, setIsApiError] = useState();
   const history = useHistory();
 
-  const script = document.createElement('script');
-  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
-  script.async = true;
-  document.body.appendChild(script);
+  // const script = document.createElement('script');
+  // script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
+  // script.async = true;
+  // document.body.appendChild(script);
 
   const authenticateUser = (data) => {
-    let myData = {
-      riders: data.Rider,
-      routes: data.Route,
-      trips: data.Trip,
-      activeTrips: data.ActiveTrip
+    if (data === "Request failed!") {
+      setIsApiError("No data available");
+    } else {
+      let myData = {
+        riders: data.Rider,
+        routes: data.Route,
+        trips: data.Trip,
+        activeTrips: data.ActiveTrip
+      }
+      // console.log(myData);
+      setListData(myData);
     }
-    // console.log(myData);
-    setListData(myData);
     // setFilteredData(department_data)
   };
 
-  const { sendRequest } = useHttp();
+  const { isLoading, sendRequest } = useHttp();
 
   useEffect(() => {
     if (divFlag > 0)
@@ -81,26 +87,26 @@ const Main = () => {
     divFlag++;
   }, [sendRequest])
 
-  function myInitMap() {
-    var map = new window.google.maps.Map(document.getElementById("map-modal"), {
-      center: { lat: 23.0225, lng: 72.5714 },
-      zoom: 11,
-      mapTypeControl: false,
-    });
+  // function myInitMap() {
+  //   var map = new window.google.maps.Map(document.getElementById("map-modal"), {
+  //     center: { lat: 23.0225, lng: 72.5714 },
+  //     zoom: 11,
+  //     mapTypeControl: false,
+  //   });
 
-    let myInt = setInterval(() => {
-      if (document.getElementsByClassName("gm-control-active")[0]) {
-        document.getElementsByClassName("gm-control-active")[0].style.marginTop = "40px";
-        clearInterval(myInt);
-      }
-      if (document.getElementsByClassName("gm-svpc")[0]) {
-        document.getElementsByClassName("gm-svpc")[0].style.display = "none";
-        clearInterval(myInt);
-      }
-    })
-  }
+  //   let myInt = setInterval(() => {
+  //     if (document.getElementsByClassName("gm-control-active")[0]) {
+  //       document.getElementsByClassName("gm-control-active")[0].style.marginTop = "40px";
+  //       clearInterval(myInt);
+  //     }
+  //     if (document.getElementsByClassName("gm-svpc")[0]) {
+  //       document.getElementsByClassName("gm-svpc")[0].style.display = "none";
+  //       clearInterval(myInt);
+  //     }
+  //   })
+  // }
 
-  window.myInitMap = myInitMap;
+  // window.myInitMap = myInitMap;
 
   return (
     <div className={classes.container} id="myContainer">
@@ -114,19 +120,47 @@ const Main = () => {
       <div className={classes.cards}>
         <div className={classes.text} title="Click to see Monthly Trip details" onClick={() => history.push("/trips")} >
           <p>Trips</p>
-          <span>{listData.trips}</span>
+          {isApiError && <span style={{ fontWeight: "normal", fontSize: "14px" }}>{isApiError}</span>}
+          {!isApiError &&
+            <span>
+              {isLoading ? <Loading /> :
+                <span>{listData.trips}</span>
+              }
+            </span>
+          }
         </div>
         <div className={classes.text} title="Click to see Monthly Usage details" onClick={() => history.push("/staff")} >
           <p>Riders</p>
-          <span>{listData.riders}</span>
+          {isApiError && <span style={{ fontWeight: "normal", fontSize: "14px" }}>{isApiError}</span>}
+          {!isApiError &&
+            <span>
+              {isLoading ? <Loading /> :
+                <span>{listData.riders}</span>
+              }
+            </span>
+          }
         </div>
         <div className={classes.text} title="Click to see Routes details" onClick={() => history.push("/routes")} >
           <p>Routes</p>
-          <span>{listData.routes}</span>
+          {isApiError && <span style={{ fontWeight: "normal", fontSize: "14px" }}>{isApiError}</span>}
+          {!isApiError &&
+            <span>
+              {isLoading ? <Loading /> :
+                <span>{listData.routes}</span>
+              }
+            </span>
+          }
         </div>
         <div className={classes.text} title="Click to see Active Trips details">
           <p>Active Trips</p>
-          <span>{listData.activeTrips}</span>
+          {isApiError && <span style={{ fontWeight: "normal", fontSize: "14px" }}>{isApiError}</span>}
+          {!isApiError &&
+            <span>
+              {isLoading ? <Loading /> :
+                <span>{listData.activeTrips}</span>
+              }
+            </span>
+          }
         </div>
       </div>
       {/* <div className={classes.tripChart}>
@@ -156,7 +190,7 @@ const Main = () => {
           })}
         </div>
         <div className={classes.mapContainer}>
-          <div id="map-modal" className={classes.map}></div>
+          {/* <div id="map-modal" className={classes.map}></div> */}
           <div className={classes.mapText}>Live Trip Tracker</div>
         </div>
       </div>

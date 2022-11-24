@@ -317,7 +317,7 @@ let total_trip_data = "";
 function App(props) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  console.log(queryParams.get('department'));
+  // console.log(queryParams.get('department'));
 
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(7);
@@ -327,26 +327,30 @@ function App(props) {
 
   const authenticateUser = (data) => {
     let trip_list = [];
-    for(let i = 0; i < data.TripList.length; i++){
-      trip_list.push({
-        id: i+1,
-        driver_name: data.TripList[i].DriverName,
-        car_info: data.TripList[i].VehicaleModel + "," + data.TripList[i].VehicaleNumber,
-        journey_id: data.TripList[i].DriverTripID,
-        trip_date: data.TripList[i].StartedOnDate,
-        pickup_time: data.TripList[i].StartedOnTime,
-        drop_time: data.TripList[i].EndedOnTime,
-        total_trip_time: data.TripList[i].TotalTripTime,
-        total_trip_km: data.TripList[i].TripDistance
-      })
+    if (data.TripList) {
+      for (let i = 0; i < data.TripList.length; i++) {
+        trip_list.push({
+          id: i + 1,
+          driver_name: data.TripList[i].DriverName,
+          car_info: data.TripList[i].VehicaleModel + "," + data.TripList[i].VehicaleNumber,
+          journey_id: data.TripList[i].DriverTripID,
+          trip_date: data.TripList[i].StartedOnDate,
+          pickup_time: data.TripList[i].StartedOnTime,
+          drop_time: data.TripList[i].EndedOnTime,
+          total_trip_time: data.TripList[i].TotalTripTime,
+          total_trip_km: data.TripList[i].TripDistance
+        })
+      }
     }
     total_trip_data = trip_list;
     setFilteredData(trip_list);
   };
 
-  const { sendRequest } = useHttp();
+  const { isLoading, sendRequest } = useHttp();
 
   useEffect(() => {
+    let date = new Date();
+    let today = date.getFullYear().toString().concat("-",date.getMonth(),"-",date.getDate());
     if (tripListFlag > 0)
       sendRequest({
         url: "/api/v1/ShuttleTrips/GetShuttleTrips",
@@ -359,10 +363,10 @@ function App(props) {
           corporateID: sessionStorage.getItem("corpId"),
           departmentID: "",
           fromDate: "2018-01-01",
-          toDate: "2022-11-23"
+          toDate: today
         }
       }, authenticateUser);
-      tripListFlag++;
+    tripListFlag++;
   }, [sendRequest]);
 
 
@@ -519,7 +523,7 @@ function App(props) {
             </CSVLink>
           </div>
         </div>
-        <Records data={currentRecords} headers={TRIP_TITLE} />
+        <Records data={currentRecords} headers={TRIP_TITLE} isLoading={isLoading} />
         <div className="footer">
           <p>
             Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}

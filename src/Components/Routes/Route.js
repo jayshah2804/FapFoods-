@@ -186,7 +186,7 @@ function Routes() {
     const id = new URLSearchParams(search).get('departmentId');
 
     const authenticateUser = (data) => {
-        console.log(data.RouteList);
+        // console.log(data.RouteList);
         // console.log(data);
         let route_list = [];
         if (data.RouteList) {
@@ -207,7 +207,7 @@ function Routes() {
         setFilteredData(route_list);
     };
 
-    const { sendRequest } = useHttp();
+    const { isLoading, sendRequest } = useHttp();
 
     useEffect(() => {
         if (routeListFlag > 0)
@@ -259,12 +259,12 @@ function Routes() {
     const routeSearchHandler = (e) => {
         // if (e.target.value)
         setFilteredData(route_details.filter(data => data.route.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.route_id.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.city.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.country.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.zone_price.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.route_type.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.department.toLowerCase().includes(e.target.value.toLowerCase())
+            data.route_id?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.city?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.country?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.zone_price.toString()?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.route_type?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.department?.toLowerCase().includes(e.target.value.toLowerCase())
         ));
         // else setFilteredData(TRIP_DATA);
     };
@@ -290,7 +290,7 @@ function Routes() {
                         </CSVLink>
                     </div>
                 </div>
-                <Records data={currentRecords} headers={TRIP_TITLE} />
+                <Records data={currentRecords} headers={TRIP_TITLE} isLoading={isLoading} />
                 <div className="footer">
                     <p>
                         Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}

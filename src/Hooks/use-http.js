@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useCallback } from 'react';
 
 const useHttp = () => {
-    // const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const sendRequest = useCallback(async (requestConfig, applyData) => {
-        // setIsLoading(true);
+        setIsLoading(true);
         setError(null);
         try {
             const response = await fetch(
@@ -27,11 +27,11 @@ const useHttp = () => {
         } catch (err) {
             applyData(err.message || 'Something went wrong!');
         }
-        // setIsLoading(false);
+        setIsLoading(false);
     }, []);
 
     return {
-        // isLoading,
+        isLoading,
         sendRequest
     }
 }

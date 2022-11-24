@@ -37,49 +37,43 @@ const SideMenu = (props) => {
   const { sendRequest } = useHttp();
 
   const authenticateUser = (data) => {
-    console.log(data.MenuList);
-    sessionStorage.setItem("corpId", data.MenuList[0].CorporateID);
-    // console.log(data.MenuList);
     let sideMenu = [];
-    sideMenu.push({
-      main: "Dashboard"
-    },
-      {
-        main: data.MenuList[0].CorporateName,
-        corpId: data.MenuList[0].CorporateID,
-        sub: ["Departments", "Admins", "Trips"]
-      });
-    if (data.MenuList[0].DepartMentName) {
-      for (let i = 0; i < data.MenuList.length; i++) {
-        sideMenu.push({
-          main: data.MenuList[i].DepartMentName,
-          deptId: data.MenuList[i].DepartmentID,
-          sub: ["Staff Members", "Private Drive"]
+    if (data.MenuList) {
+      sessionStorage.setItem("corpId", data.MenuList[0].CorporateID);
+      sideMenu.push({
+        main: "Dashboard"
+      },
+        {
+          main: data.MenuList[0].CorporateName,
+          corpId: data.MenuList[0].CorporateID,
+          sub: ["Departments", "Admins", "Trips"]
         });
+      if (data.MenuList[0].DepartMentName) {
+        for (let i = 0; i < data.MenuList.length; i++) {
+          sideMenu.push({
+            main: data.MenuList[i].DepartMentName,
+            deptId: data.MenuList[i].DepartmentID,
+            sub: ["Staff Members", "Private Drive"]
+          });
+        }
       }
+      sideMenu.push({
+        main: "Departments",
+      },
+        {
+          main: "All Staff",
+        },
+        {
+          main: "Routes"
+        },
+        {
+          main: "Documents Upload"
+        },
+        {
+          main: "Query & Support"
+        })
     }
-    sideMenu.push({
-      main: "Departments",
-    },
-      {
-        main: "All Staff",
-      },
-      {
-        main: "Routes"
-      },
-      {
-        main: "Documents Upload"
-      },
-      {
-        main: "Query & Support"
-      })
-
-    // console.log(sideMenu);
     setSideMenuData(sideMenu);
-    // if (!data.Message)
-    //   setIsApiError(data + " Please try again later");
-    // else
-    //   data.Message === "Success" ? login(true) : setIsApiError("Please enter valid email or password");
   };
   useEffect(() => {
     if (sideMenuFlag > 0) {
@@ -101,11 +95,28 @@ const SideMenu = (props) => {
     console.log(data);
   };
 
+  // if (props.property) {
+  //   document.getElementById("mySidemenu").style.width = "300px";
+  //   flag = true;
+  // } else {
+  //   if (flag) document.getElementById("mySidemenu").style.width = "0px";
+  // }
+
   if (props.property) {
     document.getElementById("mySidemenu").style.width = "300px";
+    window.addEventListener("popstate", function (event) {
+      // alert(document.getElementById("mySidemenu").style.width);
+      if (document.getElementById("mySidemenu").style.width == "300px")
+        document.getElementById("mySidemenu").style.minWidth = "300px";
+      // The URL changed...
+      this.window.removeEventListener("popstate");
+    });
     flag = true;
   } else {
-    if (flag) document.getElementById("mySidemenu").style.width = "0px";
+    if (flag) {
+      document.getElementById("mySidemenu").style.minWidth = null;
+      document.getElementById("mySidemenu").style.width = "0px";
+    }
   }
 
   return (
@@ -120,6 +131,9 @@ const SideMenu = (props) => {
         >
           <GrClose />
         </div>
+        {!sideMenuData[0] &&
+          <div style={{ textAlign: "center", marginTop: "20px" }}>No Data Available</div>
+        }
         {sideMenuData.map(({ main, corpId, sub, deptId }, index) => {
           return (
             <SideMenuData

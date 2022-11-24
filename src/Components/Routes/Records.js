@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import Loading from "../../Loading/Loading";
 // import Accordian from "./_Accordian";
 import "./Records.css";
 
-const Records = ({ data, headers }) => {
+const Records = ({ isLoading, data, headers }) => {
     const history = useHistory();
     // const func = (val) => {
     //     if (val) {
@@ -46,7 +47,9 @@ const Records = ({ data, headers }) => {
                             </tr>
                         </thead>
                     </table>
-                    <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
+                    {isLoading ? <Loading datatable="true" /> :
+                        <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
+                    }
                 </React.Fragment>
             }
         </React.Fragment>
