@@ -19,17 +19,22 @@ function RouteInfo(props) {
 
     const routeNameChangeHandler = () => {
         if (routeNameInputRef.current.value) {
+            sessionStorage.setItem("routeName", routeNameInputRef.current.value);
             setIsError(prev => ({ ...prev, routeName: "" }));
         }
     }
     const routeTypeChangeHandler = () => {
-        if (routeTypeSelectRef.current.value !== "Route Type")
+        if (routeTypeSelectRef.current.value !== "Route Type") {
+            sessionStorage.setItem("routeType", routeTypeSelectRef.current.value);
             setIsError(prev => ({ ...prev, routeType: "" }));
+        }
     }
 
     const shuttleTypeChangeHandler = () => {
-        if (shuttleTypeSelectRef.current.value !== "Shuttle Type")
+        if (shuttleTypeSelectRef.current.value !== "Shuttle Type") {
+            sessionStorage.setItem("shuttleType", shuttleTypeSelectRef.current.value);
             setIsError(prev => ({ ...prev, shuttleType: "" }));
+        }
     }
 
     const nextWizard = (value) => {
@@ -76,9 +81,9 @@ function RouteInfo(props) {
 
     const nextClickHandler = () => {
         // if (routeNameInputRef.current.value && routeTypeSelectRef.current.value) {
-            current = "RouteInfo";
-            nextWizard("TimingInfo");
-            setIsNextClicked(true);
+        current = "RouteInfo";
+        nextWizard("TimingInfo");
+        setIsNextClicked(true);
         // } else {
         //     if (!routeNameInputRef.current.value)
         //         setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));

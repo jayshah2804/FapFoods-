@@ -5,7 +5,7 @@ import Accordian from "./Accordian";
 import editIcon from "../../Assets/editIcon.png";
 import tripsIcon from "../../Assets/tripsIcon.png";
 import statementIcon from "../../Assets/statementIcon.png";
-import staffIcon from "../../Assets/staffIcon.png";
+import staffIconNew from "../../Assets/staffIconNew.png";
 import adminIcon from "../../Assets/adminIcon.png";
 
 import "./Records.css";
@@ -48,7 +48,7 @@ const Records = ({ isLoading, data, headers }) => {
                                 <img src={editIcon} alt="edit" title="Click to edit department Details" />
                                 <img src={tripsIcon} alt="trips" title="Click to see Trips Details" />
                                 <img src={statementIcon} alt="statement" title="Click to see Statement" />
-                                <img src={staffIcon} alt="staff" title="Click to see Staff Details" />
+                                <img src={staffIconNew} alt="staff" title="Click to see Staff Details" />
                                 <img src={adminIcon} alt="admins" title="Click to see Admin Details" />
                             </td>
                             {/* <td><Accordian myId={myData.id} forMyRender={func} /></td> */}

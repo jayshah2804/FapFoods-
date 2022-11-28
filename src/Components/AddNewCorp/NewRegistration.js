@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import useHttp from '../../Hooks/use-http';
 import "./NewRegistration.css";
 
+import loadingGif from "../../Assets/loading-gif.gif";
 
 let corporateLogo = "";
 let adminPhoto = "";
@@ -48,16 +50,20 @@ const NewRegistration = () => {
     const CreditPeriodInputRef = useRef();
     const contractStartDateInputRef = useRef();
     const contractEndDateInputRef = useRef();
+    const history = useHistory();
 
 
     const authenticateUser = (data) => {
         console.log(data);
+        if (data.Message === "Success")
+            history.push("/dashboard");
+        else alert("some error occured. Please try again later!")
     };
 
-    const { sendRequest } = useHttp();
+    const { isLoading, sendRequest } = useHttp();
 
     useEffect(() => {
-        if (apiFlag > 1)
+        if (apiFlag > 1 && isValid)
             sendRequest({
                 url: "/api/v1/Corporate/CorporateRegistration",
                 method: "POST",
@@ -463,6 +469,9 @@ const NewRegistration = () => {
                     <button onClick={saveCorporateClickHandler}>Save</button>
                 </div>
             </div>
+            {isLoading && 
+                <img src={loadingGif} style={{position: "absolute", top: "40%", left: "40%"}} />
+            }
         </div>
     )
 }

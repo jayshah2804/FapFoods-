@@ -5,6 +5,8 @@
     width: calc(100vw - 20px);
     /* width: 75%; */
     margin-right: 10px;
+    transition-property: width;
+    transition-duration: 0.7s
 }
 
 .support .mainHeader {

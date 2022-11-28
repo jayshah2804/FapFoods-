@@ -1,19 +1,52 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import StudentsInfo from './StopInfo';
 
 import "./SelectDepartment.css";
+import useHttp from '../../../Hooks/use-http';
+import Loading from '../../../Loading/Loading';
 
-let selectedDepartment = "";
+// let selectedDepartment = "";
+let dptId = "";
 let error = "";
 const DEPARTMENTS = ["Sales and Marketing", "Little school testing"];
 const SelectDepartment = (props) => {
     const departmentInputRef = useRef();
     const [isDepartmentChanged, setIsDepartmentChanged] = useState();
+    const [departmentList, setDepartmentList] = useState([]);
     const [isError, setIsError] = useState(error);
 
+    const authenticateUser = (data) => {
+        // console.log(data.DepartMentList);
+        let departments = [];
+        for(let i = 0; i < data.DepartMentList.length; i++){
+            departments.push({
+                name: data.DepartMentList[i].DepartmentName,
+                dptID: data.DepartMentList[i].DepartmentID
+            })
+        }
+        setDepartmentList(departments);
+    };
+
+    const { isLoading, sendRequest } = useHttp();
+
+    useEffect(() => {
+            sendRequest({
+                url: "/api/v1/Department/DepartmentList",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    emailID: sessionStorage.getItem("user"),
+                    corporateID: sessionStorage.getItem("corpId")
+                }
+            }, authenticateUser);
+    }, [sendRequest]);
+
     const departmentChangeHandler = (e) => {
-        selectedDepartment = e.target.value;
-        if (selectedDepartment)
+        // selectedDepartment = e.target.value;
+        dptId = e.target.id;
+        if (e.target.value)
             setIsError("");
     }
     const nextClickHandler = () => {
@@ -33,10 +66,11 @@ const SelectDepartment = (props) => {
                 <div className='department-container'>
                     <p>Select Department</p>
                     <div className='department-subcontainer'>
-                        {DEPARTMENTS && DEPARTMENTS.map(data => {
+                        {isLoading && <Loading />}
+                        {departmentList[0] && departmentList.map(data => {
                             return (
                                     <div style={{display: "inline-block"}}>
-                                        <input type="radio" ref={departmentInputRef} name='department' onChange={departmentChangeHandler} value={data} /><span>{data}</span>
+                                        <input type="radio" ref={departmentInputRef} name='department' id={data.dptID} onChange={departmentChangeHandler} value={data.name} /><span>{data.name}</span>
                                     </div>
                             );
                         })}
@@ -48,7 +82,7 @@ const SelectDepartment = (props) => {
                     </div>
                 </div>
             }
-            {isDepartmentChanged && <StudentsInfo backWizard={props.backWizard} nextWizard={props.nextWizard} setIsDepartmentChanged={setIsDepartmentChanged} setIsAddRouteClicked={props.setIsAddRouteClicked} />}
+            {isDepartmentChanged && <StudentsInfo dptId={dptId} backWizard={props.backWizard} nextWizard={props.nextWizard} setIsDepartmentChanged={setIsDepartmentChanged} setIsAddRouteClicked={props.setIsAddRouteClicked} />}
         </React.Fragment>
     )
 }

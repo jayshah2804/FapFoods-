@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./StopInfo.css";
 
 import startPoint from "../../../Assets/Pin_icon_green50.png";
@@ -6,6 +6,7 @@ import studentDummyImage from "../../../Assets/new_student_marker.png";
 import connectionPoint from "../../../Assets/start_location.png";
 import threedots from "../../../Assets/route_3dots.png";
 import endPoint from "../../../Assets/place_outline.png";
+import useHttp from '../../../Hooks/use-http';
 
 let studentCount = 0;
 let shuttleSeatingCapacity = 4;
@@ -74,6 +75,7 @@ let flightPlanCoordinates = [
   { lat: RIDER_DATA[0].location.lat, lng: RIDER_DATA[0].location.lng },
 ];
 
+let flag = true;
 const StopInfo = (props) => {
   const [filteredData, setFilteredData] = useState(RIDER_DATA);
   const [isRender, setIsRender] = useState();
@@ -82,6 +84,46 @@ const StopInfo = (props) => {
   script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
   script.async = true;
   document.body.appendChild(script);
+
+  // console.log(filteredData.length = 1, RIDER_DATA);
+
+  const authenticateUser = (data) => {
+    // console.log(data.StaffList);
+    let studentData = [];
+    for (let i = 0; i < data.StaffList.length; i++) {
+      studentData.push({
+        stop: data.StaffList[i].PickupPoint,
+        name: data.StaffList[i].StaffName,
+        mNumber: data.StaffList[i].MobileNumber,
+        location: {
+          lat: +data.StaffList[i].PickupLL.split(",")[0],
+          lng: +data.StaffList[i].PickupLL.split(",")[1]
+        },
+        status: false
+      });
+    }
+    console.log(studentData);
+  };
+
+  const { isLoading, sendRequest } = useHttp();
+
+  useEffect(() => {
+    // alert(props.dptId);
+    if (flag) {
+      sendRequest({
+        url: "/api/v1/Corporate/StaffListByCorporate",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          emailID: sessionStorage.getItem("user"),
+          corporateID: props.dptId
+        }
+      }, authenticateUser);
+      flag = false;
+    }
+  }, [sendRequest]);
 
   const undoRouteClickHandler = () => {
     if (flightPlanCoordinates.length > 1) {
@@ -160,30 +202,30 @@ const StopInfo = (props) => {
       //   alert("Shuttle seating capacity exceeded");
       // }
       // else {
-        if (previewRouteFlag) {
-          flightPlanCoordinates.pop();
-          previewRouteFlag = false;
-        }
-        filteredData[e.target.parentElement.id].status = true;
-        // myRecord = e.target.parentElement.id;
-        myRecord.push(e.target.parentElement.id);
-        flightPlanCoordinates.push(
-          {
-            lat: filteredData[e.target.parentElement.id].location.lat,
-            lng: filteredData[e.target.parentElement.id].location.lng
-          });
-        // if(+e.target.parentElement.id === (RIDER_DATA.length - 1)){
-        //   flightPlanCoordinates.push(RIDER_DATA[0].location);
-        // }
-        STOP_DETAILS.push({
-          stopName: filteredData[e.target.parentElement.id].stop,
-          riders: filteredData[e.target.parentElement.id].name
-        })
-        // console.log(STOP_DETAILS);
-        setTimeout(() => {
-          document.getElementById("asdf").click();
-        })
-        setIsRender(prev => !prev);
+      if (previewRouteFlag) {
+        flightPlanCoordinates.pop();
+        previewRouteFlag = false;
+      }
+      filteredData[e.target.parentElement.id].status = true;
+      // myRecord = e.target.parentElement.id;
+      myRecord.push(e.target.parentElement.id);
+      flightPlanCoordinates.push(
+        {
+          lat: filteredData[e.target.parentElement.id].location.lat,
+          lng: filteredData[e.target.parentElement.id].location.lng
+        });
+      // if(+e.target.parentElement.id === (RIDER_DATA.length - 1)){
+      //   flightPlanCoordinates.push(RIDER_DATA[0].location);
+      // }
+      STOP_DETAILS.push({
+        stopName: filteredData[e.target.parentElement.id].stop,
+        riders: filteredData[e.target.parentElement.id].name
+      })
+      // console.log(STOP_DETAILS);
+      setTimeout(() => {
+        document.getElementById("asdf").click();
+      })
+      setIsRender(prev => !prev);
       // }
     }
 
@@ -226,6 +268,7 @@ const StopInfo = (props) => {
   window.myInitMap = myInitMap;
 
   const backClickHandler = () => {
+    flag = true;
     props.backWizard("StopInfo");
     props.setIsDepartmentChanged(false);
   }
