@@ -26,7 +26,9 @@
   height: calc(100vh - 75px);
   margin: 0 25px;
   padding: 10px 0;
-  /* padding: 10px 0; */
+  transition-property: width;
+  transition-duration: 0.7s;
+    /* padding: 10px 0; */
 }
 
 .container .newCorpButton {
@@ -101,7 +103,7 @@
 }
 
 .cards div:nth-child(3) {
-  background-color: rgba(42, 149, 69, 255); 
+  background-color: rgba(42, 149, 69, 255);
   /* green */
 }
 

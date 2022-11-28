@@ -1,5 +1,8 @@
 .add-department-container {
     width: 100%;
+    transition-property: width;
+    transition-duration: 0.7s;
+        /* transform: ; */
 }
 
 .add-department-subcontainer {

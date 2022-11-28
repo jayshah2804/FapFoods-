@@ -191,7 +191,7 @@ function Routes() {
                 }
             }, authenticateUser);
         staffListFlag++;
-    }, [sendRequest]);
+    }, [sendRequest, id]);
 
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;

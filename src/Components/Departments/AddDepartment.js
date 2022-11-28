@@ -4,6 +4,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import useHttp from '../../Hooks/use-http';
 import "./AddDepartment.css";
 
+import loadingGif from "../../Assets/loading-gif.gif";
+
 var showVehicle = true;
 var showRide = true;
 let allow_inter_country = "No";
@@ -46,6 +48,7 @@ const AddDepartment = () => {
     if (id && type !== "create") type = "edit";
 
     const authenticateUser = (data) => {
+        console.log(data);
         if (type === "edit") {
             if (data?.DepartMentDetails) {
                 let department_data = {};
@@ -53,17 +56,17 @@ const AddDepartment = () => {
                     document.getElementsByTagName("input")[0].click();
                 if (data.DepartMentDetails[0].LockVehicleType === "Y")
                     document.getElementsByTagName("input")[1].click();
-                if (data.DepartMentDetails[0].AllowedVehicleTypes.toLowerCase().includes("basic"))
+                if (data.DepartMentDetails[0].AllowedVehicleTypes?.toLowerCase().includes("basic"))
                     document.getElementsByTagName("input")[2].click();
-                if (data.DepartMentDetails[0].AllowedVehicleTypes.toLowerCase().includes("comfort"))
+                if (data.DepartMentDetails[0].AllowedVehicleTypes?.toLowerCase().includes("comfort"))
                     document.getElementsByTagName("input")[3].click();
-                if (data.DepartMentDetails[0].AllowedVehicleTypes.toLowerCase().includes("plus"))
+                if (data.DepartMentDetails[0].AllowedVehicleTypes?.toLowerCase().includes("plus"))
                     document.getElementsByTagName("input")[4].click();
                 showVehicleCheckboxes();
                 showVehicleCheckboxes();
-                if (data.DepartMentDetails[0].AvailableServices.toLowerCase().includes("ride"))
+                if (data.DepartMentDetails[0].AvailableServices?.toLowerCase().includes("ride"))
                     document.getElementsByTagName("input")[5].click();
-                if (data.DepartMentDetails[0].AvailableServices.toLowerCase().includes("food"))
+                if (data.DepartMentDetails[0].AvailableServices?.toLowerCase().includes("food"))
                     document.getElementsByTagName("input")[6].click();
                 showRideCheckboxes();
                 showRideCheckboxes();
@@ -86,7 +89,7 @@ const AddDepartment = () => {
         }
     };
 
-    const { sendRequest } = useHttp();
+    const { isLoading, sendRequest } = useHttp();
 
     useEffect(() => {
         if (!isCall && id && addDeptFlag > 0)
@@ -193,7 +196,7 @@ const AddDepartment = () => {
     return (
         <div className='add-department-container' id='add-department'>
             <div>
-                <h3>ADD NEW DEPARTMENT</h3>
+                <h3>{id? "Edit Department" : "ADD NEW DEPARTMENT"}</h3>
             </div>
             <div className='add-department-subcontainer'>
                 <div>
@@ -298,6 +301,9 @@ const AddDepartment = () => {
                 <br />
                 <button onClick={createDepartmentClickedHandler} >{!id ? "Create Department" : "Edit Department"}</button>
             </div>
+            {isLoading &&
+                <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "45%" }} />
+            }
         </div>
     )
 }

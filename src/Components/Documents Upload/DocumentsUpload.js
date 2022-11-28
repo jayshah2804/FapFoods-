@@ -26,17 +26,17 @@ const DocumentUpload = () => {
   const { isLoading, sendRequest } = useHttp();
 
   useEffect(() => {
-    sendRequest(
-      {
-        url: "/api/v1/Corporate/CorporateRegistration",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {},
-      },
-      authenticateUser
-    );
+    // sendRequest(
+    //   {
+    //     url: "/api/v1/Corporate/CorporateRegistration",
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: {},
+    //   },
+    //   authenticateUser
+    // );
   }, [sendRequest]);
 
   const uploadDocumentsClickHandler = () => {};

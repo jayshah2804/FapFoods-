@@ -55,6 +55,7 @@ const Main = () => {
   // document.body.appendChild(script);
 
   const authenticateUser = (data) => {
+    console.log(data);
     if (data === "Request failed!") {
       setIsApiError("No data available");
     } else {

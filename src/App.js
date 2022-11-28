@@ -62,6 +62,9 @@ function App() {
         if (document.getElementById("add-department")) {
             document.getElementById("add-department").style.width = "78%";
         }
+        if (document.getElementById("documents-upload")) {
+            document.getElementById("documents-upload").style.width = "78%";
+        }
         if (document.getElementById("support")) {
             // document.getElementById("support").style.width = "calc(100vw - 320px )";
             document.getElementById("support").style.width = "77%";
@@ -99,6 +102,9 @@ function App() {
         }
         if (document.getElementById("main-stop")) {
             document.getElementById("main-stop").style.width = "100%";
+        }
+        if (document.getElementById("documents-upload")) {
+            document.getElementById("documents-upload").style.width = "100%";
         }
         if (document.getElementById("support")) {
             // document.getElementById("support").style.width = "calc(100vw - 20px )";

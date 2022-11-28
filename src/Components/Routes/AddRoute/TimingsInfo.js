@@ -64,6 +64,26 @@ const TimingsInfo = (props) => {
         }
         setIsTimingChange(prev => !prev);
     }
+
+    sessionStorage.setItem("pickupTimings", {
+        monday: TIMINGS.monday.pickup,
+        tuesday: TIMINGS.tuesday.pickup,
+        wednesday: TIMINGS.wednesday.pickup,
+        thursday: TIMINGS.thursday.pickup,
+        friday: TIMINGS.friday.pickup,
+        saturday: TIMINGS.saturday.pickup,
+        sunday: TIMINGS.sunday.pickup,
+    })
+    sessionStorage.setItem("dropTimings", JSON.stringify({
+        monday: TIMINGS.monday.drop,
+        tuesday: TIMINGS.tuesday.drop,
+        wednesday: TIMINGS.wednesday.drop,
+        thursday: TIMINGS.thursday.drop,
+        friday: TIMINGS.friday.drop,
+        saturday: TIMINGS.saturday.drop,
+        sunday: TIMINGS.sunday.drop,
+    }));
+
     const dropTimeChangeHandler = () => {
         if (isDayTimeChange.dayname) {
             dayTimeChangeHandler(dayName);
