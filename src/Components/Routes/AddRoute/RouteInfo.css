@@ -36,7 +36,6 @@
   border: none;
   border-bottom: 1px solid gray;
   background: transparent;
-  margin-top: 30px;
   width: 170px;
   height: 15px;
   font-size: 17px;
@@ -45,15 +44,27 @@
   font-size: 15px;
 }
 
+.routeInfo-subContainer {
+  display: flex;
+  margin-left: 6%;
+  margin-top: 80px;
+  gap: 6px;
+}
+
 .routeInfo-container input:focus {
   outline: none;
 }
 
-.routeInfo-container .error-roureName {
-  position: absolute;
+.routeInfo-container .error {
+  /* position: absolute;
   color: red;
   font-size: 13px;
-  margin-left: 7%;
+  margin-left: 7%; */
+  display: flex;
+  flex-direction: column;
+  margin-left: 6%;
+  font-size: 13px;
+  color: red;
 }
 
 .routeInfo-container .error-routeType {
@@ -64,7 +75,6 @@
   border: none;
   border-bottom: 1px solid gray;
   background: transparent;
-  margin-top: 30px;
   width: 170px;
   height: 20px;
   font-size: 15px;

@@ -25,14 +25,26 @@ function RouteInfo(props) {
     }
     const routeTypeChangeHandler = () => {
         if (routeTypeSelectRef.current.value !== "Route Type") {
-            sessionStorage.setItem("routeType", routeTypeSelectRef.current.value);
+            if (routeTypeSelectRef.current.value === "Pickup Busbuddy")
+                sessionStorage.setItem("routeType", "1");
+            else if (routeTypeSelectRef.current.value === "Corporate Commuters")
+                sessionStorage.setItem("routeType", "2");
+            else if (routeTypeSelectRef.current.value === "Private Drive")
+                sessionStorage.setItem("routeType", "3");
             setIsError(prev => ({ ...prev, routeType: "" }));
         }
     }
 
     const shuttleTypeChangeHandler = () => {
         if (shuttleTypeSelectRef.current.value !== "Shuttle Type") {
-            sessionStorage.setItem("shuttleType", shuttleTypeSelectRef.current.value);
+            if (shuttleTypeSelectRef.current.value === "Basic")
+                sessionStorage.setItem("shuttleType", "1");
+            else if (shuttleTypeSelectRef.current.value === "Comfort")
+                sessionStorage.setItem("shuttleType", "2");
+            else if (shuttleTypeSelectRef.current.value === "Comfort plus")
+                sessionStorage.setItem("shuttleType", "3");
+            else if (shuttleTypeSelectRef.current.value === "Busbuddy")
+                sessionStorage.setItem("shuttleType", "4");
             setIsError(prev => ({ ...prev, shuttleType: "" }));
         }
     }
@@ -80,15 +92,17 @@ function RouteInfo(props) {
     }
 
     const nextClickHandler = () => {
-        // if (routeNameInputRef.current.value && routeTypeSelectRef.current.value) {
-        current = "RouteInfo";
-        nextWizard("TimingInfo");
-        setIsNextClicked(true);
+        // if (routeNameInputRef.current.value && routeTypeSelectRef.current.value !== "Route Type" && shuttleTypeSelectRef.current.value !== "Shuttle Type") {
+            current = "RouteInfo";
+            nextWizard("TimingInfo");
+            setIsNextClicked(true);
         // } else {
         //     if (!routeNameInputRef.current.value)
         //         setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));
         //     if (routeTypeSelectRef.current.value === "Route Type")
         //         setIsError(prev => ({ ...prev, routeType: "Route type is invalid" }));
+        //     if (shuttleTypeSelectRef.current.value === "Shuttle Type")
+        //         setIsError(prev => ({ ...prev, shuttleType: "Shuttle type is invalid" }));
         // }
     }
     const backClickHandler = () => {
@@ -123,22 +137,29 @@ function RouteInfo(props) {
             {!isNextClicked &&
                 <div className='routeInfo-container'>
                     <div className='routeInfo-subContainer'>
-                        <input type="text" id="route-name" ref={routeNameInputRef} placeholder='Route Name' onChange={routeNameChangeHandler} />
-                        {isError.routeName && <p className='error-roureName' >{isError.routeName}</p>}
-                        <select ref={routeTypeSelectRef} onChange={routeTypeChangeHandler} >
-                            <option disabled selected>Route Type</option>
-                            <option>Pickup Busbuddy</option>
-                            <option>Corporate Commuters</option>
-                            <option>Private Drive</option>
-                        </select>
-                        <select ref={shuttleTypeSelectRef} onChange={shuttleTypeChangeHandler} >
-                            <option disabled selected>Shuttle Type</option>
-                            <option>Basic</option>
-                            <option>Comfort</option>
-                            <option>Comfort plus</option>
-                            <option>Busbuddy</option>
-                        </select>
-                        {/* {isError.routeType && <p className='error-routeType'>{isError.routeType}</p>} */}
+                        <div>
+                            <input type="text" id="route-name" ref={routeNameInputRef} placeholder='Route Name' onChange={routeNameChangeHandler} />
+                            {isError.routeName && <p className='error' >{isError.routeName}</p>}
+                        </div>
+                        <div >
+                            <select ref={routeTypeSelectRef} onChange={routeTypeChangeHandler} >
+                                <option disabled selected>Route Type</option>
+                                <option>Pickup Busbuddy</option>
+                                <option>Corporate Commuters</option>
+                                <option>Private Drive</option>
+                            </select>
+                            {isError.routeType && <p className='error'>{isError.routeType}</p>}
+                        </div>
+                        <div>
+                            <select ref={shuttleTypeSelectRef} onChange={shuttleTypeChangeHandler} >
+                                <option disabled selected>Shuttle Type</option>
+                                <option>Basic</option>
+                                <option>Comfort</option>
+                                <option>Comfort plus</option>
+                                <option>Busbuddy</option>
+                            </select>
+                            {isError.shuttleType && <p className='error'>{isError.shuttleType}</p>}
+                        </div>
                     </div>
                     <button className='nextButton' onClick={nextClickHandler}>Next</button>
                 </div>

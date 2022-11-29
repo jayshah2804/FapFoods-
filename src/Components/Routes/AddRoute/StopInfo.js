@@ -7,6 +7,7 @@ import connectionPoint from "../../../Assets/start_location.png";
 import threedots from "../../../Assets/route_3dots.png";
 import endPoint from "../../../Assets/place_outline.png";
 import useHttp from '../../../Hooks/use-http';
+import loadingGif from "../../../Assets/loading-gif.gif";
 
 let studentCount = 0;
 let shuttleSeatingCapacity = 4;
@@ -16,99 +17,75 @@ let prev_id;
 let myFlag = true;
 let indexToBeMove;
 let indexToBeShift;
-const RIDER_DATA = [
-  {
-    stop: "Eximious Global",
-    name: ["Eximious Global"],
-    location: { lat: 23.020922774165125, lng: 72.46970495605471 }
-  },
-  {
-    stop: "Divya Bhaskar Office",
-    name: ["Jay Shah"],
-    location: { lat: 23.015234991655756, lng: 72.51416525268557 },
-    status: false
-  },
-  {
-    stop: "Divya Bhaskar Office",
-    name: ["Darshan Patel"],
-    location: { lat: 23.015234991655756, lng: 72.51416525268557 },
-    status: false
-  },
-  {
-    stop: "JEEP Ahmedabad",
-    name: ["Dev Shah", "Vijay Kansara"],
-    location: { lat: 22.993429603752258, lng: 72.5378545227051 },
-    status: false
-  },
-  {
-    stop: "L.D. College of Engineering",
-    name: ["Het Desai"],
-    location: { lat: 23.034509283424683, lng: 72.55879721069338 },
-    status: false
-  },
-  {
-    stop: "Vishala Circle",
-    name: ["Roshan Patel"],
-    location: { lat: 23.03489120423814, lng: 72.56658725087891 },
-    status: false
-  },
-  {
-    stop: "Navarangpura Circle",
-    name: ["Nihar Gupte"],
-    location: { lat: 23.04272371760406, lng: 72.53682455444338 },
-    status: false
-  },
-  {
-    stop: "Naherunagar Circle",
-    name: ["Vinay Joshi"],
-    location: { lat: 23.006702868171974, lng: 72.53030142211917 },
-    status: false
-  },
-];
+let ridersData = [];
 
-let STOP_DETAILS = [
-  {
-    stopName: RIDER_DATA[0].stop
-  }
-]
-let flightPlanCoordinates = [
-  { lat: RIDER_DATA[0].location.lat, lng: RIDER_DATA[0].location.lng },
-];
+let STOP_DETAILS = [];
+let flightPlanCoordinates = [];
 
 let flag = true;
+let type = "";
 const StopInfo = (props) => {
-  const [filteredData, setFilteredData] = useState(RIDER_DATA);
+  const [filteredData, setFilteredData] = useState([]);
   const [isRender, setIsRender] = useState();
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
 
   const script = document.createElement('script');
   script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
   script.async = true;
   document.body.appendChild(script);
 
-  // console.log(filteredData.length = 1, RIDER_DATA);
-
   const authenticateUser = (data) => {
-    // console.log(data.StaffList);
-    let studentData = [];
-    for (let i = 0; i < data.StaffList.length; i++) {
-      studentData.push({
-        stop: data.StaffList[i].PickupPoint,
-        name: data.StaffList[i].StaffName,
-        mNumber: data.StaffList[i].MobileNumber,
-        location: {
-          lat: +data.StaffList[i].PickupLL.split(",")[0],
-          lng: +data.StaffList[i].PickupLL.split(",")[1]
-        },
-        status: false
-      });
+    if (type === "submit") {
+      console.log(data);
+      setIsSubmitClicked(false);
     }
-    console.log(studentData);
+    // console.log(data.StaffList);
+    else {
+      let studentData = [];
+      if (data.StaffList) {
+        STOP_DETAILS = [];
+        studentData.push({
+          stop: "Eximious Global",
+          name: "Eximious Global",
+          location: {
+            lat: 23.0448498,
+            lng: 72.52949269999999
+          }
+        })
+        for (let i = 0; i < data.StaffList.length; i++) {
+          studentData.push({
+            stop: data.StaffList[i].PickupPoint,
+            name: [data.StaffList[i].StaffName],
+            mNumber: [data.StaffList[i].MobileNumber],
+            location: {
+              lat: +data.StaffList[i].PickupLL.split(",")[0],
+              lng: +data.StaffList[i].PickupLL.split(",")[1]
+            },
+            status: false
+          });
+        }
+        STOP_DETAILS.push(
+          {
+            stopName: studentData[0].stop,
+            lat: studentData[0].location.lat,
+            lng: studentData[0].location.lng,
+            mNumber: studentData[0].mNumber
+          }
+        );
+        flightPlanCoordinates.push(studentData[0].location);
+      }
+      setFilteredData(studentData);
+      ridersData = structuredClone(studentData);
+      // console.log(studentData);
+    }
   };
 
   const { isLoading, sendRequest } = useHttp();
 
   useEffect(() => {
-    // alert(props.dptId);
+    let pickup = JSON.parse(sessionStorage.pickupTimings);
+    let drop = JSON.parse(sessionStorage.dropTimings);
+
     if (flag) {
       sendRequest({
         url: "/api/v1/Corporate/StaffListByCorporate",
@@ -123,7 +100,79 @@ const StopInfo = (props) => {
       }, authenticateUser);
       flag = false;
     }
-  }, [sendRequest]);
+    if (isSubmitClicked) {
+      let shuttleTiming = [];
+      let days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+      for (let i = 0; i < 7; i++) {
+        shuttleTiming.push({
+          Weekday: i + 1,
+          StartTime: `${new Date().getFullYear().toString().concat("-", new Date().getMonth(), "-", new Date().getDate())} ${pickup[days[i]]}`,
+          EndTime: `${new Date().getFullYear().toString().concat("-", new Date().getMonth(), "-", new Date().getDate())} ${drop[days[i]]}`,
+        })
+      }
+      let shuttleRoute = [];
+      let staffList = [];
+      for (let i = 0; i < STOP_DETAILS.length; i++) {
+        shuttleRoute.push({
+          StopName: STOP_DETAILS[i].stopName,
+          StopNumber: i + 1,
+          StopLatitude: STOP_DETAILS[i].lat,
+          StopLongitude: STOP_DETAILS[i].lng
+        });
+        for (let j = 0; j < STOP_DETAILS[i].mNumber?.length; j++) {
+          staffList.push({
+            MobileNumber: STOP_DETAILS[i].mNumber[j]
+          })
+        }
+      }
+      var obj = {};
+      obj.ApiActionTypeID = 0;
+      obj.ApiDynamicFields = "";
+      obj.ApiOperatorID = "";
+      obj.ApiRequestID = "";
+      obj.ApiRoleID = "";
+      obj.ApiUniqueID = "";
+      obj.ApiOperatedOn = "";
+      obj.EmailID = sessionStorage.getItem("user");
+      obj.CorporateID = sessionStorage.getItem("corpId");
+      obj.RouteID = "";
+      obj.RouteName = sessionStorage.getItem("routeName");
+      obj.RouteTypeID = sessionStorage.getItem("routeType");
+      obj.ShuttleTypeID = sessionStorage.getItem("shuttleType");
+      obj.ShuttleTiming = JSON.stringify(shuttleTiming);
+      obj.ShuttleRoute = JSON.stringify(shuttleRoute);
+      obj.StaffList = JSON.stringify(staffList);
+      var dataInfo = (obj);
+      // let dataInfo = JSON.stringify({
+      //   ApiActionTypeID: 0,
+      //   ApiDynamicFields: "",
+      //   ApiOperatorID: "",
+      //   ApiRequestID: "",
+      //   ApiRoleID: "",
+      //   ApiUniqueID: "",
+      //   ApiOperatedOn: "",
+      //   EmailID: sessionStorage.getItem("user"),
+      //   CorporateID: sessionStorage.getItem("corpId"),
+      //   RouteID: "",
+      //   RouteName: sessionStorage.getItem("routeName"),
+      //   RouteTypeID: sessionStorage.getItem("routeType"),
+      //   ShuttleTypeID: sessionStorage.getItem("shuttleType"),
+      //   ShuttleTiming: shuttleTiming,
+      //   ShuttleRoute: shuttleRoute,
+      //   StaffList: staffList
+      // });
+      console.log(dataInfo);
+
+      sendRequest({
+        url: "/api/v1/Route/AddEditRoute",
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: obj
+      }, authenticateUser);
+    }
+  }, [sendRequest, isSubmitClicked]);
 
   const undoRouteClickHandler = () => {
     if (flightPlanCoordinates.length > 1) {
@@ -142,7 +191,14 @@ const StopInfo = (props) => {
     if (response) {
       // studentCount = 0;
       flightPlanCoordinates = [flightPlanCoordinates[0]];
-      STOP_DETAILS = [{ stopName: RIDER_DATA[0].stop }];
+      STOP_DETAILS = [
+        {
+          stopName: structuredClone(ridersData)[0].stop,
+          lat: structuredClone(ridersData)[0].location.lat,
+          lng: structuredClone(ridersData)[0].location.lng,
+          mNumber: structuredClone(ridersData)[0].mNumber
+        }
+      ];
       filteredData.map(data => data.status = false);
       myRecord = [];
       setIsRender(prev => !prev);
@@ -164,8 +220,8 @@ const StopInfo = (props) => {
     //   mapTypeControl: false,
     // });
     const map = new window.google.maps.Map(document.getElementById("stops-map"), {
-      zoom: 12,
-      center: { lat: filteredData[Math.round(filteredData.length / 2)].location.lat, lng: filteredData[Math.round(filteredData.length / 2)].location.lng },
+      zoom: 14,
+      center: { lat: filteredData[Math.round(filteredData.length / 2)]?.location.lat, lng: filteredData[Math.round(filteredData.length / 2)]?.location.lng },
       disableDefaultUI: true,
       fullscreenControl: true,
       zoomControl: true
@@ -219,7 +275,10 @@ const StopInfo = (props) => {
       // }
       STOP_DETAILS.push({
         stopName: filteredData[e.target.parentElement.id].stop,
-        riders: filteredData[e.target.parentElement.id].name
+        riders: filteredData[e.target.parentElement.id].name,
+        lat: filteredData[e.target.parentElement.id].location.lat,
+        lng: filteredData[e.target.parentElement.id].location.lng,
+        mNumber: filteredData[e.target.parentElement.id].mNumber
       })
       // console.log(STOP_DETAILS);
       setTimeout(() => {
@@ -238,10 +297,10 @@ const StopInfo = (props) => {
         icon = studentDummyImage;
         if (position.status)
           // myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><p id="infowindow-success">Assigned</div>`;
-          myTitle = `<div id="infowindow-container" ><h3>${position.stop.toString()}</h3><p id="infowindow-success">Assigned</div>`;
+          myTitle = `<div id="infowindow-container" ><h3>${position.stop.split(",")[0]}</h3><p id="infowindow-success">Assigned</div>`;
         else
           // myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><div id=${i}><span id='infowindow-assign'>Assign rider</span></div></div>`;
-          myTitle = `<div><div id="infowindow-container" ><h3>${position.stop.toString()}</h3><div id=${i}><span id='infowindow-assign'>Assign riders</span></div></div><div>${position.name.toString()}</div></div>`;
+          myTitle = `<div><div id="infowindow-container" ><h3>${position.stop.split(",")[0]}</h3><div id=${i}><span id='infowindow-assign'>Assign riders</span></div></div><div>${position.name.toString()}</div></div>`;
       }
 
       const marker = new window.google.maps.Marker({
@@ -269,24 +328,30 @@ const StopInfo = (props) => {
 
   const backClickHandler = () => {
     flag = true;
+    myFlag = true;
+    type = "";
     props.backWizard("StopInfo");
     props.setIsDepartmentChanged(false);
   }
   const submitClickHandler = () => {
     props.nextWizard("Submit");
-    props.setIsAddRouteClicked(false);
+    type = "submit";
+    setIsSubmitClicked(true);
+    // props.setIsAddRouteClicked(false);
   }
 
-  if (myFlag) {
+  if (myFlag && filteredData.length > 0) {
     let arr = [];
     for (let i = 0; i < filteredData.length; i++) {
       if (arr.includes(filteredData[i].stop)) {
-        // alert("here");
-        filteredData[i - 1].name.push(filteredData[i].name.toString());
+        let index = arr.indexOf(filteredData[i].stop);
+        filteredData[index].name.push(filteredData[i].name.toString());
+        filteredData[index].mNumber.push(filteredData[i].mNumber.toString());
         filteredData.splice(i, 1);
       }
       arr.push(filteredData[i].stop);
     }
+    setFilteredData(filteredData);
     myFlag = false;
   }
 
@@ -333,11 +398,13 @@ const StopInfo = (props) => {
       for (let i = 0; i < STOP_DETAILS[targetIndex].riders.length; i++) {
         if (STOP_DETAILS[targetIndex].riders[i] !== e.target.parentNode.children[0].innerText) {
           STOP_DETAILS[targetIndex].riders[holdingIndex] = STOP_DETAILS[targetIndex].riders[i];
+          STOP_DETAILS[targetIndex].mNumber[holdingIndex] = STOP_DETAILS[targetIndex].mNumber[i];
           holdingIndex++;
         }
       }
       STOP_DETAILS = structuredClone(STOP_DETAILS);
       STOP_DETAILS[targetIndex].riders.length = holdingIndex;
+      STOP_DETAILS[targetIndex].mNumber.length = holdingIndex;
 
       for (let i = 0; i < filteredData.length; i++) {
         if (filteredData[i].stop === e.target.parentNode.children[0].innerText)
@@ -489,7 +556,9 @@ const StopInfo = (props) => {
           </div>
         </div>
       </div>
-    </div>
+      {isLoading &&
+        <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "50%", zIndex: "100" }} />
+      }    </div>
   )
 }
 
