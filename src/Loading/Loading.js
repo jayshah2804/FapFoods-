@@ -6,7 +6,7 @@ const Loading = (props) => {
         <React.Fragment>
             {
                 props.datatable ?
-                <div style={{width: "100%", textAlign: "center"}} className='loading'></div> :
+                <div style={{width: "100%", textAlign: "center", zIndex: "100"}} className='loading'></div> :
                     <pre className='loading'></pre> 
             }
         </React.Fragment>
