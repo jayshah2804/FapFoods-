@@ -3,10 +3,20 @@ table .actions {
     border: rgba(34, 137, 203, 255);
     border-radius: 5px;
     padding: 5px 10px;
-    cursor: pointer;
+    /* cursor: pointer; */
     color: white;
 }
 
 table .actions:hover {
     background-color: rgb(97, 97, 235);
+}
+
+.edit-route {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.edit-route:hover {
+    transform: scale(1.1);
 }

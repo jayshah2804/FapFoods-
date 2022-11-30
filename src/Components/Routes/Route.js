@@ -6,6 +6,8 @@ import { CSVLink } from "react-csv";
 import { Route, useLocation } from "react-router-dom";
 import AddRoute from "./AddRoute/RouteInfo";
 import useHttp from "../../Hooks/use-http";
+import Message from "../../Modal/Message";
+import loadingGif from "../../Assets/loading-gif.gif";
 
 const TRIP_DATA = [
     {
@@ -161,13 +163,13 @@ const TRIP_DATA = [
 ];
 
 const TRIP_TITLE = [
-    "Route_ID",
-    "Route",
+    "Route ID",
+    "Route Name",
     "City",
     "Country",
     "Zone Price",
     "Route Type",
-    "Department",
+    "Actions"
 ];
 
 let myClick = false;
@@ -181,6 +183,11 @@ function Routes() {
     const [filteredData, setFilteredData] = useState([]);
     const searchInputRef = useRef();
     const [isAddRouteClicked, setIsAddRouteClicked] = useState();
+    const [isRouteCreated, setIsRouteCreated] = useState();
+
+    const routeCreationStatus = (data) => {
+        setIsRouteCreated(data);
+    }
 
     const search = useLocation().search;
     const id = new URLSearchParams(search).get('departmentId');
@@ -312,7 +319,13 @@ function Routes() {
                     />
                 </div>
             </div>
-            {isAddRouteClicked && <AddRoute setIsAddRouteClicked={setIsAddRouteClicked} />}
+            {isAddRouteClicked && <AddRoute routeCreationStatus={routeCreationStatus} setIsAddRouteClicked={setIsAddRouteClicked} />}
+            {isRouteCreated &&
+                (isRouteCreated === "Loading" ?
+                    <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "40%" }} /> :
+                    <Message type={isRouteCreated} message={"Route name " + sessionStorage.getItem("routeName") + " has been Successfully created"} />
+                )
+            }
         </div>
     );
 }

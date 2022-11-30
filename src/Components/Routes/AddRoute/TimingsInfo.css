@@ -81,7 +81,7 @@
 }
 
 .timingsInfo-container .droptime-input::before {
-    content: '';
+    content: 'Time';
     color: #8a8787;
     position: absolute;
     background: #fff;
@@ -90,11 +90,11 @@
 }
 
 .timingsInfo-container .pickuptime-input::before {
-    content: "Pickup Time";
+    content: "Time";
 }
 
 .timingsInfo-container .droptime-input::before {
-    content: "Drop Time";
+    content: "Time";
 }
 
 .timingsInfo-container input[type="time"]:focus:before {
@@ -107,7 +107,7 @@
     color: grey;
 }
 
-.timingsInfo-container .footer {
+.timingsInfo-container footer {
     margin-top: 30px;
     display: flex;
     justify-content: flex-end;
@@ -116,27 +116,31 @@
     margin-bottom: 15px;
 }
 
-.timingsInfo-container .footer button {
+.timingsInfo-container footer .button {
     padding: 5px 25px;
 }
 
-.timingsInfo-container .footer button:nth-child(1) {
+.timingsInfo-container footer .button:nth-child(1) {
     color: gray;
     border: 1px solid gray;
 }
 
-.timingsInfo-container .footer button:nth-child(1):hover {
+.timingsInfo-container footer .button:nth-child(1):hover {
     background-color: white;
     /* color: white; */
     font-weight: bold;
 }
 
-.timingsInfo-container .footer button:nth-child(2) {
+.timingsInfo-container footer .button:nth-child(2) {
     color: rgba(42, 149, 69, 255);
     border: 1px solid rgba(42, 149, 69, 255);
 }
 
-.timingsInfo-container .footer button:nth-child(2):hover {
+.timingsInfo-container footer .button:nth-child(2):hover {
     color: white;
     background-color: rgba(42, 149, 69, 255);
-}                       
+}     
+
+.dayList-container .selected-time {
+    align-self: center;
+}
