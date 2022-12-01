@@ -105,3 +105,27 @@
   font-weight: bold;
   color: black;
 }
+
+.documents-upload .pending {
+  color: white;
+  background-color: rgb(241, 88, 33);
+  border-radius: 10px;
+  padding: 3px 6px;
+  font-size: 10.5px;
+}
+
+.documents-upload .approved {
+  color: white;
+  background-color: green;
+  border-radius: 10px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+.documents-upload .rejected {
+  color: white;
+  background-color: red;
+  border-radius: 10px;
+  padding: 3px 6px;
+  font-size: 12px;
+}

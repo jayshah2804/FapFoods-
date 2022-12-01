@@ -35,6 +35,7 @@ function RouteInfo(props) {
             routeNameInputRef.current.value = routeName;
             routeTypeSelectRef.current.value = routeType;
             shuttleTypeSelectRef.current.value = shuttleType;
+            if (props.routeId) document.getElementsByTagName("select")[0].setAttribute("disabled", "disabled");
         })
         sessionStorage.setItem("routeName", routeName);
         sessionStorage.setItem("routeType", routeType);
@@ -124,18 +125,18 @@ function RouteInfo(props) {
     }
 
     const nextClickHandler = () => {
-        // if (routeNameInputRef.current.value && routeTypeSelectRef.current.value !== "Route Type" && shuttleTypeSelectRef.current.value !== "Shuttle Type") {
-        current = "RouteInfo";
-        nextWizard("TimingInfo");
-        setIsNextClicked(true);
-        // } else {
-        //     if (!routeNameInputRef.current.value)
-        //         setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));
-        //     if (routeTypeSelectRef.current.value === "Route Type")
-        //         setIsError(prev => ({ ...prev, routeType: "Route type is invalid" }));
-        //     if (shuttleTypeSelectRef.current.value === "Shuttle Type")
-        //         setIsError(prev => ({ ...prev, shuttleType: "Shuttle type is invalid" }));
-        // }
+        if (routeNameInputRef.current.value && routeTypeSelectRef.current.value !== "Route Type" && shuttleTypeSelectRef.current.value !== "Shuttle Type") {
+            current = "RouteInfo";
+            nextWizard("TimingInfo");
+            setIsNextClicked(true);
+        } else {
+            if (!routeNameInputRef.current.value)
+                setIsError(prev => ({ ...prev, routeName: "Route name is invalid" }));
+            if (routeTypeSelectRef.current.value === "Route Type")
+                setIsError(prev => ({ ...prev, routeType: "Route type is invalid" }));
+            if (shuttleTypeSelectRef.current.value === "Shuttle Type")
+                setIsError(prev => ({ ...prev, shuttleType: "Shuttle type is invalid" }));
+        }
     }
     const backClickHandler = () => {
         backWizard("TimingInfo");
@@ -177,9 +178,6 @@ function RouteInfo(props) {
                             <div >
                                 <select ref={routeTypeSelectRef} onChange={routeTypeChangeHandler} >
                                     <option disabled selected>Route Type</option>
-                                    {/* <option>Pickup Busbuddy</option>
-                                <option>Corporate Commuters</option>
-                                <option>Private Drive</option> */}
                                     <option>Pickup</option>
                                     <option>Drop</option>
                                 </select>
@@ -201,7 +199,6 @@ function RouteInfo(props) {
                 }
                 {isNextClicked && <TimingsInfo routeCreationStatus={props.routeCreationStatus} routeId={props.routeId} defaultShuttleTimings={defaultShuttleTimings} routeType={sessionStorage.getItem("routeType")} nextWizard={nextWizard} backWizard={backWizard} setIsNextClicked={setIsNextClicked} backClickHandler={backClickHandler} setIsAddRouteClicked={props.setIsAddRouteClicked} />}
             </div>
-            {/* } */}
         </React.Fragment>
     )
 }

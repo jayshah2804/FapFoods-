@@ -206,7 +206,6 @@ function Routes() {
                     country: data.RouteList[i].Country,
                     zone_price: data.RouteList[i].ZonePrice,
                     route_type: data.RouteList[i].RouteTypeName,
-                    department: data.RouteList[i].Deplartmentname
                 })
             }
         }
@@ -265,13 +264,12 @@ function Routes() {
 
     const routeSearchHandler = (e) => {
         // if (e.target.value)
-        setFilteredData(route_details.filter(data => data.route.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        setFilteredData(route_details.filter(data => data.route?.toLowerCase().includes(e.target.value.toLowerCase()) ||
             data.route_id?.toLowerCase().includes(e.target.value.toLowerCase()) ||
             data.city?.toLowerCase().includes(e.target.value.toLowerCase()) ||
             data.country?.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.zone_price.toString()?.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.route_type?.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            data.department?.toLowerCase().includes(e.target.value.toLowerCase())
+            data.zone_price?.toString()?.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            data.route_type?.toLowerCase().includes(e.target.value.toLowerCase())
         ));
         // else setFilteredData(TRIP_DATA);
     };

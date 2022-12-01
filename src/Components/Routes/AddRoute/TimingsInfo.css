@@ -107,6 +107,13 @@
     color: grey;
 }
 
+.timingsInfo-container .error {
+    margin-top: 5px;
+    margin-left: 6%;
+    font-size: 13px;
+    color: red;
+}
+
 .timingsInfo-container footer {
     margin-top: 30px;
     display: flex;
@@ -139,7 +146,7 @@
 .timingsInfo-container footer .button:nth-child(2):hover {
     color: white;
     background-color: rgba(42, 149, 69, 255);
-}     
+}
 
 .dayList-container .selected-time {
     align-self: center;
