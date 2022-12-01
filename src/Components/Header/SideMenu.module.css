@@ -30,6 +30,7 @@
   width: 0;
   transition-property: width;
   transition-duration: 0.7s;
+  z-index: 99;
   /* position: absolute;
   z-index: 10; */
 }
