@@ -93,18 +93,18 @@ const StopInfo = (props) => {
       setIsSubmitClicked(false);
     }
     else {
-      // console.log(data.StaffList);
+      // console.log(data.CorporateLatlong, "current co");
       let studentData = [];
+      studentData.push({
+        stop: data.CorporateLatlong[0].CorporateName,
+        name: data.CorporateLatlong[0].CorporateName,
+        location: {
+          lat: +data.CorporateLatlong[0].CorporateLat,
+          lng: +data.CorporateLatlong[0].Corporatelong,
+        }
+      })
       if (data.StaffList) {
         STOP_DETAILS = [];
-        studentData.push({
-          stop: data.StaffList[0].CorporateName,
-          name: data.StaffList[0].CorporateName,
-          location: {
-            lat: +data.StaffList[0].CorporateLat,
-            lng: +data.StaffList[0].Corporatelong,
-          }
-        })
         for (let i = 0; i < data.StaffList.length; i++) {
           studentData.push({
             stop: sessionStorage.getItem("routeType").toLowerCase() === "pickup" ? data.StaffList[i].PickupPoint : data.StaffList[i].DropPoint,
@@ -117,27 +117,30 @@ const StopInfo = (props) => {
             status: false
           });
         }
-        STOP_DETAILS.push(
-          {
-            stop: studentData[0].stop,
-            lat: studentData[0].location.lat,
-            lng: studentData[0].location.lng,
-            mNumber: studentData[0].mNumber
-          }
-        );
-        flightPlanCoordinates.push(studentData[0].location);
-        if (props.routeId) {
-          STOP_DETAILS.push(editedStopDetails);
-          STOP_DETAILS = STOP_DETAILS.flat();
-          flightPlanCoordinates.push(editaedFlightPanCoordinates);
-          flightPlanCoordinates = flightPlanCoordinates.flat();
-          studentData.splice(1, 0, editedFilteredData);
-          studentData = studentData.flat();
-        }
-        console.log(STOP_DETAILS, flightPlanCoordinates);
       }
-      console.log(studentData, "studentData");
+      STOP_DETAILS.push(
+        {
+          stop: studentData[0].stop,
+          lat: studentData[0].location.lat,
+          lng: studentData[0].location.lng,
+          mNumber: studentData[0].mNumber
+        }
+      );
+      flightPlanCoordinates.push(studentData[0].location);
+      // console.log(STOP_DETAILS, "stop");
+      if (props.routeId) {
+        STOP_DETAILS.push(editedStopDetails);
+        STOP_DETAILS = STOP_DETAILS.flat();
+        flightPlanCoordinates.push(editaedFlightPanCoordinates);
+        flightPlanCoordinates = flightPlanCoordinates.flat();
+        studentData.splice(1, 0, editedFilteredData);
+        studentData = studentData.flat();
+      }
+      // console.log(STOP_DETAILS, flightPlanCoordinates);
+      // }
+      // console.log(studentData, "studentData");
       setFilteredData(studentData);
+      console.log(studentData, "data");
       ridersData = structuredClone(studentData);
     }
   };
@@ -263,7 +266,7 @@ const StopInfo = (props) => {
   function myInitMap() {
     const map = new window.google.maps.Map(document.getElementById("stops-map"), {
       zoom: 12,
-      center: { lat: filteredData[Math.round(filteredData.length / 2)]?.location.lat, lng: filteredData[Math.round(filteredData.length / 2)]?.location.lng },
+      center: { lat: filteredData[Math.round(filteredData.length / 2) - 1]?.location.lat, lng: filteredData[Math.round(filteredData.length / 2) - 1]?.location.lng },
       disableDefaultUI: true,
       fullscreenControl: true,
       zoomControl: true
@@ -407,7 +410,7 @@ const StopInfo = (props) => {
         STOP_DETAILS[index].riders.push(STOP_DETAILS[i].riders.toString());
         STOP_DETAILS[index].mNumber.push(STOP_DETAILS[i].mNumber.toString());
         STOP_DETAILS.splice(i, 1);
-        flightPlanCoordinates.splice(i,1);
+        flightPlanCoordinates.splice(i, 1);
       }
       arr.push(STOP_DETAILS[i].stop);
     }
@@ -555,13 +558,15 @@ const StopInfo = (props) => {
         document.getElementsByClassName("studentCross")[i].classList.remove("myStudentClass");
       })
     }
+    setTimeout(() => {
+      document.getElementById("asdf").click();
+    })
   })
 
   return (
     <div style={{ display: "flex" }}>
       <div className='stop-container'>
         <ul id='sortlist' className='stop-subcontainer'>
-          {/* {console.log(STOP_DETAILS, "here")} */}
           {STOP_DETAILS.map((data, index) => {
             return (
               <div style={{ display: "flex", flexDirection: "column" }}>

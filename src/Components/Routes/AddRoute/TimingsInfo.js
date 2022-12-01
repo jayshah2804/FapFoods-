@@ -18,13 +18,12 @@ const TIMINGS =
 let dayName = "";
 const TimingsInfo = (props) => {
     const timeInputRef = useRef();
-    // const dropTimeInputRef = useRef();
     const [isDayTimeChange, setIsDayTimeChange] = useState({ dayname: "" });
     const [isTimingChange, setIsTimingChange] = useState();
     const [isNextClicked, setIsNextClicked] = useState();
+    const [isError, setIsError] = useState("");
 
     useEffect(() => {
-        // console.log(timeInputRef.current.value);
         if (props.defaultShuttleTimings) {
             let obj = {
                 1: "monday",
@@ -41,13 +40,15 @@ const TimingsInfo = (props) => {
             console.log(TIMINGS);
             setIsTimingChange(prev => !prev);
         }
-        // console.log(props.defaultShuttleTimings[0].WeekDay);
-        // console.log(props.defaultShuttleTimings[0].StartTime.split("T")[1]);
     }, []);
 
     const nextClickHandler = () => {
-        props.nextWizard("StopInfo");
-        setIsNextClicked(true);
+        if (TIMINGS.monday || TIMINGS.tuesday || TIMINGS.wednesday || TIMINGS.thursday || TIMINGS.friday || TIMINGS.saturday || TIMINGS.sunday) {
+            props.nextWizard("StopInfo");
+            setIsNextClicked(true);
+            setIsError("");
+        } else
+            setIsError("Please set the timing for atleast one day");
     }
     const backClickHandler = () => {
         props.backClickHandler("TimingInfo");
@@ -66,6 +67,7 @@ const TimingsInfo = (props) => {
             TIMINGS.sunday = timeInputRef.current.value;
         }
         setIsTimingChange(prev => !prev);
+        setIsError("");
     }
 
     sessionStorage.setItem("timings", JSON.stringify({
@@ -100,10 +102,10 @@ const TimingsInfo = (props) => {
                             <p>Or to disable the {dayName} <span onClick={disableDayClickHandler} >click here</span></p>
                         </div>
                     }
+                    {isError && <p className='error'>{isError}</p>}
                     <label style={{ marginLeft: "6%", marginRight: "-3%" }} >{props.routeType} Time:</label>
                     <input type="time" ref={timeInputRef} onChange={timeChangeHandler} className="pickuptime-input" />
-                    {/* <input type="time" ref={dropTimeInputRef} onChange={dropTimeChangeHandler} className="droptime-input" /> */}
-                    <br />
+                    {/* <br /> */}
                     <div className='dayList-container' onClick={dayButtonClickHandler} >
                         <div>
                             <button>Monday</button>
@@ -154,7 +156,6 @@ const TimingsInfo = (props) => {
                     </footer>
                 </div>
             }
-            {/* {isNextClicked && <SelectDepartment backWizard={props.backWizard} nextWizard={props.nextWizard} setIsNextClicked={setIsNextClicked} setIsAddRouteClicked={props.setIsAddRouteClicked} />} */}
             {isNextClicked && <StudentsInfo routeCreationStatus={props.routeCreationStatus} routeId={props.routeId} backWizard={props.backWizard} nextWizard={props.nextWizard} setIsNextClicked={setIsNextClicked} setIsAddRouteClicked={props.setIsAddRouteClicked} />}
         </React.Fragment >
     )
