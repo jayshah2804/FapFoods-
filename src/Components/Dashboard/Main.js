@@ -156,7 +156,7 @@ const Main = () => {
         >
           <p>Riders</p>
           {isApiError && (
-            <span style={{ fontWeight: "normal", fontSize: "14px" }}>
+            <span style={{ fontWeight: "normal", fontSize: "14px" }}> 
               {isApiError}
             </span>
           )}
