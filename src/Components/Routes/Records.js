@@ -3,14 +3,28 @@ import { useHistory } from "react-router-dom";
 import Loading from "../../Loading/Loading";
 // import Accordian from "./_Accordian";
 import "./Records.css";
+import editIcon from "../../Assets/editIcon.png";
+import AddRoute from "./AddRoute/RouteInfo";
+import Message from "../../Modal/Message";
 
+let routeId = "";
 const Records = ({ isLoading, data, headers }) => {
+    const [isEditRouteClicked, setIsEditRouteClicked] = useState(false);
+    const [isRouteCreated, setIsRouteCreated] = useState();
+
+    const routeCreationStatus = (data) => {
+        setIsRouteCreated(data);
+    }
     const history = useHistory();
     // const func = (val) => {
     //     if (val) {
     //         document.getElementById(val).click();
     //     }
     // }
+    const editRouteClickHandler = (e) => {
+        routeId = e.target.parentElement.parentElement.children[0].innerText;
+        setIsEditRouteClicked(true);
+    }
     return (
         <React.Fragment>
             {data[0] ?
@@ -22,8 +36,7 @@ const Records = ({ isLoading, data, headers }) => {
                             ))}
                         </tr>
                     </thead>
-                    {/* <tbody  onClick={(e) => console.log(e.target.parentElement.children[0])}> */}
-                    <tbody className="routes_records" onClick={(e) => history.push(`/routes/${e.target.parentElement.children[0].innerText}`)}>
+                    <tbody className="routes_records">
                         {data.map(myData => <tr>
                             <td>{myData.route_id}</td>
                             <td>{myData.route}</td>
@@ -31,8 +44,9 @@ const Records = ({ isLoading, data, headers }) => {
                             <td>{myData.country}</td>
                             <td>{myData.zone_price}</td>
                             <td>{myData.route_type}</td>
-                            <td width="20%" >{myData.department}</td>
-                            {/* <td><Accordian myId={myData.id} forMyRender={func} /></td> */}
+                            <td>
+                                <img onClick={editRouteClickHandler} className="edit-route" src={editIcon} />
+                            </td>
                         </tr>)}
                     </tbody>
                 </table> :
@@ -51,6 +65,10 @@ const Records = ({ isLoading, data, headers }) => {
                         <div style={{ textAlign: "center", marginTop: "10px" }}>No Data Available</div>
                     }
                 </React.Fragment>
+            }
+            {isEditRouteClicked && <AddRoute routeCreationStatus={routeCreationStatus} routeId={routeId} setIsAddRouteClicked={setIsEditRouteClicked} />}
+            {isRouteCreated &&
+                <Message type={isRouteCreated} message={"Route name " + sessionStorage.getItem("routeName") + " has been Successfully edited"} />
             }
         </React.Fragment>
     );

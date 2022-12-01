@@ -8,6 +8,7 @@ import threedots from "../../../Assets/route_3dots.png";
 import endPoint from "../../../Assets/place_outline.png";
 import useHttp from '../../../Hooks/use-http';
 import loadingGif from "../../../Assets/loading-gif.gif";
+import Message from '../../../Modal/Message';
 
 let studentCount = 0;
 let shuttleSeatingCapacity = 4;
@@ -24,67 +25,131 @@ let flightPlanCoordinates = [];
 
 let flag = true;
 let type = "";
+let editedStopDetails = "";
+let editaedFlightPanCoordinates = "";
+let editedFilteredData = "";
 const StopInfo = (props) => {
   const [filteredData, setFilteredData] = useState([]);
   const [isRender, setIsRender] = useState();
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+  const [isRouteCreated, setIsRouteCreated] = useState(false);
 
   const script = document.createElement('script');
   script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAq88vEj-mQ9idalgeP1IuvulowkkFA-Nk&callback=myInitMap&libraries=places&v=weekly";
   script.async = true;
   document.body.appendChild(script);
 
+  useEffect(() => {
+    if (flag && props.routeId) {
+      // flightPlanCoordinates = [];
+      // STOP_DETAILS = [];
+      let details = JSON.parse(sessionStorage.getItem("routeDetails"));
+      editedStopDetails = [];
+      editaedFlightPanCoordinates = [];
+      editedFilteredData = [];
+      for (let i = 1; i < details.length; i++) {
+        editedStopDetails.push(
+          {
+            stop: details[i].StopName,
+            lat: details[i].StopLatitude,
+            lng: details[i].StopLongitude,
+            mNumber: [details[i].MobileNumber],
+            riders: [details[i].OfficialName]
+          }
+        );
+        editaedFlightPanCoordinates.push({
+          lat: details[i].StopLatitude,
+          lng: details[i].StopLongitude
+        })
+
+        editedFilteredData.push({
+          stop: details[i].StopName,
+          name: [details[i].OfficialName],
+          location: {
+            lat: details[i].StopLatitude,
+            lng: details[i].StopLongitude,
+          },
+          mNumber: [details[i].MobileNumber],
+          status: true
+        })
+      }
+      // console.log(filteredData);
+      // console.log(STOP_DETAILS);
+      // console.log(flightPlanCoordinates);
+      // setIsRender(prev => !prev);
+    }
+  }, []);
+
   const authenticateUser = (data) => {
     if (type === "submit") {
       console.log(data);
+      if (data.Message && data.Message.toLowerCase() === "success")
+        props.routeCreationStatus("Success");
+      else {
+        alert("here");
+        props.routeCreationStatus("Error");
+      }
+      props.setIsAddRouteClicked(false);
       setIsSubmitClicked(false);
     }
-    // console.log(data.StaffList);
     else {
+      // console.log(data.StaffList);
       let studentData = [];
       if (data.StaffList) {
         STOP_DETAILS = [];
         studentData.push({
-          stop: "Eximious Global",
-          name: "Eximious Global",
+          stop: data.StaffList[0].CorporateName,
+          name: data.StaffList[0].CorporateName,
           location: {
-            lat: 23.0448498,
-            lng: 72.52949269999999
+            lat: +data.StaffList[0].CorporateLat,
+            lng: +data.StaffList[0].Corporatelong,
           }
         })
         for (let i = 0; i < data.StaffList.length; i++) {
           studentData.push({
-            stop: data.StaffList[i].PickupPoint,
+            stop: sessionStorage.getItem("routeType").toLowerCase() === "pickup" ? data.StaffList[i].PickupPoint : data.StaffList[i].DropPoint,
             name: [data.StaffList[i].StaffName],
             mNumber: [data.StaffList[i].MobileNumber],
             location: {
-              lat: +data.StaffList[i].PickupLL.split(",")[0],
-              lng: +data.StaffList[i].PickupLL.split(",")[1]
+              lat: sessionStorage.getItem("routeType").toLowerCase() === "pickup" ? +data.StaffList[i].PickupLL.split(",")[0] : +data.StaffList[i].DropupLL.split(",")[0],
+              lng: sessionStorage.getItem("routeType").toLowerCase() === "pickup" ? +data.StaffList[i].PickupLL.split(",")[1] : +data.StaffList[i].DropupLL.split(",")[1]
             },
             status: false
           });
         }
         STOP_DETAILS.push(
           {
-            stopName: studentData[0].stop,
+            stop: studentData[0].stop,
             lat: studentData[0].location.lat,
             lng: studentData[0].location.lng,
             mNumber: studentData[0].mNumber
           }
         );
         flightPlanCoordinates.push(studentData[0].location);
+        if (props.routeId) {
+          STOP_DETAILS.push(editedStopDetails);
+          STOP_DETAILS = STOP_DETAILS.flat();
+          flightPlanCoordinates.push(editaedFlightPanCoordinates);
+          flightPlanCoordinates = flightPlanCoordinates.flat();
+          studentData.splice(1, 0, editedFilteredData);
+          studentData = studentData.flat();
+        }
+        console.log(STOP_DETAILS, flightPlanCoordinates);
       }
+      console.log(studentData, "studentData");
       setFilteredData(studentData);
       ridersData = structuredClone(studentData);
-      // console.log(studentData);
     }
   };
 
   const { isLoading, sendRequest } = useHttp();
+  if (isLoading && type.toLowerCase() === "submit") {
+    document.getElementById("submit").innerText = "Creating...";
+    document.getElementById("submit").style.cursor = "no-drop";
+  }
 
   useEffect(() => {
-    let pickup = JSON.parse(sessionStorage.pickupTimings);
-    let drop = JSON.parse(sessionStorage.dropTimings);
+    let time = JSON.parse(sessionStorage.timings);
 
     if (flag) {
       sendRequest({
@@ -95,7 +160,8 @@ const StopInfo = (props) => {
         },
         body: {
           emailID: sessionStorage.getItem("user"),
-          corporateID: props.dptId
+          corporateID: sessionStorage.getItem("corpId"),
+          routeType: sessionStorage.getItem("routeType")
         }
       }, authenticateUser);
       flag = false;
@@ -106,15 +172,14 @@ const StopInfo = (props) => {
       for (let i = 0; i < 7; i++) {
         shuttleTiming.push({
           Weekday: i + 1,
-          StartTime: `${new Date().getFullYear().toString().concat("-", new Date().getMonth(), "-", new Date().getDate())} ${pickup[days[i]]}`,
-          EndTime: `${new Date().getFullYear().toString().concat("-", new Date().getMonth(), "-", new Date().getDate())} ${drop[days[i]]}`,
+          StartTime: `${new Date().getFullYear().toString().concat("-", new Date().getMonth(), "-", new Date().getDate())} ${time[days[i]]}`,
         })
       }
       let shuttleRoute = [];
       let staffList = [];
       for (let i = 0; i < STOP_DETAILS.length; i++) {
         shuttleRoute.push({
-          StopName: STOP_DETAILS[i].stopName,
+          StopName: STOP_DETAILS[i].stop,
           StopNumber: i + 1,
           StopLatitude: STOP_DETAILS[i].lat,
           StopLongitude: STOP_DETAILS[i].lng
@@ -135,32 +200,14 @@ const StopInfo = (props) => {
       obj.ApiOperatedOn = "";
       obj.EmailID = sessionStorage.getItem("user");
       obj.CorporateID = sessionStorage.getItem("corpId");
-      obj.RouteID = "";
+      obj.RouteID = props.routeId ? props.routeId : "";
       obj.RouteName = sessionStorage.getItem("routeName");
-      obj.RouteTypeID = sessionStorage.getItem("routeType");
+      obj.RouteType = sessionStorage.getItem("routeType");
       obj.ShuttleTypeID = sessionStorage.getItem("shuttleType");
       obj.ShuttleTiming = JSON.stringify(shuttleTiming);
       obj.ShuttleRoute = JSON.stringify(shuttleRoute);
       obj.StaffList = JSON.stringify(staffList);
       var dataInfo = (obj);
-      // let dataInfo = JSON.stringify({
-      //   ApiActionTypeID: 0,
-      //   ApiDynamicFields: "",
-      //   ApiOperatorID: "",
-      //   ApiRequestID: "",
-      //   ApiRoleID: "",
-      //   ApiUniqueID: "",
-      //   ApiOperatedOn: "",
-      //   EmailID: sessionStorage.getItem("user"),
-      //   CorporateID: sessionStorage.getItem("corpId"),
-      //   RouteID: "",
-      //   RouteName: sessionStorage.getItem("routeName"),
-      //   RouteTypeID: sessionStorage.getItem("routeType"),
-      //   ShuttleTypeID: sessionStorage.getItem("shuttleType"),
-      //   ShuttleTiming: shuttleTiming,
-      //   ShuttleRoute: shuttleRoute,
-      //   StaffList: staffList
-      // });
       console.log(dataInfo);
 
       sendRequest({
@@ -193,7 +240,7 @@ const StopInfo = (props) => {
       flightPlanCoordinates = [flightPlanCoordinates[0]];
       STOP_DETAILS = [
         {
-          stopName: structuredClone(ridersData)[0].stop,
+          stop: structuredClone(ridersData)[0].stop,
           lat: structuredClone(ridersData)[0].location.lat,
           lng: structuredClone(ridersData)[0].location.lng,
           mNumber: structuredClone(ridersData)[0].mNumber
@@ -214,13 +261,8 @@ const StopInfo = (props) => {
   }
 
   function myInitMap() {
-    // var map = new window.google.maps.Map(document.getElementById("map-modal"), {
-    //   center: { lat: 23.0225, lng: 72.5714 },
-    //   zoom: 11,
-    //   mapTypeControl: false,
-    // });
     const map = new window.google.maps.Map(document.getElementById("stops-map"), {
-      zoom: 14,
+      zoom: 12,
       center: { lat: filteredData[Math.round(filteredData.length / 2)]?.location.lat, lng: filteredData[Math.round(filteredData.length / 2)]?.location.lng },
       disableDefaultUI: true,
       fullscreenControl: true,
@@ -249,6 +291,7 @@ const StopInfo = (props) => {
 
     flightPath1.setMap(map);
     flightPath.setMap(map);
+    // console.log(flightPlanCoordinates);
 
     const assignButtonClickHandler = (e) => {
       prev_id = e.target.parentElement.id;
@@ -274,7 +317,7 @@ const StopInfo = (props) => {
       //   flightPlanCoordinates.push(RIDER_DATA[0].location);
       // }
       STOP_DETAILS.push({
-        stopName: filteredData[e.target.parentElement.id].stop,
+        stop: filteredData[e.target.parentElement.id].stop,
         riders: filteredData[e.target.parentElement.id].name,
         lat: filteredData[e.target.parentElement.id].location.lat,
         lng: filteredData[e.target.parentElement.id].location.lng,
@@ -288,12 +331,15 @@ const StopInfo = (props) => {
       // }
     }
 
+    // console.log(filteredData);
     filteredData.forEach((position, i) => {
+      // console.log(filteredData[i]);
       if (i === 0) {
         icon = startPoint;
         myTitle = `<div><h3>${position.name.toString()}</h3></div>`;
       }
       else {
+        // console.log(position.stop.split(",")[0], position.status);
         icon = studentDummyImage;
         if (position.status)
           // myTitle = `<div id="infowindow-container" ><h3>${position.name.toString()}</h3><p id="infowindow-success">Assigned</div>`;
@@ -331,17 +377,17 @@ const StopInfo = (props) => {
     myFlag = true;
     type = "";
     props.backWizard("StopInfo");
-    props.setIsDepartmentChanged(false);
+    props.setIsNextClicked(false);
   }
   const submitClickHandler = () => {
     props.nextWizard("Submit");
     type = "submit";
     setIsSubmitClicked(true);
-    // props.setIsAddRouteClicked(false);
   }
 
   if (myFlag && filteredData.length > 0) {
     let arr = [];
+    // debugger;
     for (let i = 0; i < filteredData.length; i++) {
       if (arr.includes(filteredData[i].stop)) {
         let index = arr.indexOf(filteredData[i].stop);
@@ -349,8 +395,23 @@ const StopInfo = (props) => {
         filteredData[index].mNumber.push(filteredData[i].mNumber.toString());
         filteredData.splice(i, 1);
       }
+      // console.log(filteredData);
+      // console.log(filteredData[i],i);
       arr.push(filteredData[i].stop);
     }
+    // STOP_DETAILS = [];
+    arr = [];
+    for (let i = 0; i < STOP_DETAILS.length; i++) {
+      if (arr.includes(STOP_DETAILS[i].stop)) {
+        let index = arr.indexOf(STOP_DETAILS[i].stop);
+        STOP_DETAILS[index].riders.push(STOP_DETAILS[i].riders.toString());
+        STOP_DETAILS[index].mNumber.push(STOP_DETAILS[i].mNumber.toString());
+        STOP_DETAILS.splice(i, 1);
+        flightPlanCoordinates.splice(i,1);
+      }
+      arr.push(STOP_DETAILS[i].stop);
+    }
+
     setFilteredData(filteredData);
     myFlag = false;
   }
@@ -358,7 +419,7 @@ const StopInfo = (props) => {
   const crossClickHandler = (e, targetIndex) => {
     if (targetIndex) {
       for (let i = 0; i < filteredData.length; i++) {
-        if (filteredData[i].stop === STOP_DETAILS[targetIndex].stopName)
+        if (filteredData[i].stop === STOP_DETAILS[targetIndex].stop)
           filteredData[i].status = false;
       }
       STOP_DETAILS.splice(targetIndex, 1);
@@ -367,7 +428,7 @@ const StopInfo = (props) => {
       let holdingIndex = 0;
       let presentIndex = 0;
       for (let i = 0; i < STOP_DETAILS.length; i++) {
-        if (STOP_DETAILS[i].stopName !== e.target.parentNode.children[0].innerText) {
+        if (STOP_DETAILS[i].stop !== e.target.parentNode.children[0].innerText) {
           STOP_DETAILS[holdingIndex] = STOP_DETAILS[i];
           holdingIndex++;
         } else presentIndex = i;
@@ -447,23 +508,24 @@ const StopInfo = (props) => {
           }
           // console.log(current, items[i]);
           STOP_DETAILS.map((data, index) => {
-            if (data.stopName === document.getElementById(current.id).innerText)
+            if (data.stop === document.getElementById(current.id).innerText)
               indexToBeMove = index;
-            if (data.stopName === document.getElementById(items[i].id).innerText)
+            if (data.stop === document.getElementById(items[i].id).innerText)
               indexToBeShift = index;
           })
+          // console.log(STOP_DETAILS, flightPlanCoordinates);
           if (currentpos < droppedpos) {
             // items[i].parentNode.insertBefore(current, items[i].nextSibling);
             STOP_DETAILS.splice(+indexToBeShift + 1, 0, STOP_DETAILS[indexToBeMove]);
             STOP_DETAILS.splice(indexToBeMove, 1);
-            flightPlanCoordinates.splice(indexToBeShift + 1, 0, flightPlanCoordinates[indexToBeMove]);
+            flightPlanCoordinates.splice(+indexToBeShift + 1, 0, flightPlanCoordinates[indexToBeMove]);
             flightPlanCoordinates.splice(indexToBeMove, 1);
           } else {
             // items[i].parentNode.insertBefore(current, items[i]);
             STOP_DETAILS.splice(indexToBeShift, 0, STOP_DETAILS[indexToBeMove]);
             STOP_DETAILS.splice(+indexToBeMove + 1, 1);
             flightPlanCoordinates.splice(indexToBeShift, 0, flightPlanCoordinates[indexToBeMove]);
-            flightPlanCoordinates.splice(indexToBeMove + 1, 1);
+            flightPlanCoordinates.splice(+indexToBeMove + 1, 1);
           }
         }
         setIsRender(prev => !prev);
@@ -499,6 +561,7 @@ const StopInfo = (props) => {
     <div style={{ display: "flex" }}>
       <div className='stop-container'>
         <ul id='sortlist' className='stop-subcontainer'>
+          {/* {console.log(STOP_DETAILS, "here")} */}
           {STOP_DETAILS.map((data, index) => {
             return (
               <div style={{ display: "flex", flexDirection: "column" }}>
@@ -511,7 +574,7 @@ const StopInfo = (props) => {
                       <img src={endPoint} className="connectedPoint" style={{ width: "15px" }} />
                     }
                     <li id={index + 10} className="stopNames" draggable>
-                      <p>{data.stopName}</p>
+                      <p>{data.stop}</p>
                     </li>
                   </div>
                   <p className='cross' onClick={crossClickHandler} >X</p>
@@ -547,18 +610,19 @@ const StopInfo = (props) => {
           <span onClick={undoRouteClickHandler}>Undo route operation</span>
           <span onClick={resetRouteClickHandler}>Reset route</span>
         </div>
-        <div id="stops-map"></div>
+        {(isLoading && type !== "submit") ?
+          <img src={loadingGif} style={{ position: "absolute", top: "50%", left: "60%", zIndex: "100" }} /> :
+          <div id="stops-map"></div>
+        }
         <div className='footer'>
           <button className='preview' onClick={previewClickHandler} >Preview Route</button>
           <div style={{ display: "flex", gap: "15px" }}>
             <button className='back' onClick={backClickHandler}>Back</button>
-            <button className='next' onClick={submitClickHandler}>Submit</button>
+            <button id='submit' className='next' onClick={submitClickHandler}>Submit</button>
           </div>
         </div>
       </div>
-      {isLoading &&
-        <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "50%", zIndex: "100" }} />
-      }    </div>
+    </div>
   )
 }
 

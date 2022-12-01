@@ -13,7 +13,7 @@
   height: max-content;
 }
 
-.add-route-container .header {
+.add-route-container header {
   display: flex;
   justify-content: space-between;
   align-items: center;
