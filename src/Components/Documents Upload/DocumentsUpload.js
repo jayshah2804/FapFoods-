@@ -5,6 +5,7 @@ import { useState } from "react";
 import useHttp from "../../Hooks/use-http";
 import { useEffect } from "react";
 import loadingGif from "../../Assets/loading-gif.gif";
+import Message from "../../Modal/Message";
 
 let gstCertificate = "";
 let incorporationCertificate = "";
@@ -23,9 +24,23 @@ let panCardURL = "";
 let flag = true;
 let status = false;
 let type = "";
+let erros = {
+  gstNumber: "",
+  gststartDate: "",
+  gstFile: "",
+  incorpNumber: "",
+  incorpStartDate: "",
+  incorpFile: "",
+  panNumber: "",
+  panStartDate: "",
+  panFile: ""
+}
+let formIsValid = false;
 const DocumentUpload = () => {
   const [isFileChange, setIsFileChange] = useState(filesName);
   const [isUpload, setIsUpload] = useState(false);
+  const [isResponse, setIsResponse] = useState(false);
+  const [isInputError, setIsInputError] = useState(erros);
   const gstCertificateNumberInpuetRef = useRef();
   const gstCertificateStartDateInputRef = useRef();
   const incorpCertificateNumberInputRef = useRef();
@@ -34,9 +49,10 @@ const DocumentUpload = () => {
   const panCardStartDateInpuetRef = useRef();
 
   const authenticateUser = (data) => {
-    console.log(data.DocumentList[0]);
     if (type === "submit") {
+      type = "";
       setIsUpload(false);
+      setIsResponse(data.Message ? data.Message : data);
     } else {
       gstCertificateNumberInpuetRef.current.value = data.DocumentList[0].DocumentNumber;
       gstCertificateStartDateInputRef.current.value = data.DocumentList[0].CertificateStartDate;
@@ -75,7 +91,7 @@ const DocumentUpload = () => {
   const { isLoading, sendRequest } = useHttp();
 
   useEffect(() => {
-    if (flag) {
+    if (!isUpload && flag) {
       sendRequest(
         {
           url: "/api/v1/Document/GetCorporateDocument",
@@ -90,7 +106,6 @@ const DocumentUpload = () => {
         },
         authenticateUser
       );
-      flag = false;
     }
 
     if (isUpload) {
@@ -137,29 +152,92 @@ const DocumentUpload = () => {
   }, [sendRequest, isUpload]);
 
   const uploadDocumentsClickHandler = () => {
-    type = "submit";
-    setIsUpload(true);
+    if (!gstCertificateNumberInpuetRef.current.value) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, gstNumber: "Gst Number is Invalid" }));
+    }
+    if (!gstCertificateStartDateInputRef.current.value) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, gststartDate: "Gst number start date is invalid" }));
+    }
+    if (!gstCertificateBase64) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, gstFile: "Gst certificate file is invalid" }));
+    }
+    if (!incorpCertificateNumberInputRef.current.value) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, incorpNumber: "Incorporation number is invalid" }));
+    }
+    if (!incorpCertificateStartDateInputRef.current.value) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, incorpStartDate: "Incorporation number start date is invalid" }));
+    }
+    if (!incorpCertificateBase64) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, incorpFile: "Incorporation certificate file is invalid" }));
+    }
+    if (!panCardNumberInpuetRef.current.value) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, panNumber: "Pan number is invalid" }));
+    }
+    if (!panCardStartDateInpuetRef.current.value) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, panStartDate: "Pan number start date is invalid" }));
+    }
+    if (!panCardBase64) {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, panFile: "Pan card file is invalid" }));
+    }
+    if (formIsValid) {
+      type = "submit";
+      setIsUpload(true);
+    }
   };
 
   const GSTCentificateChangeHandler = (e) => {
-    gstCertificate = e.target.files[0];
-    gstCertificateURL = URL.createObjectURL(gstCertificate);
-    getBase64(e.target.files[0]).then((data) => (gstCertificateBase64 = data));
-    setIsFileChange((prev) => ({ ...prev, gst: e.target.files[0].name }));
+    console.log(e.target.files[0].name.includes("jpg"));
+    if (e.target.files[0].size > 500000) {
+      setIsInputError(prev => ({ ...prev, gstFile: "File size should be less than 5 mb" }))
+    } else if (!(e.target.files[0].name.includes("jpg") || e.target.files[0].name.includes("jpeg") || e.target.files[0].name.includes("png") || e.target.files[0].name.includes("pdf"))) {
+      setIsInputError(prev => ({ ...prev, gstFile: "File format must be jpg, jpeg, png or pdf" }));
+    } else {
+      formIsValid = true;
+      gstCertificate = e.target.files[0];
+      gstCertificateURL = URL.createObjectURL(gstCertificate);
+      getBase64(e.target.files[0]).then((data) => (gstCertificateBase64 = data));
+      setIsFileChange((prev) => ({ ...prev, gst: e.target.files[0].name }));
+      setIsInputError(prev => ({ ...prev, gstFile: "" }));
+    }
   };
   const incorporationCertificateChangeHandler = (e) => {
-    incorporationCertificate = e.target.files[0];
-    incorpCertificateURL = URL.createObjectURL(incorporationCertificate);
-    getBase64(e.target.files[0]).then(
-      (data) => (incorpCertificateBase64 = data)
-    );
-    setIsFileChange((prev) => ({ ...prev, incorp: e.target.files[0].name }));
+    if (e.target.files[0].size > 500000) {
+      setIsInputError(prev => ({ ...prev, incorpFile: "File size must be less than 5 mb" }))
+    } else if (!(e.target.files[0].name.includes("jpg") || e.target.files[0].name.includes("jpeg") || e.target.files[0].name.includes("png") || e.target.files[0].name.includes("pdf"))) {
+      setIsInputError(prev => ({ ...prev, incorpFile: "File format must be jpg, jpeg, png or pdf" }));
+    } else {
+      formIsValid = true;
+      incorporationCertificate = e.target.files[0];
+      incorpCertificateURL = URL.createObjectURL(incorporationCertificate);
+      getBase64(e.target.files[0]).then(
+        (data) => (incorpCertificateBase64 = data)
+      );
+      setIsFileChange((prev) => ({ ...prev, incorp: e.target.files[0].name }));
+      setIsInputError(prev => ({ ...prev, incorpFile: "" }));
+    }
   };
   const panCardChangeHandler = (e) => {
-    panCard = e.target.files[0];
-    panCardURL = URL.createObjectURL(panCard);
-    getBase64(e.target.files[0]).then((data) => (panCardBase64 = data));
-    setIsFileChange((prev) => ({ ...prev, panCard: e.target.files[0].name }));
+    if (e.target.files[0].size > 500000) {
+      setIsInputError(prev => ({ ...prev, panFile: "File size should be less than 5 mb" }))
+    } else if (!(e.target.files[0].name.includes("jpg") || e.target.files[0].name.includes("jpeg") || e.target.files[0].name.includes("png") || e.target.files[0].name.includes("pdf"))) {
+      setIsInputError(prev => ({ ...prev, panFile: "File format must be jpg, jpeg, png or pdf" }));
+    } else {
+      formIsValid = true;
+      panCard = e.target.files[0];
+      panCardURL = URL.createObjectURL(panCard);
+      getBase64(e.target.files[0]).then((data) => (panCardBase64 = data));
+      setIsFileChange((prev) => ({ ...prev, panCard: e.target.files[0].name }));
+      setIsInputError(prev => ({ ...prev, panFile: "" }));
+    }
   };
   const gstFileViewHandler = () => {
     viewDocument(gstCertificateBase64);
@@ -187,6 +265,63 @@ const DocumentUpload = () => {
       reader.onerror = (error) => reject(error);
     });
   }
+
+  const gstNumnerChangeHandler = () => {
+    if (gstCertificateNumberInpuetRef.current.value) {
+      formIsValid = true;
+      setIsInputError(prev => ({ ...prev, gstNumber: "" }));
+    } else {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, gstNumber: "Gst number is invalid" }));
+    }
+  }
+
+  const gstStartDateChangeHandler = () => {
+    if (gstCertificateStartDateInputRef.current.value) {
+      formIsValid = true;
+      setIsInputError(prev => ({ ...prev, gststartDate: "" }));
+    } else {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, gststartDate: "Gst number start date is invalid" }));
+    }
+  }
+  const incorpNumberChnageHandler = () => {
+    if (incorpCertificateNumberInputRef.current.value) {
+      formIsValid = true;
+      setIsInputError(prev => ({ ...prev, incorpNumber: "" }));
+    } else {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, incorpNumber: "Incorporation number is invalid" }));
+    }
+  }
+  const incorpStartDateChangeHandler = () => {
+    if (incorpCertificateStartDateInputRef.current.value) {
+      formIsValid = true;
+      setIsInputError(prev => ({ ...prev, incorpStartDate: "" }));
+    } else {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, incorpStartDate: "Incorporation number start date is invalid" }));
+    }
+  }
+  const panNumberChangeHandler = () => {
+    if (panCardNumberInpuetRef.current.value) {
+      formIsValid = true;
+      setIsInputError(prev => ({ ...prev, panNumber: "" }));
+    } else {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, panNumber: "Pan number is invalid" }));
+    }
+  }
+  const panStartDateChangeHandler = () => {
+    if (panCardStartDateInpuetRef.current.value) {
+      formIsValid = true;
+      setIsInputError(prev => ({ ...prev, panStartDate: "" }));
+    } else {
+      formIsValid = false;
+      setIsInputError(prev => ({ ...prev, panStartDate: "Pan number start date is invalid" }));
+    }
+  }
+
   return (
     <div className="documents-upload-container" id="documents-upload">
       <h3>CORPORATE DOCUMENTS DETAILS</h3>
@@ -196,15 +331,15 @@ const DocumentUpload = () => {
             ? "Dear Jay, Kindly upload the below documents."
             : "Dear Jay, Kindly check your uploaded documents."}
         </header>
-        <main style={{ display: "flex", flexDirection: "column" }}>
+        <main>
           <div>
-            <header>Document Upload</header>
+            <h4>Document Upload</h4>
             <div className="border"></div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className="sub-container">
               <div className="text">
                 <p>Upload Guidelines.</p>
                 <p>Enter the document number (if aplicable).</p>
-                <p>Enter the start and end date.</p>
+                <p>Enter the start date.</p>
                 <p>
                   Attach your document (Kindly ensure that your document size
                   should not be more than 5MB).
@@ -218,165 +353,178 @@ const DocumentUpload = () => {
               </button>
             </div>
           </div>
-          <div>
-            <header style={{ display: "flex", gap: "4%" }} >
-              <span>Corporate GST Certificate</span>
+          <div className="document-details-container">
+            <header>
+              <h4>Corporate GST Certificate</h4>
               {status &&
-                <span style={{ fontWeight: "normal" }} >Approval status <span id="gstStatus" ></span></span>
+                <p className="approval-status">
+                  <span>Approval status</span> <span id="gstStatus" ></span>
+                </p>
               }
             </header>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <input
-                type="text"
-                placeholder="Corporate GST Certificate Number "
-                ref={gstCertificateNumberInpuetRef}
-              />
-              <input
-                type="text"
-                placeholder="Corporate GST Certificate Start Date "
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
-                ref={gstCertificateStartDateInputRef}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <p
-                  className="upload-document"
-                  onClick={() =>
-                    document.getElementsByTagName("input")[2].click()
-                  }
+            <div className="document-inputs">
+              <div className="for-input-error-container">
+                <input
+                  type="text"
+                  placeholder="Corporate GST Certificate Number"
+                  ref={gstCertificateNumberInpuetRef}
+                  onChange={gstNumnerChangeHandler}
+                />
+                {isInputError.gstNumber && <span className="error">{isInputError.gstNumber}</span>}
+              </div>
+              <div className="for-input-error-container">
+                <input
+                  type="text"
+                  placeholder="Corporate GST Certificate Start Date "
+                  onFocus={(e) => (e.target.type = "date")}
+                  onBlur={(e) => (e.target.type = "text")}
+                  ref={gstCertificateStartDateInputRef}
+                  onChange={gstStartDateChangeHandler}
+                />
+                {isInputError.gststartDate && <span className="error">{isInputError.gststartDate}</span>}
+              </div>
+              <div className="for-input-error-container">
+                <div
+                  className="file-upload-container"
                 >
-                  <input
-                    type="file"
-                    style={{
-                      fontSize: "20px",
-                      width: "100%",
-                      height: "100%",
-                      display: "none",
-                    }}
-                    onChange={GSTCentificateChangeHandler}
-                  />
-                  <FiUploadCloud style={{ fontSize: "20px" }} />
-                  <span>Tap/Click to attach Documents here.</span>
-                </p>
-                {isFileChange.gst && (
-                  <p className="filename" onClick={gstFileViewHandler}>
-                    {isFileChange.gst}
+                  <p
+                    className="upload-document"
+                    onClick={() =>
+                      document.getElementsByTagName("input")[2].click()
+                    }
+                  >
+                    <input
+                      type="file"
+                      onChange={GSTCentificateChangeHandler}
+                    />
+                    <FiUploadCloud className="fileUpload-icon" />
+                    <span>Tap/Click to attach Documents here.</span>
                   </p>
-                )}
+                  {isFileChange.gst && (
+                    <p className="filename" onClick={gstFileViewHandler}>
+                      {isFileChange.gst}
+                    </p>
+                  )}
+                </div>
+                {isInputError.gstFile && <span className="error">{isInputError.gstFile}</span>}
               </div>
             </div>
           </div>
-          <div>
-            <header style={{ display: "flex", gap: "4%" }}>
-              <span>Incorporation Certificate</span>
-              {console.log(status)}
+          <div className="document-details-container">
+            <header>
+              <h4>Incorporation Certificate</h4>
               {status &&
-                <span style={{ fontWeight: "normal" }} >Approval status <span id="incorpStatus"></span></span>
+                <p className="approval-status">
+                  <span>Approval status</span> <span id="incorpStatus"></span>
+                </p>
               }
             </header>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <input
-                type="text"
-                placeholder="Incorporation Certificate Number "
-                ref={incorpCertificateNumberInputRef}
-              />
-              <input
-                type="text"
-                placeholder="Incorporation Certificate Start Date "
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
-                ref={incorpCertificateStartDateInputRef}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <p
-                  className="upload-document"
-                  onClick={() =>
-                    document.getElementsByTagName("input")[5].click()
-                  }
+            <div className="document-inputs">
+              <div className="for-input-error-container">
+                <input
+                  type="text"
+                  placeholder="Incorporation Certificate Number "
+                  ref={incorpCertificateNumberInputRef}
+                  onChange={incorpNumberChnageHandler}
+                />
+                {isInputError.incorpNumber && <span className="error">{isInputError.incorpNumber}</span>}
+              </div>
+              <div className="for-input-error-container">
+                <input
+                  type="text"
+                  placeholder="Incorporation Certificate Start Date "
+                  onFocus={(e) => (e.target.type = "date")}
+                  onBlur={(e) => (e.target.type = "text")}
+                  ref={incorpCertificateStartDateInputRef}
+                  onChange={incorpStartDateChangeHandler}
+                />
+                {isInputError.incorpStartDate && <span className="error">{isInputError.incorpStartDate}</span>}
+              </div>
+              <div className="for-input-error-container">
+                <div
+                  className="file-upload-container"
                 >
-                  <input
-                    type="file"
-                    style={{
-                      fontSize: "20px",
-                      width: "100%",
-                      height: "100%",
-                      display: "none",
-                    }}
-                    onChange={incorporationCertificateChangeHandler}
-                  />
-                  <FiUploadCloud style={{ fontSize: "20px" }} />
-                  <span>Tap/Click to attach Documents here.</span>
-                </p>
-                {isFileChange.incorp && (
-                  <p className="filename" onClick={incorpFileViewHandler}>
-                    {isFileChange.incorp}
+                  <p
+                    className="upload-document"
+                    onClick={() =>
+                      document.getElementsByTagName("input")[5].click()
+                    }
+                  >
+                    <input
+                      type="file"
+                      onChange={incorporationCertificateChangeHandler}
+                    />
+                    <FiUploadCloud className="fileUpload-icon" />
+                    <span>Tap/Click to attach Documents here.</span>
                   </p>
-                )}
+                  {isFileChange.incorp && (
+                    <p className="filename" onClick={incorpFileViewHandler}>
+                      {isFileChange.incorp}
+                    </p>
+                  )}
+                </div>
+                {isInputError.incorpFile && <span className="error">{isInputError.incorpFile}</span>}
               </div>
             </div>
           </div>
-          <div>
-            <header style={{ display: "flex", gap: "4%" }} >
-              <span>Corporate Pan Card</span>
+          <div className="document-details-container" >
+            <header>
+              <h4>Corporate Pan Card</h4>
               {status &&
-                <span style={{ fontWeight: "normal" }}>Approval status <span id="panCardStatus"></span></span>
+                <p style={{marginLeft: "35px"}} className="approval-status">
+                  <span>Approval status</span> <span id="panCardStatus"></span>
+                </p>
               }
             </header>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <input type="text" placeholder="Corporate Pan Card Number " ref={panCardNumberInpuetRef} />
-              <input
-                type="text"
-                placeholder="Corporate Pan Card Start Date "
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
-                ref={panCardStartDateInpuetRef}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <p
-                  className="upload-document"
-                  onClick={() =>
-                    document.getElementsByTagName("input")[8].click()
-                  }
+            <div className="document-inputs">
+              <div className="for-input-error-container">
+                <input type="text" placeholder="Corporate Pan Card Number " ref={panCardNumberInpuetRef} onChange={panNumberChangeHandler} />
+                {isInputError.panNumber && <span className="error">{isInputError.panNumber}</span>}
+              </div>
+              <div className="for-input-error-container">
+                <input
+                  type="text"
+                  placeholder="Corporate Pan Card Start Date "
+                  onFocus={(e) => (e.target.type = "date")}
+                  onBlur={(e) => (e.target.type = "text")}
+                  ref={panCardStartDateInpuetRef}
+                  onChange={panStartDateChangeHandler}
+                />
+                {isInputError.panStartDate && <span className="error">{isInputError.panStartDate}</span>}
+              </div>
+              <div className="for-input-error-container">
+                <div
+                  className="file-upload-container"
                 >
-                  <input
-                    type="file"
-                    style={{
-                      fontSize: "20px",
-                      width: "100%",
-                      height: "100%",
-                      display: "none",
-                    }}
-                    onChange={panCardChangeHandler}
-                  />
-                  <FiUploadCloud style={{ fontSize: "20px" }} />
-                  <span>Tap/Click to attach Documents here.</span>
-                </p>
-                {isFileChange.panCard && (
-                  <p className="filename" onClick={panCardFileViewHandler}>
-                    {isFileChange.panCard}
+                  <p
+                    className="upload-document"
+                    onClick={() =>
+                      document.getElementsByTagName("input")[8].click()
+                    }
+                  >
+                    <input
+                      type="file"
+                      onChange={panCardChangeHandler}
+                    />
+                    <FiUploadCloud className="fileUpload-icon" />
+                    <span>Tap/Click to attach Documents here.</span>
                   </p>
-                )}
+                  {isFileChange.panCard && (
+                    <p className="filename" onClick={panCardFileViewHandler}>
+                      {isFileChange.panCard}
+                    </p>
+                  )}
+                </div>
+                {isInputError.panFile && <span className="error">{isInputError.panFile}</span>}
               </div>
             </div>
           </div>
         </main>
       </div>
-      {isLoading && <img src={loadingGif} style={{ position: "absolute", top: "45%", left: "45%" }} />}
+      {isLoading && <img src={loadingGif} className="loading-gif" />}
+      {isResponse &&
+        <Message type={isResponse} message={"Documents has been successfully added."} />
+      }
     </div>
   );
 };

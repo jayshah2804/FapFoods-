@@ -11,6 +11,7 @@ import ChangePassword from "../Dashboard/ChangePassword";
 import { GrClose } from "react-icons/gr";
 import useHttp from "../../Hooks/use-http";
 import { useEffect } from "react";
+import EditProfile from "./EditProfile";
 
 const NOTIFICATION_DATA = [
   {
@@ -41,9 +42,10 @@ const Nav = (props) => {
   const [isAdminPhotoClicked, setIsAdminPhotoClicked] = useState(false);
   const [isNotificationIconClicked, setIsNotificationIconClicked] =
     useState(false);
-  const [isChangePasswordClicked, setIsChangePasswordClicked] = useState(false);
-  const [isSaveNewPasswordClicked, setIsSaveNewPasswordClicked] =
-    useState(false);
+  // const [isChangePasswordClicked, setIsChangePasswordClicked] = useState(false);
+  // const [isSaveNewPasswordClicked, setIsSaveNewPasswordClicked] =
+  //   useState(false);
+  const [isEditProfileClicked, setIsEditProfileClicked] = useState(false);
 
   const authenticateUser = (data) => {
     setAdminData(data.AdminInformation[0]);
@@ -81,15 +83,25 @@ const Nav = (props) => {
     setIsNotificationIconClicked((prev) => !prev);
   };
 
-  const changePasswordHandler = () => {
-    setIsAdminPhotoClicked(false);
-    setIsChangePasswordClicked(true);
-  };
+  // const changePasswordHandler = () => {
+  //   setIsAdminPhotoClicked(false);
+  //   setIsChangePasswordClicked(true);
+  // };
 
-  const saveNewPasswordClickHandler = () => {
-    setIsSaveNewPasswordClicked(true);
-    setIsChangePasswordClicked(false);
-  };
+  // const saveNewPasswordClickHandler = () => {
+  //   setIsSaveNewPasswordClicked(true);
+  //   setIsChangePasswordClicked(false);
+  // };
+
+  const editProfileClickHandler = () => {
+    setIsEditProfileClicked(true);
+    setIsAdminPhotoClicked(false);
+  }
+  setTimeout(() => {
+    document.getElementById("a").addEventListener("click", () => {
+      document.body.style.overflow = "hidden";
+    })
+  })
 
   return (
     <React.Fragment>
@@ -103,7 +115,7 @@ const Nav = (props) => {
         <div className={classes.orgDetails}>
 
           {isLoading ?
-            <div style={{height: "80px"}}>
+            <div style={{ height: "80px" }}>
               <img style={{ marginTop: "25px", height: "25px" }} src={loadingGif} alt="" className={classes.logo} />
             </div> :
             <img src={adminData.CorporateImage} alt="" className={classes.logo} />
@@ -147,12 +159,12 @@ const Nav = (props) => {
                   Admin of {adminData?.Corporate}
                 </p>
               </div>
-              <p className={classes.changePassword}>Change Photo</p>
+              <p className={classes.changePassword} onClick={editProfileClickHandler} id="a" >Edit Profile</p>
               <hr />
-              <p className={classes.changePassword} onClick={changePasswordHandler} >
+              {/* <p className={classes.changePassword} onClick={changePasswordHandler} >
                 Change Password
-              </p>
-              <hr style={{ color: "gray" }} />
+              </p> */}
+              {/* <hr style={{ color: "gray" }} /> */}
               <p className={classes.logout}
                 onClick={() => {
                   history.push("/login");
@@ -166,7 +178,10 @@ const Nav = (props) => {
           )}
         </div>
       </div>
-      {isChangePasswordClicked && (
+      {isEditProfileClicked &&
+        <EditProfile setIsEditProfileClicked={setIsEditProfileClicked} adminName={adminData.AdminName} adminOrg={adminData.Corporate} adminPhoto={adminData.AdminImage} />
+      }
+      {/* {isChangePasswordClicked && (
         <ChangePassword
           close={setIsChangePasswordClicked}
           saveNewPassword={saveNewPasswordClickHandler}
@@ -186,10 +201,9 @@ const Nav = (props) => {
             <div className={classes.passwordText}>
               Your password is successfully updated.
             </div>
-            {/* <button className={classes.passwordOk} onClick={() => setIsSaveNewPasswordClicked()} >Ok</button> */}
           </div>
         </div>
-      )}
+      )} */}
     </React.Fragment>
   );
 };

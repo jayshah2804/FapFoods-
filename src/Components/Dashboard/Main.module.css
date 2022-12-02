@@ -22,13 +22,11 @@
 
 .container {
   width: 100%;
-  /* width: 75%; */
   height: calc(100vh - 75px);
   margin: 0 25px;
   padding: 10px 0;
   transition-property: width;
   transition-duration: 0.7s;
-    /* padding: 10px 0; */
 }
 
 .container .newCorpButton {
@@ -38,6 +36,8 @@
   border-radius: 5px;
   padding: 0px 25px;
   cursor: pointer;
+  height: 35px;
+  align-self: center;
 }
 
 .adminName {
@@ -53,18 +53,15 @@
 
 .cards {
   display: flex;
-  gap: 25px;
+  justify-content: space-between;
   color: white;
   margin-bottom: 25px;
   margin-top: 15px;
-  /* margin-top: 5px; */
 }
 
 .cards div {
-  /* width: 310px; */
-  width: 23%;
+  width: 24%;
   height: 120px;
-  /* height: 125px;  */
   border-radius: 10px;
 }
 
@@ -89,12 +86,10 @@
 
 .cards div:nth-child(1) {
   background-color: rgba(34, 137, 203, 255);
-  /* transition: transform 1s; */
 }
 
 .cards div:hover {
   cursor: pointer;
-  /* box-shadow: 0 0 20px rgba(33, 33, 33, 0.4); */
   transform: scale(1.05);
 }
 
@@ -110,6 +105,11 @@
 .cards div:nth-child(4) {
   background-color: rgba(245, 174, 48, 255);
   /* yellow */
+}
+
+.container header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .chart {
@@ -169,8 +169,7 @@
   background-color: white;
   border-radius: 15px;
   padding: 10px 20px;
-  /* width: 310px; */
-  width: 23%;
+  width: 24%;
   height: 100%;
   overflow-y: auto;
 }
@@ -201,24 +200,19 @@
 
 .footer {
   display: flex;
-  gap: 25px;
-  /* align-items: stretch; */
+  justify-content: space-between;
   height: 68%;
 }
 
 .mapContainer {
   position: relative;
-  width: 25%;
+  width: 74.5%;
 }
 
 .map {
   position: relative;
-  /* height: 100%; */
-  /* height: 89%; */
   height: 100%;
-  /* width: 980px; */
-  width: 290%;
-  /* margin-top: 40px; */
+  width: 100%;
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -228,8 +222,7 @@
   top: 0px;
   height: 40px;
   background-color: white;
-  /* width: 980px; */
-  width: 290%;
+  width: 100%;
   border-radius: 10px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -239,32 +232,43 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .container {
+    width: auto;
+    margin: 0;
+    padding: 10px 25px;
+  }
+  .container header {
+    padding-right: 10px;
+  }
   .cards {
     display: flex;
     flex-direction: column;
-    width: 350%;
+    gap: 20px;
+    width: 100%;
   }
-
+  .cards div {
+    width: 94%;
+  }
   .footer {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    height: auto;
+    min-height: 400px;
+    max-height: 800px;
   }
-
   .map {
-    width: 310px;
-    height: 260px;
+    width: 100%;
+    height: 400px;
   }
-
   .mapText {
-    width: 310px;
+    width: 100%;
   }
-
-  .tripChart {
-    width: 310px;
-  }
-
   .driverList {
-    width: 310px;
-    height: 300px;
+    width: 94%;
+    height: 40%;
+  }
+  .mapContainer {
+    width: 94%;
   }
 }
