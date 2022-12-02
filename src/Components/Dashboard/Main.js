@@ -93,24 +93,82 @@ const Main = () => {
   }, [sendRequest]);
 
   function myInitMap() {
-    var map = new window.google.maps.Map(document.getElementById("map-modal"), {
-      center: { lat: 23.0225, lng: 72.5714 },
-      zoom: 11,
-      mapTypeControl: false,
+    // var map = new window.google.maps.Map(document.getElementById("map-modal"), {
+    //   center: { lat: 23.0225, lng: 72.5714 },
+    //   zoom: 11,
+    //   disableDefaultUI: true,
+    //   fullscreenControl: true,
+    //   zoomControl: true
+    // });
+
+    // let myInt = setInterval(() => {
+    //   if (document.getElementsByClassName("gm-control-active")[0]) {
+    //     document.getElementsByClassName(
+    //       "gm-control-active"
+    //     )[0].style.marginTop = "40px";
+    //     clearInterval(myInt);
+    //   }
+    // });
+    // INSTANTIATE MAP
+    const map = new window.google.maps.Map(document.getElementById("map-modal"), {
+      center: new window.google.maps.LatLng(23.0225, 72.5714),
+      zoom: 13,
+      mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false
+    });
+    //DEFINE THE POLYLINE
+    const polyline = new window.google.maps.Polyline({
+      path: [],
+      // geodesic: true,
+      strokeColor: '#397273',
+      strokeOpacity: 10.0,
+      strokeWeight: 5
     });
 
-    let myInt = setInterval(() => {
-      if (document.getElementsByClassName("gm-control-active")[0]) {
-        document.getElementsByClassName(
-          "gm-control-active"
-        )[0].style.marginTop = "40px";
-        clearInterval(myInt);
-      }
-      if (document.getElementsByClassName("gm-svpc")[0]) {
-        document.getElementsByClassName("gm-svpc")[0].style.display = "none";
-        clearInterval(myInt);
+    //DIRECTION SERVICE
+    let directionsService = new window.google.maps.DirectionsService();
+    let directionsRenderer = new window.google.maps.DirectionsRenderer({
+      polylineOptions: polyline, suppressMarkers: true
+    });
+
+    directionsRenderer.setMap(map);
+
+    const request = {
+      origin: { lat: parseFloat(23.0448498), lng: parseFloat(72.52949269999999) },
+      destination: { lat: parseFloat(23.0264486), lng: parseFloat(72.5555701) },
+      waypoints: [
+        {
+          location: new window.google.maps.LatLng(23.0371184, 72.5489122),
+          stopover: true
+        },
+        {
+          location: new window.google.maps.LatLng(23.0358311, 72.5579656),
+          stopover: true
+        }
+      ],
+      travelMode: 'DRIVING'
+    }
+
+    directionsService.route(request, function (response, status) {
+      if (status == window.google.maps.DirectionsStatus.OK) {
+
+        directionsRenderer.setDirections(response); // Add route to the map
+        console.log(response.routes[0].legs[0]);
+
+        var leg = response.routes[0].legs[0];
+
+        new window.google.maps.Marker({
+          position: leg.start_location,
+          map: map,
+          icon: this.start,
+          title: 'start'
+        })
       }
     });
+
+    // 23.0371184 72.5489122
+
+
   }
 
   window.myInitMap = myInitMap;
@@ -156,7 +214,7 @@ const Main = () => {
         >
           <p>Riders</p>
           {isApiError && (
-            <span style={{ fontWeight: "normal", fontSize: "14px" }}> 
+            <span style={{ fontWeight: "normal", fontSize: "14px" }}>
               {isApiError}
             </span>
           )}

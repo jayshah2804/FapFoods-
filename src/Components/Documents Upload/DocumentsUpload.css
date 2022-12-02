@@ -1,7 +1,8 @@
 .documents-upload-container {
   width: 100%;
   height: calc(100vh-85px);
-  /* height: 100vh; */
+  transition-property: width;
+  transition-duration: 0.7s;
 }
 
 .documents-upload-container h3 {
@@ -18,28 +19,33 @@
 
 .documents-upload .fill {
   background-color: rgb(255, 237, 212);
-  /* opacity: 0.6; */
   color: rgb(245, 185, 74);
   padding: 10px 15px;
   border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .documents-upload .success {
   background-color: rgb(165, 232, 165);
-  /* opacity: 0.6; */
   color: green;
   padding: 10px 15px;
   border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.documents-upload main {
+  display: flex;
+  flex-direction: column;
 }
 
 .documents-upload main .border {
   border-bottom: 1px solid rgb(190, 187, 187);
 }
 
-.documents-upload main header {
-  font-weight: bold;
-  padding-top: 15px;
-  /* padding-bottom: 10px; */
+.documents-upload main .sub-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .documents-upload main .text {
@@ -47,18 +53,42 @@
   padding: 10px 5px;
 }
 
+.documents-upload .document-details-container header {
+  display: flex;
+  gap: 4%;
+  padding-top: 15px;
+}
+
+.document-details-container .approval-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+
+.documents-upload .document-inputs {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
 .documents-upload input {
   margin-top: 5px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   border: none;
   border-bottom: 1px solid gray;
-  margin-right: 3%;
-  width: 23%;
+  /* margin-right: 3%; */
+  width: 100%;
   height: 25px;
 }
 
 .documents-upload input:focus {
   outline: none;
+}
+
+.documents-upload .file-upload-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .documents-upload .upload-document {
@@ -93,16 +123,17 @@
 }
 
 .documents-upload .filename {
-  align-self: center;
+  align-self: flex-start;
   font-size: 13px;
   margin-top: 2px;
-  color: rgb(73, 71, 71);
+  color: rgb(31, 28, 28);
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .documents-upload .filename:hover {
-  text-decoration: underline;
   font-weight: bold;
+  text-decoration: none;
   color: black;
 }
 
@@ -119,7 +150,6 @@
   background-color: green;
   border-radius: 10px;
   padding: 3px 6px;
-  font-size: 12px;
 }
 
 .documents-upload .rejected {
@@ -127,5 +157,52 @@
   background-color: red;
   border-radius: 10px;
   padding: 3px 6px;
-  font-size: 12px;
+}
+
+.documents-upload .fileUpload-icon {
+  font-size: 20px;
+}
+
+.documents-upload input[type="file"] {
+  display: none;
+}
+
+.documents-upload-container .loading-gif {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* z-index: 99; */
+}
+
+.documents-upload .for-input-error-container {
+  display: flex;
+  flex-direction: column;
+  width: 23%;
+}
+
+.documents-upload .for-input-error-container .error {
+  color: red;
+  font-size: 11.5px;
+}
+
+@media only screen and (max-width: 768px) {
+  .documents-upload .document-inputs {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .documents-upload .upload-document {
+    width: 100%;
+    height: 40px;
+    font-size: 7.5px;
+  }
+
+  .documents-upload main {
+    gap: 15px;
+  }
+
+  .documents-upload .filename {
+    font-size: 8px;
+  }
 }

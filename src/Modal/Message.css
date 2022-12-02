@@ -16,8 +16,9 @@
     border-radius: 10px;
     gap: 10px;
     position: absolute;
-    top: 30%;
-    left: 40%;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%,-50%);
     /* justify-content: space-between; */
 }
 
