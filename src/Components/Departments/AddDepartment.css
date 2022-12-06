@@ -72,7 +72,7 @@
     border-bottom: 1px solid gray;
     background: transparent;
     margin-top: 40px;
-    width: 320px;
+    width: 25%;
     height: 25px;
     font-size: 15px;
     padding: 5px;
@@ -232,4 +232,37 @@
 
 #checkBoxes input {
     margin-top: 2px;
+}
+
+.create-department .admin-details {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    margin: 0 40px;
+}
+
+@media only screen and (max-width: 768px) {
+    .add-department-subcontainer {
+        display: block;
+    }
+    .add-department-subcontainer>div {
+        width: 98%;
+        margin-bottom: 20px;
+    }
+    .create-department .sub-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .create-department .admin-details {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .create-department .admin-details input {
+        width: 90%;
+    }
+    .add-department-container .create-department {
+        height: auto;
+        margin: 10px;
+    }
 }

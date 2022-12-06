@@ -1,3 +1,25 @@
+.table-container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+.table-container::-webkit-scrollbar-track {
+  /* background: #f1f1f1;  */
+  /* border-radius: 30px; */
+}
+
+/* Handle */
+.table-container::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .pagination {
   list-style: none;
   display: flex;
@@ -32,6 +54,8 @@
   background-color: white;
   border-radius: 10px;
   margin: 0 20px;
+  /* width: 100%; */
+  /* overflow: auto; */
 }
 
 .table-container .header {
@@ -141,7 +165,9 @@ tr {
 
 .trips-details {
   transition-property: width;
-  transition-duration: 0.7s
+  transition-duration: 0.7s;
+  /* overflow: auto; */
+  width: 100%;
 }
 
 .table-container .footer {
@@ -194,6 +220,7 @@ tr {
   }
 
   .table-container {
-    width: min-content;
+    /* width: min-content; */
+    overflow: auto;
   }
 }

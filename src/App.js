@@ -40,14 +40,6 @@ function App() {
         }
         if (document.getElementById("new-reg")) {
             document.getElementById("new-reg").style.width = "80%";
-            for (let i = 0; i < document.getElementsByTagName("input").length; i++) {
-                document.getElementsByTagName("input")[i].style.width = "250px";
-                // document.getElementsByTagName("input")[i].style.marginRight = "50px";
-            }
-            // for (let i = 0; i < document.getElementsByTagName("select").length; i++) {
-            //     document.getElementsByTagName("select")[i].style.width = "250px";
-            //     document.getElementsByTagName("select")[i].style.marginRight = "50px";
-            // }
         }
         if (document.getElementById("trip-table")) {
             document.getElementById("trip-table").style.width = "78%";
@@ -81,14 +73,6 @@ function App() {
         }
         if (document.getElementById("new-reg")) {
             document.getElementById("new-reg").style.width = "100%";
-            for (let i = 0; i < document.getElementsByTagName("input").length; i++) {
-                document.getElementsByTagName("input")[i].style.width = "300px";
-                // document.getElementsByTagName("input")[i].style.marginRight = "100px";
-            }
-            // for (let i = 0; i < document.getElementsByTagName("select").length; i++) {
-            //     document.getElementsByTagName("select")[i].style.width = "300px";
-            //     document.getElementsByTagName("select")[i].style.marginRight = "100px";
-            // }
         }
         if (document.getElementById("trip-table")) {
             document.getElementById("trip-table").style.width = "100%";

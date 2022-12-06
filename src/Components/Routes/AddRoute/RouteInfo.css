@@ -1,3 +1,16 @@
+.add-route-fullcontainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(88, 88, 88, 0.5);
+  z-index: 97;
+  /* margin-top: -65px; */
+  top: 0;
+  left: 0;
+  margin-right: -20px;
+  padding-right: -20px;
+}
+
 .add-route-container {
   position: absolute;
   box-shadow: 0 0 20px rgba(33, 33, 33, .3);
@@ -11,7 +24,7 @@
   /* width: 770px; */
   width: auto;
   height: max-content;
-  z-index: 100;
+  z-index: 98;
 }
 
 .add-route-container header {
@@ -192,29 +205,50 @@ option:not(:first-of-type) {
 }
 
 
-@media only screen and (max-width: 768px){
+@media only screen and (max-width: 768px) {
   .add-route-container {
     /* min-width: 330px; */
     transform: none;
     left: 5%;
     top: 30%;
   }
+
+  .add-route-container .routeInfo-container {
+    margin-top: 0;
+  }
+
+  .routeInfo-container input {
+    width: 90%;
+    margin-left: 6%;
+    margin-bottom: 15px;
+  }
+
+  .routeInfo-container select {
+    width: 90%;
+    margin-left: 6%;
+    margin-bottom: 15px;
+  }
+
   .routeInfo-container {
     /* min-width: 330px; */
     display: flex;
     flex-direction: column;
   }
+
   .routeInfo-subContainer {
     display: flex;
     flex-direction: column;
   }
+
   .routeInfo-container .nextButton {
-    align-self: center;
-    margin-left: 0;
+    margin-left: 70%;
+    margin-right: 20px;
   }
+
   .routeInfo-container select {
-    margin-left: 6%;
+    /* margin-left: 6%; */
   }
+
   .wizard-progress .step {
     font-size: 11px;
   }
