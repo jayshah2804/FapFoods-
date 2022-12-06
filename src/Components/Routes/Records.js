@@ -57,7 +57,6 @@ const Records = ({ isLoading, data, headers }) => {
                                 {headers.map((data) => (
                                     <th>{data}</th>
                                 ))}
-                                <th>Actions</th>
                             </tr>
                         </thead>
                     </table>

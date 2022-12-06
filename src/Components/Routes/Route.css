@@ -1,3 +1,25 @@
+.table-container-routes::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+.table-container-routes::-webkit-scrollbar-track {
+  /* background: #f1f1f1;  */
+  /* border-radius: 30px; */
+}
+
+/* Handle */
+.table-container-routes::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+.table-container-routes::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .pagination {
   list-style: none;
   display: flex;
@@ -191,6 +213,7 @@ tbody tr:hover {
   }
 
   .table-container-routes {
-    width: min-content;
+    /* width: min-content; */
+    overflow: auto;
   }
 }

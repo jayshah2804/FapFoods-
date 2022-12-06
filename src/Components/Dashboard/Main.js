@@ -7,6 +7,8 @@ import studentDummyImage from "../../Assets/new_student_marker.png";
 import { useHistory } from "react-router-dom";
 import useHttp from "../../Hooks/use-http";
 import Loading from "../../Loading/Loading";
+// import studentDummyImage from "../../Assets/new_student_marker.png";
+
 
 const DUMMY_DATA = [
   {
@@ -111,8 +113,10 @@ const Main = () => {
     // });
     // INSTANTIATE MAP
     const map = new window.google.maps.Map(document.getElementById("map-modal"), {
-      center: new window.google.maps.LatLng(23.0225, 72.5714),
-      zoom: 13,
+      // center: new window.google.maps.LatLng(23.0225, 72.5714),
+      // zoom: 13,
+      zoom: 6,
+      center: { lat: 41.85, lng: -87.65 },
       mapTypeId: window.google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false
     });
@@ -127,44 +131,91 @@ const Main = () => {
 
     //DIRECTION SERVICE
     let directionsService = new window.google.maps.DirectionsService();
-    let directionsRenderer = new window.google.maps.DirectionsRenderer({
-      polylineOptions: polyline, suppressMarkers: true
-    });
+    let directionsRenderer = new window.google.maps.DirectionsRenderer();
+    // let directionsRenderer = new window.google.maps.DirectionsRenderer({
+    //   polylineOptions: polyline, suppressMarkers: true
+    // });
 
     directionsRenderer.setMap(map);
 
     const request = {
-      origin: { lat: parseFloat(23.0448498), lng: parseFloat(72.52949269999999) },
-      destination: { lat: parseFloat(23.0264486), lng: parseFloat(72.5555701) },
+      origin: "Halifax, NS", //Eximious
+      destination: "Boston, MA", //LD
+      // origin: { lat: parseFloat(23.0448498), lng: parseFloat(72.52949269999999) }, //Eximious
+      // destination: { lat: parseFloat(23.0338), lng: parseFloat(72.546584) }, //LD
       waypoints: [
         {
-          location: new window.google.maps.LatLng(23.0371184, 72.5489122),
+          location: "toronto, ont",
           stopover: true
         },
-        {
-          location: new window.google.maps.LatLng(23.0358311, 72.5579656),
-          stopover: true
-        }
+        // {
+        //   location: new window.google.maps.LatLng(23.0264486, 72.5555701), //KP
+        //   stopover: true
+        // }
       ],
-      travelMode: 'DRIVING'
+      travelMode: window.google.maps.TravelMode.DRIVING
     }
 
-    directionsService.route(request, function (response, status) {
-      if (status == window.google.maps.DirectionsStatus.OK) {
+    const waypts = [];
+    // waypts.push(
+    //   {
+    //     location: "calgary, ab",
+    //     stopover: true
+    //   });
 
-        directionsRenderer.setDirections(response); // Add route to the map
-        console.log(response.routes[0].legs[0]);
+    directionsService
+      .route({
+        origin: "San Francisco, CA",
+        destination: "Halifax, NS",
+        waypoints: waypts,
+        travelMode: window.google.maps.TravelMode.DRIVING,
+      })
+      .then((response) => {
+        directionsRenderer.setDirections(response);
 
+        // const route = response.routes[0].leg[0];
         var leg = response.routes[0].legs[0];
 
         new window.google.maps.Marker({
           position: leg.start_location,
           map: map,
-          icon: this.start,
+          icon: studentDummyImage,
           title: 'start'
         })
-      }
-    });
+        // const summaryPanel = document.getElementById("directions-panel");
+
+        // summaryPanel.innerHTML = "";
+
+        // // For each route, display summary information.
+        // for (let i = 0; i < route.legs.length; i++) {
+        //   const routeSegment = i + 1;
+
+        //   summaryPanel.innerHTML +=
+        //     "<b>Route Segment: " + routeSegment + "</b><br>";
+        //   summaryPanel.innerHTML += route.legs[i].start_address + " to ";
+        //   summaryPanel.innerHTML += route.legs[i].end_address + "<br>";
+        //   summaryPanel.innerHTML += route.legs[i].distance.text + "<br><br>";
+        // }
+      })
+    // .catch((e) => window.alert("Directions request failed due to "));
+
+
+    // directionsService.route(request, function (response, status) {
+    //   if (status == window.google.maps.DirectionsStatus.OK) {
+
+    //     directionsRenderer.setDirections(response); // Add route to the map
+    //     console.log(response.routes[0]);
+
+    //     var leg = response.routes[0];
+
+    //     new window.google.maps.Marker({
+    //       position: leg.start_location,
+    //       map: map,
+    //       icon: studentDummyImage,
+    //       title: 'start'
+    //     })
+    //   }
+    // });
 
     // 23.0371184 72.5489122
 

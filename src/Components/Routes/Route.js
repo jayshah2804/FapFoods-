@@ -275,56 +275,61 @@ function Routes() {
     };
 
     return (
-        <div className="trips-details" id="trip-table">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ display: "inline-block" }} className="title">corporate shuttle routes</div>
-                <button onClick={addRouteClickHandler} style={{ marginRight: "40px", padding: "7px 14px", backgroundColor: "rgba(34, 137, 203, 255)", color: "white", border: "rgba(34, 137, 203, 255)", borderRadius: "5px", cursor: "pointer" }}>Add Route</button>
-            </div>
-            <div className="table-container-routes">
-                <div className="header">
-                    <div>
-                        <div onChange={routeSearchHandler} className="route-search">
-                            <input
-                                placeholder="Search"
-                                type="text"
-                                ref={searchInputRef}
-                            />
+        <React.Fragment>
+            {isAddRouteClicked &&
+                <div className="add-route-fullcontainer"></div>
+            }
+            <div className="trips-details" id="trip-table">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ display: "inline-block" }} className="title">corporate shuttle routes</div>
+                    <button onClick={addRouteClickHandler} style={{ marginRight: "40px", padding: "7px 14px", backgroundColor: "rgba(34, 137, 203, 255)", color: "white", border: "rgba(34, 137, 203, 255)", borderRadius: "5px", cursor: "pointer" }}>Add Route</button>
+                </div>
+                <div className="table-container-routes">
+                    <div className="header">
+                        <div>
+                            <div onChange={routeSearchHandler} className="route-search">
+                                <input
+                                    placeholder="Search"
+                                    type="text"
+                                    ref={searchInputRef}
+                                />
+                            </div>
+                            <CSVLink data={route_details} className="export_csv">
+                                Export
+                            </CSVLink>
                         </div>
-                        <CSVLink data={route_details} className="export_csv">
-                            Export
-                        </CSVLink>
+                    </div>
+                    <Records data={currentRecords} headers={TRIP_TITLE} isLoading={isLoading} />
+                    <div className="footer">
+                        <p>
+                            Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}
+                            entries{" "}
+                        </p>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel=">"
+                            onPageChange={(e) => setCurrentPage(e.selected + 1)}
+                            pageRangeDisplayed={3}
+                            pageCount={nPages}
+                            previousLabel="<"
+                            renderOnZeroPageCount={null}
+                            containerClassName="pagination"
+                            pageLinkClassName="page-num"
+                            previousLinkClassName="page-num"
+                            nextLinkClassName="page-num"
+                            activeLinkClassName="active"
+                        />
                     </div>
                 </div>
-                <Records data={currentRecords} headers={TRIP_TITLE} isLoading={isLoading} />
-                <div className="footer">
-                    <p>
-                        Showing {fromRecords} to {toRecords} of {filteredData.length}{" "}
-                        entries{" "}
-                    </p>
-                    <ReactPaginate
-                        breakLabel="..."
-                        nextLabel=">"
-                        onPageChange={(e) => setCurrentPage(e.selected + 1)}
-                        pageRangeDisplayed={3}
-                        pageCount={nPages}
-                        previousLabel="<"
-                        renderOnZeroPageCount={null}
-                        containerClassName="pagination"
-                        pageLinkClassName="page-num"
-                        previousLinkClassName="page-num"
-                        nextLinkClassName="page-num"
-                        activeLinkClassName="active"
-                    />
-                </div>
+                {isAddRouteClicked && <AddRoute routeCreationStatus={routeCreationStatus} setIsAddRouteClicked={setIsAddRouteClicked} />}
+                {isRouteCreated &&
+                    (isRouteCreated === "Loading" ?
+                        <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "40%" }} /> :
+                        <Message type={isRouteCreated} message={"Route name " + sessionStorage.getItem("routeName") + " has been Successfully created"} />
+                    )
+                }
             </div>
-            {isAddRouteClicked && <AddRoute routeCreationStatus={routeCreationStatus} setIsAddRouteClicked={setIsAddRouteClicked} />}
-            {isRouteCreated &&
-                (isRouteCreated === "Loading" ?
-                    <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "40%" }} /> :
-                    <Message type={isRouteCreated} message={"Route name " + sessionStorage.getItem("routeName") + " has been Successfully created"} />
-                )
-            }
-        </div>
+        </React.Fragment>
     );
 }
 

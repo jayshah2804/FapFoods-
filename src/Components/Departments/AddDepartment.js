@@ -293,7 +293,7 @@ const AddDepartment = () => {
                         <span>Enabled Services: </span><span>{enableSerices.toString()}</span>
                     </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", margin: "0px 40px", gap: "100px" }}>
+                <div className='admin-details'>
                     <input defaultValue={departmentDefaultDetails.departmentname} type="text" placeholder='Department Name' ref={departmentNameInputRef} />
                     <input defaultValue={departmentDefaultDetails.adminName} type="text" placeholder='Admin Name' ref={adminNameInputRef} />
                     <input defaultValue={departmentDefaultDetails.adminEmail} type="email" placeholder='Admin Email' ref={adminEmailInputRef} />

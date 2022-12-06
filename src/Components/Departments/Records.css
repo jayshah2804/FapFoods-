@@ -1,3 +1,9 @@
+.department-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .department-data img {
     width: 20px;
     height: 20px;
@@ -14,3 +20,4 @@
 .department-data img:hover {
     transform: scale(1.1);
 }
+

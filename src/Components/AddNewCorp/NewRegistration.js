@@ -13,6 +13,7 @@ let adminPhoto = "";
 const DATA_ERRORS = {
     countryError: "",
     industryError: "",
+    corporateTypeError: "",
     corporateNameError: "",
     corporateDomainError: "",
     corporateLogoError: "",
@@ -24,6 +25,7 @@ const DATA_ERRORS = {
     invoiceContactEmailError: "",
     accountManagerError: "",
     salesExecutiveError: "",
+    latLngError: "",
     creditPeriodError: "",
     contractStartDateError: "",
     contractEndDateError: ""
@@ -36,6 +38,7 @@ const NewRegistration = () => {
     const [isValid, setIsValid] = useState(false);
     const countrySelectRef = useRef();
     const industrySelectRef = useRef();
+    const typeSelectRef = useRef();
     const corporateNameInputRef = useRef();
     const corporateDomainInputRef = useRef();
     const corporateLogoInputRef = useRef();
@@ -47,6 +50,7 @@ const NewRegistration = () => {
     const invoiceContactEmailInputRef = useRef();
     const accountManagerSelectRef = useRef();
     const salesExecutiveSelectRef = useRef();
+    const latLngInputRef = useRef();
     const CreditPeriodInputRef = useRef();
     const contractStartDateInputRef = useRef();
     const contractEndDateInputRef = useRef();
@@ -112,6 +116,16 @@ const NewRegistration = () => {
         else {
             isFormValid = false;
             setFormError(prev => ({ ...prev, industryError: "Industry name is invalid" }));
+        }
+    }
+    const corporateTypeChangeHandler = () => {
+        if (typeSelectRef.current.value) {
+            isFormValid = true;
+            setFormError(prev => ({ ...prev, corporateTypeError: "" }));
+        }
+        else {
+            isFormValid = false;
+            setFormError(prev => ({ ...prev, corporateTypeError: "Corporate type is invalid" }));
         }
     }
     const corprateNameChangeHandler = () => {
@@ -204,6 +218,16 @@ const NewRegistration = () => {
             setFormError(prev => ({ ...prev, salesExecutiveError: "sales executive is Invalid" }));
         }
     }
+    const latLngChangeHandler = () => {
+        if (latLngInputRef.current.value) {
+            isFormValid = true;
+            setFormError(prev => ({ ...prev, latLngError: "" }));
+        }
+        else {
+            isFormValid = false;
+            setFormError(prev => ({ ...prev, latLngError: "Lat, lng is Invalid" }));
+        }
+    }
     const creditPeriodChangeHandler = () => {
         if (CreditPeriodInputRef.current.value) {
             isFormValid = true;
@@ -287,6 +311,10 @@ const NewRegistration = () => {
             isFormValid = false;
             setFormError(prev => ({ ...prev, industryError: "Industry name is Invalid" }));
         }
+        if (typeSelectRef.current.value === "Type") {
+            isFormValid = false;
+            setFormError(prev => ({ ...prev, corporateTypeError: "Corporate type is Invalid" }));
+        }
         if (!corporateNameInputRef.current.value) {
             isFormValid = false;
             setFormError(prev => ({ ...prev, corporateNameError: "Corporate name is Invalid" }));
@@ -335,6 +363,10 @@ const NewRegistration = () => {
             isFormValid = false;
             setFormError(prev => ({ ...prev, salesExecutiveError: "Sales executive is Invalid" }));
         }
+        if (!latLngInputRef.current.value) {
+            isFormValid = false;
+            setFormError(prev => ({ ...prev, latLngError: "Lat, lng is Invalid" }));
+        }
         if (!CreditPeriodInputRef.current.value) {
             isFormValid = false;
             setFormError(prev => ({ ...prev, creditPeriodError: "Credit Period is Invalid" }));
@@ -359,7 +391,7 @@ const NewRegistration = () => {
         <div className='new-corp-conatiner' id='new-reg' >
             <header>New Corporate Registration</header>
             <div className='new-corp-subcontainer'>
-                <div style={{ display: "flex", gap: "15%" }}>
+                <div className='mini-container'>
                     <div className='inputErrorBox'>
                         <select ref={countrySelectRef} onChange={countryChangeHandler} >
                             <option selected disabled>Country</option>
@@ -384,8 +416,16 @@ const NewRegistration = () => {
                         </select>
                         <span className='errorMsg'>{formError.industryError}</span>
                     </div>
+                    <div className='inputErrorBox'>
+                        <select ref={typeSelectRef} onChange={corporateTypeChangeHandler} >
+                            <option selected disabled>Type</option>
+                            <option>School</option>
+                            <option>Corporate</option>
+                        </select>
+                        <span className='errorMsg'>{formError.corporateTypeError}</span>
+                    </div>
                 </div>
-                <div style={{ display: "flex", gap: "10%" }}>
+                <div className='mini-container'>
                     <div className='inputErrorBox'>
                         <input type="text" placeholder='Corporate Name' ref={corporateNameInputRef} onChange={corprateNameChangeHandler} />
                         <span className='errorMsg'>{formError.corporateNameError}</span>
@@ -402,7 +442,7 @@ const NewRegistration = () => {
                         <span className='errorMsg'>{formError.corporateLogoError}</span>
                     </div>
                 </div>
-                <div style={{ display: "flex", gap: "10%" }} >
+                <div className='mini-container'>
                     <div className='inputErrorBox'>
                         <input type="text" placeholder='Admin Name' ref={adminNameInputRef} onChange={adminNameChangeHandler} />
                         <span className='errorMsg'>{formError.adminNameError}</span>
@@ -419,7 +459,7 @@ const NewRegistration = () => {
                         <span className='errorMsg'>{formError.adminPhotoError}</span>
                     </div>
                 </div>
-                <div style={{ display: "flex", gap: "10%" }}>
+                <div className='mini-container'>
                     <div className='inputErrorBox'>
                         <input type="number" placeholder='Admin Contact Number' ref={adminMobileInputRef} onChange={adminContactChangeHandler} />
                         <span className='errorMsg'>{formError.adminContactError}</span>
@@ -433,7 +473,7 @@ const NewRegistration = () => {
                         <span className='errorMsg'>{formError.invoiceContactEmailError}</span>
                     </div>
                 </div>
-                <div style={{ display: "flex", gap: "15%" }}>
+                <div className='mini-container'>
                     <div className='inputErrorBox'>
                         <select ref={accountManagerSelectRef} onChange={accountManagerChangeHandler} >
                             <option selected disabled>Account Manager</option>
@@ -449,8 +489,12 @@ const NewRegistration = () => {
                         </select>
                         <span className='errorMsg'>{formError.salesExecutiveError}</span>
                     </div>
+                    <div className='inputErrorBox'>
+                        <input type="text" ref={latLngInputRef} onChange={latLngChangeHandler} placeholder='Latitude and Longitude' />
+                        <span className='errorMsg'>{formError.latLngError}</span>
+                    </div>
                 </div>
-                <div style={{ display: "flex", gap: "10%" }}>
+                <div className='mini-container'>
                     <div className='inputErrorBox'>
                         <input type="number" placeholder='Credit Period' ref={CreditPeriodInputRef} onChange={creditPeriodChangeHandler} />
                         <span className='errorMsg'>{formError.creditPeriodError}</span>
@@ -469,8 +513,8 @@ const NewRegistration = () => {
                     <button onClick={saveCorporateClickHandler}>Save</button>
                 </div>
             </div>
-            {isLoading && 
-                <img src={loadingGif} style={{position: "absolute", top: "40%", left: "40%"}} />
+            {isLoading &&
+                <img src={loadingGif} style={{ position: "absolute", top: "40%", left: "40%" }} />
             }
         </div>
     )
